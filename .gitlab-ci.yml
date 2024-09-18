@@ -9,7 +9,8 @@ test-job:
     - comp2100
   script:
     - echo "Running gradle test"
-    - ./App/gradlew gradle test
+    - cd App
+    - ./gradlew gradle test
   artifacts:
     when: always
     reports:
