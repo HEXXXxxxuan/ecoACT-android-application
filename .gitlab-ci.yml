@@ -1,4 +1,4 @@
-image: cimg/android:latest
+image: cimg/android:2024.09.1
 
 stages:
   - test
