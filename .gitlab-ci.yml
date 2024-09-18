@@ -1,0 +1,18 @@
+image: cimg/android:latest
+
+stages:
+  - test
+
+test-job:
+  stage: test
+  tags:
+    - comp2100
+  script:
+    - echo "Running gradle test"
+    - ./App/gradlew gradle test
+  artifacts:
+    when: always
+    reports:
+      junit: App/app/build/test-results/**/TEST-*.xml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "main"
