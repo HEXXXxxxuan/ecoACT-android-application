@@ -5,6 +5,7 @@ stages:
 
 test-job:
   stage: test
+  when: manual
   tags:
     - comp2100
   script:
