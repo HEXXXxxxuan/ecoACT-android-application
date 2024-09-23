@@ -21,6 +21,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000); // 启动页面显示3秒
+        }, 3000);
     }
 }
