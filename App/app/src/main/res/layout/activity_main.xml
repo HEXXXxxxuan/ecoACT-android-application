@@ -8,17 +8,29 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/button_login"
+        android:layout_width="187dp"
+        android:layout_height="75dp"
         android:layout_marginStart="140dp"
         android:layout_marginTop="342dp"
         android:layout_marginEnd="140dp"
         android:layout_marginBottom="342dp"
-        android:text="Wakachangi"
+        android:text="@string/Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="187dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="112dp"
+        android:text="@string/Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
