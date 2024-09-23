@@ -2,7 +2,7 @@ package com.go4.application;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -13,7 +13,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
 
-        new Handler().postDelayed(new Runnable() {
+        View v = findViewById(android.R.id.content);
+        v.postDelayed(new Runnable() {
             @Override
             public void run() {
 
