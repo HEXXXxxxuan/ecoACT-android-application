@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "64498048741",
+    "project_id": "go4gp-s2",
+    "storage_bucket": "go4gp-s2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64498048741:android:c2b1fea03a7660de6ffe0c",
+        "android_client_info": {
+          "package_name": "com.go4.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkgMko36I1YRh6ZS-6l2hroN6M00M2-nI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

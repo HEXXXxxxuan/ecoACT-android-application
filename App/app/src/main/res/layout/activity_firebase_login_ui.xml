@@ -20,13 +20,13 @@
         tools:layout_editor_absoluteY="16dp" />
 
     <EditText
-        android:id="@+id/lg_username"
+        android:id="@+id/lg_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="304dp"
         android:layout_marginEnd="16dp"
-        android:hint="Username"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -34,13 +34,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/bt_login"
+        android:id="@+id/login_submit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:text="Login"
+        android:text="@string/Login"
         android:backgroundTint="@color/secondaryColorY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -54,7 +54,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:hint="Password"
+        android:hint="@string/Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
