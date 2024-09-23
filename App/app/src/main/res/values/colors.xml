@@ -3,7 +3,7 @@
     <color name="primaryColor">#FFFFFF</color>
 
 
-    <color name="secondaryColor">#FFA132</color>
-    <color name="accentColor">#DD201B</color>
+    <color name="secondaryColorY">#FFA132</color>
+    <color name="accentColorR">#DD201B</color>
 
 </resources>
