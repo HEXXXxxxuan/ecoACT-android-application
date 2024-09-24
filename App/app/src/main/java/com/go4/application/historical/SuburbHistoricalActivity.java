@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.R;
+import com.go4.application.tree.AVLTree;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +25,8 @@ import java.util.List;
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
     private EditText editTextDate;
-    private List<Record> recordList;
+    //private List<Record> recordList;
+    private AVLTree recordTree;
     private TextView resultTextView;
 
 
@@ -47,7 +49,15 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         suburbSpinner.setAdapter(adapter);
 
         CsvParser csvParser = new CsvParser();
-        recordList = csvParser.parseCsV(this, "environment_monitoring_data.csv");
+        //recordList = csvParser.parseCsV(this, "environment_monitoring_data.csv");
+
+        recordTree = new AVLTree();
+        // Parse the CSV and insert records into AVLTree
+        List<Record> recordList = csvParser.parseCsV(this, "environment_monitoring_data.csv");
+        for (Record record : recordList) {
+            String key = record.getLocation() + "_" + record.getDate();
+            recordTree.insert(key, record);
+        }
 
         findViewById(R.id.searchButton).setOnClickListener(v -> searchForRecord());
 
@@ -117,22 +127,36 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
 
-        boolean recordFound = false;
+//        boolean recordFound = false;
+//
+//        for (Record record : recordList) {
+//
+//            if (record.getDate().equals(selectedDate) && record.getLocation().equalsIgnoreCase(selectedSuburb)) {
+//                String result = "Temperature: " + record.getTemperature() + "°C\n" +
+//                        "Smoke Level: " + record.getSmokeLevel() + " ppm\n" +
+//                        "Carbon Monoxide: " + record.getCarbonMonoxide() + " ppm";
+//                resultTextView.setText(result);
+//                recordFound = true;
+//                break;
+//            }
+//
+//            if (!recordFound) {
+//                resultTextView.setText("No matching records.");
+//            }
+//        }
 
-        for (Record record : recordList) {
+        //search in tree
 
-            if (record.getDate().equals(selectedDate) && record.getLocation().equalsIgnoreCase(selectedSuburb)) {
-                String result = "Temperature: " + record.getTemperature() + "°C\n" +
-                        "Smoke Level: " + record.getSmokeLevel() + " ppm\n" +
-                        "Carbon Monoxide: " + record.getCarbonMonoxide() + " ppm";
-                resultTextView.setText(result);
-                recordFound = true;
-                break;
-            }
+        String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
 
-            if (!recordFound) {
-                resultTextView.setText("No matching records.");
-            }
+        Record record = recordTree.search(key);  // Search the AVLTree for the key
+        if (record != null) {
+            String result = "Temperature: " + record.getTemperature() + "°C\n" +
+                    "Smoke Level: " + record.getSmokeLevel() + " ppm\n" +
+                    "Carbon Monoxide: " + record.getCarbonMonoxide() + " ppm";
+            resultTextView.setText(result);
+        } else {
+            resultTextView.setText("No matching records.");
         }
 
     }
