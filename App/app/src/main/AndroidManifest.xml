@@ -33,6 +33,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".historical.SuburbHistoricalActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
