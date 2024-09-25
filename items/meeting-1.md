@@ -57,6 +57,10 @@ Stand up Procedure:
 
 ### Matters to be confirmed
 - Additional Features
+- Future planning / code-skeleton
+
+Goal is to learn the basics of android design through checkpoint 1 then, using the knowledge gained, create a strong plan with 
+specific success criterias and an integrated array of features that are documented and tested thoroughly. 
 
 
 ## Action Items
@@ -65,7 +69,8 @@ Stand up Procedure:
 | [LogIn]                               |  [Ryan]   | [22/09] |
 | [Ui Design Mock-up]                       |  [Shawn]   | [24/09] |
 | [Search]                               |  [Leo]   | [24/09] |
-| [Template Files]                               |  [Gea]   | [] |
+| [Template Files]                               |  [Gea]   | [24/09] |
+| [Main Overview]                         | [Liu] | [24/09]
 
 ## Scribe Rotation
 The following dictates who will scribe in this and the next meeting.
@@ -75,3 +80,4 @@ The following dictates who will scribe in this and the next meeting.
 | [Leo] |
 | [Shawn] |
 | [Gea] |
+| [Liu] |

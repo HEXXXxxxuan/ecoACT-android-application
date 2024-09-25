@@ -13,14 +13,29 @@
         android:theme="@style/Theme.Application"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".FirebaseLoginActivity"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".DetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+            android:exported="true" />
+        <activity
+            android:name=".historical.SuburbHistoricalActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
