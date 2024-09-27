@@ -49,9 +49,9 @@ public class FirebaseLoginActivity extends AppCompatActivity {
         }
     }
     private void signIn() {
-        Button loginSubmit = findViewById(R.id.login_submit);
+        Button loginSubmit = findViewById(R.id.bt_login);
         loginSubmit.setOnClickListener(view -> {
-            String email = ((EditText) findViewById(R.id.lg_email)).getText().toString();
+            String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
             String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
             mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, task -> {
