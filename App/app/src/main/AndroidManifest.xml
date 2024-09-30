@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Application"
         tools:targetApi="31">
         <activity
-            android:name=".SplashActivity"
+            android:name=".live_data.SuburbLiveActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,9 +33,9 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar"
             android:exported="true" />
-        <activity
+        <!--<activity
             android:name=".historical.SuburbHistoricalActivity"
-            android:exported="true" />
+            android:exported="true" /> -->
     </application>
 
 </manifest>
