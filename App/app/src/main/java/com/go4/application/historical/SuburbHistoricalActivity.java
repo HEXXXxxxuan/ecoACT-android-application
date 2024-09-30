@@ -4,11 +4,15 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,10 +41,14 @@ import java.util.concurrent.Executors;
 
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
+    private Spinner hourSpinner;
     private EditText editTextDate;
     //private List<Record> recordList;
-    private AVLTree recordTree;
+    private AVLTree<String, AirQualityRecord> recordTree;
     private TextView resultTextView;
+    private Button searchButton;
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
 
@@ -50,33 +58,60 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         setContentView(R.layout.suburb_historical);
 
         suburbSpinner = findViewById(R.id.suburbSpinner);
+        hourSpinner = findViewById(R.id.hourSpinner);
         editTextDate = findViewById(R.id.editTextDate);
         resultTextView = findViewById(R.id.resultTextView);
-
-        automaticAddRecords(this, "4f6d63b7d7512fc4b14ee2aeb89d3128", "1727395200", "1727481600", "historical_data.csv");
+        searchButton = findViewById(R.id.searchButton);
 
         editTextDate.setOnClickListener(view -> showDatePickerDialog());
+        searchButton.setOnClickListener(v -> searchForRecord());
 
+        //automatically create dataset of latest 5 days record for each suburb and store it in internal folder
+        //we can move this to other layout, ideally first time user open the app, it will automatically generated this historical file
+        long currentTime = System.currentTimeMillis() / 1000L; //current time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.DAY_OF_YEAR, -5);
+        long startingTime = calendar.getTimeInMillis() / 1000L;
+        automaticAddRecords(this, "4f6d63b7d7512fc4b14ee2aeb89d3128", String.valueOf(startingTime), String.valueOf(currentTime), "historical_data.csv");
+
+        //suburb spinner
+        suburbSpinner();
+
+        //hour spinner
+        hourSpinner();
+
+        //parseCSV and insert it in AVLTree
+        createAVLTree();
+
+    }
+
+    private void createAVLTree() {
+        CsvParser csvParser = new CsvParser();
+        recordTree = new AVLTree<>();
+        // Parse the CSV and insert records into AVLTree
+        List<AirQualityRecord> recordList = csvParser.parseCsV(this, "historical_data.csv");
+        for (AirQualityRecord record : recordList) {
+            String key = record.getLocation() + "_" + record.getTimestamp();
+            recordTree.insert(key, record);
+        }
+    }
+
+    private void hourSpinner() {
+        List<String> hours = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            hours.add(String.format("%02d:00", i)); // Add hours in format 00:00, 01:00, etc.
+        }
+        ArrayAdapter<String> hourAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hours);
+        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hourSpinner.setAdapter(hourAdapter);
+    }
+
+    private void suburbSpinner() {
         List<String> suburbList = loadSuburbsFromJson();
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         suburbSpinner.setAdapter(adapter);
-
-        CsvParser csvParser = new CsvParser();
-
-
-        //Create an AVL Tree
-        recordTree = new AVLTree();
-        // Parse the CSV and insert records into AVLTree
-        List<Record> recordList = csvParser.parseCsV(this, "environment_monitoring_data.csv");
-        for (Record record : recordList) {
-            String key = record.getLocation() + "_" + record.getDate();
-            recordTree.insert(key, record);
-        }
-
-        findViewById(R.id.searchButton).setOnClickListener(v -> searchForRecord());
-
     }
 
     private List<String> loadSuburbsFromJson(){
@@ -126,6 +161,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        String selectedHour = hourSpinner.getSelectedItem().toString().substring(0, 2);
+
 
         Log.d("SearchDebug", "Selected Suburb: " + selectedSuburb);
 
@@ -141,17 +178,24 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             return;
         }
 
+        selectedDate += " " + selectedHour + ":00:00";
+
         Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
 
         //search in tree
 
         String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
 
-        Record record = recordTree.search(key);  // Search the AVLTree for the key
+        AirQualityRecord record = recordTree.search(key);  // Search the AVLTree for the key
         if (record != null) {
-            String result = "Temperature: " + record.getTemperature() + "°C\n" +
-                    "Smoke Level: " + record.getSmokeLevel() + " ppm\n" +
-                    "Carbon Monoxide: " + record.getCarbonMonoxide() + " ppm";
+            String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
+                    "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
+                    "Nitrogen Dioxide (NO2): " + record.getNo2() + " ppm\n" +
+                    "Ozone (O3): " + record.getO3() + " ppm\n" +
+                    "Sulfur Dioxide (SO2): " + record.getSo2() + " ppm\n" +
+                    "PM2.5: " + record.getPm2_5() + " µg/m³\n" +
+                    "PM10: " + record.getPm10() + " µg/m³\n" +
+                    "Ammonia (NH3): " + record.getNh3() + " ppm";
             resultTextView.setText(result);
         } else {
             resultTextView.setText("No matching records.");
@@ -161,9 +205,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     // This method store historical air quality data to csv
     public void fetchHistoricalDataTOCSV(Context context, String location, String latitude, String longitude, String start, String end, String apiKey, String fileName) {
-
-        // Use ExecutorService to run the network operation in the background
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         executorService.submit(() -> {
             String urlString = String.format(
@@ -189,22 +230,16 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                     JSONObject jsonResponse = new JSONObject(response.toString());
                     JSONArray list = jsonResponse.getJSONArray("list");
 
-                    File localFile = new File(context.getFilesDir(), fileName);
+                    //store at local file
+                    //File localFile = new File(context.getFilesDir(), fileName);
+                    //Log.i("FilePath", "Writing to: " + localFile.getAbsolutePath());
+
+                    // Store data in cache directory
+                    File localFile = new File(context.getCacheDir(), fileName);
                     Log.i("FilePath", "Writing to: " + localFile.getAbsolutePath());
 
                     if (!localFile.exists()) {
-                        try (InputStream is = context.getAssets().open(fileName);
-                             FileWriter writer = new FileWriter(localFile)) {
-
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                writer.write(line + "\n");
-                            }
-                            reader.close();
-                        } catch (IOException e) {
-                            Log.e("AirQualityAPI", "Error copying CSV from assets: ", e);
-                        }
+                        localFile.createNewFile();
                     }
 
                     // Append data to the CSV file in internal storage
@@ -226,6 +261,11 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                             writer.append(components.getDouble("nh3") + "\n");
                         }
                         Log.i("AirQualityAPI", "Data appended to internal storage file: " + localFile.getPath());
+
+                        mainHandler.post(() -> {
+                            Toast.makeText(context, "Fetching data...", Toast.LENGTH_SHORT).show();
+                        });
+
                     } catch (IOException e) {
                         Log.e("AirQualityAPI", "Error writing to CSV: ", e);
                     }
@@ -238,6 +278,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         });
     }
 
+
+    //methods to fetch data for each location for a given period
     public static void automaticAddRecords(Context context, String apiKey, String startDate, String endDate, String fileName) {
         try {
             InputStream is = context.getAssets().open("canberra_suburbs_coordinates.json");
@@ -250,7 +292,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
             JSONObject locationsObject = new JSONObject(jsonString.toString());
 
-
             Iterator<String> keys = locationsObject.keys();
 
             while (keys.hasNext()) {
@@ -260,10 +301,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                 String latitude = String.valueOf(coordinates.getDouble(0));
                 String longitude = String.valueOf(coordinates.getDouble(1));
 
-
                 SuburbHistoricalActivity activity = new SuburbHistoricalActivity();
                 activity.fetchHistoricalDataTOCSV(context, location, latitude, longitude, startDate, endDate, apiKey, fileName);
-
 
                 Log.i("LocationProcessing", "Processed location: " + location);
             }
@@ -271,5 +310,4 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             Log.e("LocationProcessing", "Error processing JSON file", e);
         }
     }
-
 }

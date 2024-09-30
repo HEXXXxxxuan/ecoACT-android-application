@@ -2,14 +2,14 @@ package com.go4.application.tree;
 
 import com.go4.application.historical.Record;
 
-public class AVLTree {
+public class AVLTree<K extends Comparable<K>, T>{
     class Node {
-        String key;
-        Record value;
+        K key;
+        T value;
         Node left, right;
         int height;
 
-        public Node(String key, Record value) {
+        public Node(K key, T value) {
             this.key = key;
             this.value = value;
             this.left = null;
@@ -20,11 +20,11 @@ public class AVLTree {
 
     private Node root;
 
-    public void insert(String key, Record value) {
+    public void insert(K key, T value) {
         root = insertRec(root, key, value);
     }
 
-    private Node insertRec(Node node, String key, Record value) {
+    private Node insertRec(Node node, K key, T value) {
         if (node == null) {
             return new Node(key, value);
         }
@@ -107,12 +107,12 @@ public class AVLTree {
         return calculateHeight(node.left) - calculateHeight(node.right);
     }
 
-    public Record search(String key) {
+    public T search(K key) {
         Node result = searchRec(root, key);
         return (result != null) ? result.value : null;
     }
 
-    private Node searchRec(Node node, String key) {
+    private Node searchRec(Node node, K key) {
         if (node == null || node.key.equals(key)) {
             return node;
         }
