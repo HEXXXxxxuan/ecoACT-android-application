@@ -2,7 +2,7 @@ package com.go4.application.historical;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.R;
+import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.tree.AVLTree;
 
 import org.json.JSONArray;
@@ -24,18 +25,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.io.File;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -44,11 +47,13 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner hourSpinner;
     private EditText editTextDate;
     //private List<Record> recordList;
-    private AVLTree<String, AirQualityRecord> recordTree;
+    private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
     private TextView resultTextView;
     private Button searchButton;
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    private Button liveDataButton;
 
 
 
@@ -62,24 +67,32 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         editTextDate = findViewById(R.id.editTextDate);
         resultTextView = findViewById(R.id.resultTextView);
         searchButton = findViewById(R.id.searchButton);
+        liveDataButton = findViewById(R.id.livePageButton);
 
         editTextDate.setOnClickListener(view -> showDatePickerDialog());
         searchButton.setOnClickListener(v -> searchForRecord());
-
-        //automatically create dataset of latest 5 days record for each suburb and store it in internal folder
-        //we can move this to other layout, ideally first time user open the app, it will automatically generated this historical file
-        long currentTime = System.currentTimeMillis() / 1000L; //current time
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.DAY_OF_YEAR, -5);
-        long startingTime = calendar.getTimeInMillis() / 1000L;
-        automaticAddRecords(this, "4f6d63b7d7512fc4b14ee2aeb89d3128", String.valueOf(startingTime), String.valueOf(currentTime), "historical_data.csv");
 
         //suburb spinner
         suburbSpinner();
 
         //hour spinner
         hourSpinner();
+
+        liveDataButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
+            startActivity(intent);
+        });
+
+
+        //automatically create dataset of latest 5 days record for each suburb and store it in internal folder
+        //we can move this to other layout, ideally first time user open the app, it will automatically generated this historical file
+        long currentTime = System.currentTimeMillis() / 1000L; //current time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        long startingTime = calendar.getTimeInMillis() / 1000L;
+        automaticAddRecords(this, "4f6d63b7d7512fc4b14ee2aeb89d3128", String.valueOf(startingTime), String.valueOf(currentTime), "historical_data.csv");
+
 
         //parseCSV and insert it in AVLTree
         createAVLTree();
@@ -88,13 +101,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
-        recordTree = new AVLTree<>();
-        // Parse the CSV and insert records into AVLTree
-        List<AirQualityRecord> recordList = csvParser.parseCsV(this, "historical_data.csv");
-        for (AirQualityRecord record : recordList) {
-            String key = record.getLocation() + "_" + record.getTimestamp();
-            recordTree.insert(key, record);
-        }
+        recordTreeLocationAndDateKey = csvParser.createAVLTreeFromCsv(this, false);
     }
 
     private void hourSpinner() {
@@ -186,7 +193,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
 
-        AirQualityRecord record = recordTree.search(key);  // Search the AVLTree for the key
+        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);  // Search the AVLTree for the key
         if (record != null) {
             String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
                     "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
@@ -238,27 +245,55 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                     File localFile = new File(context.getCacheDir(), fileName);
                     Log.i("FilePath", "Writing to: " + localFile.getAbsolutePath());
 
-                    if (!localFile.exists()) {
-                        localFile.createNewFile();
+                    Set<String> existingRecords = new HashSet<>();
+
+                    if (localFile.exists()) {
+                        BufferedReader reader = new BufferedReader(new FileReader(localFile));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] columns = line.split(",");
+                            if (columns.length > 1) {
+                                String existingLocation = columns[0];
+                                String existingTimestamp = columns[1];
+                                existingRecords.add(existingLocation + "_" + existingTimestamp);
+                            }
+                        }
+                        reader.close();
+                    } else {
+                        localFile.createNewFile();  // Create the file if it doesn't exist
                     }
 
                     // Append data to the CSV file in internal storage
                     try (FileWriter writer = new FileWriter(localFile, true)) {
                         for (int i = 0; i < list.length(); i++) {
                             JSONObject record = list.getJSONObject(i);
-                            JSONObject main = record.getJSONObject("main");
-                            JSONObject components = record.getJSONObject("components");
 
-                            writer.append(location).append(",");
-                            writer.append(record.getLong("dt") + ",");
-                            writer.append(main.getInt("aqi") + ",");
-                            writer.append(components.getDouble("co") + ",");
-                            writer.append(components.getDouble("no2") + ",");
-                            writer.append(components.getDouble("o3") + ",");
-                            writer.append(components.getDouble("so2") + ",");
-                            writer.append(components.getDouble("pm2_5") + ",");
-                            writer.append(components.getDouble("pm10") + ",");
-                            writer.append(components.getDouble("nh3") + "\n");
+                            long timestamp = record.getLong("dt");
+                            String timestampStr = String.valueOf(timestamp);
+
+                            // Suburb-timestamp key
+                            String recordKey = location + "_" + timestampStr;
+
+                            // Check if record already exists
+                            if (!existingRecords.contains(recordKey)) {
+                                JSONObject main = record.getJSONObject("main");
+                                JSONObject components = record.getJSONObject("components");
+
+                                // Write the new data to CSV
+                                writer.append(location).append(",");
+                                writer.append(timestampStr).append(",");
+                                writer.append(main.getDouble("aqi") + ",");
+                                writer.append(components.getDouble("co") + ",");
+                                writer.append(components.getDouble("no2") + ",");
+                                writer.append(components.getDouble("o3") + ",");
+                                writer.append(components.getDouble("so2") + ",");
+                                writer.append(components.getDouble("pm2_5") + ",");
+                                writer.append(components.getDouble("pm10") + ",");
+                                writer.append(components.getDouble("nh3") + "\n");
+
+                                // Add the record to the Set
+                                existingRecords.add(recordKey);
+                            }
                         }
                         Log.i("AirQualityAPI", "Data appended to internal storage file: " + localFile.getPath());
 

@@ -77,4 +77,16 @@
         app:layout_constraintVertical_bias="0.011"
         tools:layout_editor_absoluteX="0dp" />
 
+    <Button
+        android:id="@+id/livePageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Live Data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView"
+        app:layout_constraintVertical_bias="0.915" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

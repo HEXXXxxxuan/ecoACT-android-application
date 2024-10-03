@@ -3,6 +3,8 @@ package com.go4.application.historical;
 import android.content.Context;
 import android.util.Log;
 
+import com.go4.application.tree.AVLTree;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CsvParser {
+    AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
+
     public List<AirQualityRecord> parseCsV(Context context, String fileName){
 
         //File localFile = new File(context.getFilesDir(), fileName); //localfile
@@ -30,7 +34,7 @@ public class CsvParser {
 
                 String location = values[0];
                 long timestamp = Long.parseLong(values[1]);
-                int aqi = Integer.parseInt(values[2]);
+                double aqi = Double.parseDouble(values[2]);
                 double co = Double.parseDouble(values[3]);
                 double no2 = Double.parseDouble(values[4]);
                 double o3 = Double.parseDouble(values[5]);
@@ -51,6 +55,21 @@ public class CsvParser {
 
         return records;
 
+    }
+
+    public AVLTree<String, AirQualityRecord> createAVLTreeFromCsv(Context context, boolean useLocationOnly){
+        List<AirQualityRecord> recordList = parseCsV(context, "historical_data.csv");
+        for (AirQualityRecord record : recordList) {
+            String key;
+            if (useLocationOnly) {
+                key = record.getLocation();  // Suburb only as the key
+            } else {
+                key = record.getLocation() + "_" + record.getTimestamp();  // Suburb + timestamp as the key
+            }
+
+            avlTree.insert(key, record);  // Insert into AVL tree
+        }
+        return avlTree;
     }
 
 

@@ -33,9 +33,9 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar"
             android:exported="true" />
-        <!--<activity
-            android:name=".historical.SuburbHistoricalActivity"
-            android:exported="true" /> -->
+        <activity
+            android:name=".live_data.SuburbLiveActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -1,7 +1,5 @@
 package com.go4.application.tree;
 
-import com.go4.application.historical.Record;
-
 public class AVLTree<K extends Comparable<K>, T>{
     class Node {
         K key;
@@ -124,4 +122,15 @@ public class AVLTree<K extends Comparable<K>, T>{
         }
     }
 
+    public void inOrderTraversal(Node node, java.util.function.BiConsumer<K, T> action) {
+        if (node != null) {
+            inOrderTraversal(node.left, action);
+            action.accept(node.key, node.value);  // Abstract the action
+            inOrderTraversal(node.right, action);
+        }
+    }
+
+    public Node getRoot() {
+        return root;
+    }
 }
