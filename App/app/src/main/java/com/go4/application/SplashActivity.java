@@ -1,5 +1,6 @@
 package com.go4.application;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+@SuppressLint("CustomSplashScreen")
 import com.go4.application.historical.SuburbHistoricalActivity;
 
 import org.json.JSONArray;
@@ -228,5 +230,10 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent = new Intent(SplashActivity.this, FirebaseLoginActivity.class);
         startActivity(intent);
         finish();
+        View v = findViewById(android.R.id.content);
+        v.postDelayed(() -> {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }, 1500);
     }
 }

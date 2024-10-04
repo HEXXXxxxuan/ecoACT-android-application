@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,20 +59,15 @@ public class SuburbLiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_live);
-
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
         resultTextViewLive = findViewById(R.id.resultTextView2);
         coTextView = findViewById(R.id.coTextView);
         no2TextView = findViewById(R.id.no2TextView);
         pm25TextView = findViewById(R.id.pm25TextView);
         lineChart = findViewById(R.id.lineChart);
-
         selectSuburbSpinner();
-
-
-
-
     }
+
     public enum AirQualityMetric {
         AQI, CO, NO2, PM2_5
     }
@@ -84,7 +80,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTreeFromCsv(this, false);
-
 
         suburbSpinnerLive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -129,7 +124,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
         String urlString = String.format(
                 "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
                 latitude, longitude, API_KEY);
-
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -163,7 +157,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            String json = new String(buffer, "UTF-8");
+            String json = new String(buffer, StandardCharsets.UTF_8);
 
             JSONObject jsonObject = new JSONObject(json);
 
