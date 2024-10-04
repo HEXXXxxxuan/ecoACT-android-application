@@ -274,7 +274,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
         YAxis yAxisRight = lineChart.getAxisRight();
         yAxisRight.setEnabled(false); // Disable right Y axis
 
-
         lineChart.invalidate();
     }
 }
