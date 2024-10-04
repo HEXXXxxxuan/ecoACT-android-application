@@ -30,6 +30,7 @@ public class CsvParser {
             reader.readLine();
 
             while ((line = reader.readLine()) != null){
+                Log.d("SearchDebug", "Read line: " + line);
                 String[] values = line.split(",");
 
                 String location = values[0];

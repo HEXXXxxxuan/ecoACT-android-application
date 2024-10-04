@@ -50,6 +50,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
     private TextView resultTextView;
     private Button searchButton;
+
+
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -61,6 +63,19 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_historical);
+
+        EditText searchBar = (EditText) findViewById(R.id.sh_search);
+        Button testButton = (Button) findViewById(R.id.sh_testbutton);
+
+        testButton.setOnClickListener(v-> {
+            Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString());
+            while (tokenizer.hasNext()) {
+                Token token = tokenizer.current();
+                Log.d("SearchDebug", "Tokenizer: " + tokenizer.current().getToken());
+                tokenizer.next();
+            }
+            searchBar.setText("");
+        });
 
         suburbSpinner = findViewById(R.id.suburbSpinner);
         hourSpinner = findViewById(R.id.hourSpinner);
