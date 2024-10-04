@@ -1,4 +1,4 @@
-package com.go4.application;
+package com.go4.application.historical.MovieDemo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.go4.application.R;
 
 import java.util.Map;
 

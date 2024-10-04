@@ -298,7 +298,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                         Log.i("AirQualityAPI", "Data appended to internal storage file: " + localFile.getPath());
 
                         mainHandler.post(() -> {
-                            Toast.makeText(context, "Fetching data...", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(context, "Fetching data...", Toast.LENGTH_SHORT).show();
                         });
 
                     } catch (IOException e) {

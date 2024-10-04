@@ -1,10 +1,10 @@
-package com.go4.application.Controller;
+package com.go4.application.historical.MovieDemo.Controller;
 
 import android.content.Context;
 
-import com.go4.application.Model.Movie;
-import com.go4.application.Model.Rating;
-import com.go4.application.Model.User;
+import com.go4.application.historical.MovieDemo.Model.Movie;
+import com.go4.application.historical.MovieDemo.Model.Rating;
+import com.go4.application.historical.MovieDemo.Model.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
