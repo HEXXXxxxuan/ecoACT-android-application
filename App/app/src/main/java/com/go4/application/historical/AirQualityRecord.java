@@ -4,11 +4,8 @@ import java.util.Date;
 
 public class AirQualityRecord {
     private String location;  // Suburb name
-    private double latitude;
-    private double longitude;
-    private int aqi;  // Air Quality Index
+    private double aqi;  // Air Quality Index
     private double co;  // Carbon Monoxide
-    private double no;  // Nitric Oxide
     private double no2;  // Nitrogen Dioxide
     private double o3;  // Ozone
     private double so2;  // Sulfur Dioxide
@@ -20,13 +17,10 @@ public class AirQualityRecord {
     private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // Constructor
-    public AirQualityRecord(String location, double latitude, double longitude, int aqi, double co, double no, double no2, double o3, double so2, double pm2_5, double pm10, double nh3, long unixTimestamp) {
+    public AirQualityRecord(String location, double aqi, double co, double no2, double o3, double so2, double pm2_5, double pm10, double nh3, long unixTimestamp) {
         this.location = location;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.aqi = aqi;
         this.co = co;
-        this.no = no;
         this.no2 = no2;
         this.o3 = o3;
         this.so2 = so2;
@@ -41,15 +35,7 @@ public class AirQualityRecord {
         return location;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public int getAqi() {
+    public double getAqi() {
         return aqi;
     }
 
@@ -57,9 +43,6 @@ public class AirQualityRecord {
         return co;
     }
 
-    public double getNo() {
-        return no;
-    }
 
     public double getNo2() {
         return no2;
@@ -93,11 +76,8 @@ public class AirQualityRecord {
     public String toString() {
         return "AirQualityRecord{" +
                 "location='" + location + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
                 ", aqi=" + aqi +
                 ", co=" + co +
-                ", no=" + no +
                 ", no2=" + no2 +
                 ", o3=" + o3 +
                 ", so2=" + so2 +
