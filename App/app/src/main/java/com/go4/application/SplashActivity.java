@@ -10,10 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-@SuppressLint("CustomSplashScreen")
 import com.go4.application.historical.SuburbHistoricalActivity;
 
 import org.json.JSONArray;
@@ -34,6 +30,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+@SuppressLint("CustomSplashScreen")
+
 
 public class SplashActivity extends AppCompatActivity {
 
