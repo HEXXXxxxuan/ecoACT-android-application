@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".live_data.SuburbLiveActivity"
+    tools:ignore="MissingClass">
+
+    <TextView
+        android:id="@+id/suburbLabel3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Click the value"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/lineChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.348"
+        app:layout_constraintStart_toEndOf="@+id/coTextView"
+        app:layout_constraintTop_toBottomOf="@+id/SuburbSpinnerLive"
+        app:layout_constraintVertical_bias="0.018" />
+
+    <TextView
+        android:id="@+id/pm25TextView"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/lineChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toEndOf="@+id/aqiTextVIew"
+        app:layout_constraintTop_toBottomOf="@+id/no2TextView"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/aqiTextVIew4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="PM 2_5"
+        app:layout_constraintBottom_toTopOf="@+id/lineChart"
+        app:layout_constraintTop_toBottomOf="@+id/aqiTextVIew3"
+        app:layout_constraintVertical_bias="0.025"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/no2TextView"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toEndOf="@+id/aqiTextVIew"
+        app:layout_constraintTop_toBottomOf="@+id/coTextView" />
+
+    <TextView
+        android:id="@+id/aqiTextVIew3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="NO2"
+        app:layout_constraintTop_toBottomOf="@+id/aqiTextVIew2"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/coTextView"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toEndOf="@+id/aqiTextVIew"
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView2" />
+
+    <TextView
+        android:id="@+id/aqiTextVIew2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="CO"
+        app:layout_constraintTop_toBottomOf="@+id/aqiTextVIew"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/resultTextView2"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toEndOf="@+id/aqiTextVIew"
+        app:layout_constraintTop_toBottomOf="@+id/SuburbSpinnerLive" />
+
+    <TextView
+        android:id="@+id/suburbLabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Live Data"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"/>
+
+    <Spinner
+        android:id="@+id/SuburbSpinnerLive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/resultTextView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/suburbLabel2" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/resultTextView2" />
+
+    <TextView
+        android:id="@+id/aqiTextVIew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Air Quality"
+        app:layout_constraintTop_toBottomOf="@+id/SuburbSpinnerLive"
+        tools:layout_editor_absoluteX="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

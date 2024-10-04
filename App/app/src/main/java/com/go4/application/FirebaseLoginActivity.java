@@ -8,16 +8,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.go4.application.historical.SuburbHistoricalActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,6 +19,15 @@ import java.util.Collections;
 
 public class FirebaseLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    FirebaseUser user;;
+
+    ActivityResultLauncher<Intent> getUser = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            r -> {
+                if(r.getResultCode()== MainActivity.RESULT_OK){
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,8 @@ public class FirebaseLoginActivity extends AppCompatActivity {
             // Already logged-in user, return to app flow
             Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK);
-            finish();
+            getUser.launch(new Intent(this, SuburbHistoricalActivity.class));
+            // finish();
         }
         else{
             signIn();
@@ -60,7 +63,8 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                         assert(user!=null);
                         Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
-                        finish();
+                        getUser.launch(new Intent(this, SuburbHistoricalActivity.class));
+                        // finish();
                     }
                     else{
                         Toast.makeText(this, "Try Again.", Toast.LENGTH_SHORT).show();
