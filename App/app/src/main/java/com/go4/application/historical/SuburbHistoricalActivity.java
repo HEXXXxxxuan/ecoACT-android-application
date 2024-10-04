@@ -69,12 +69,15 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         testButton.setOnClickListener(v-> {
             Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString());
-            while (tokenizer.hasNext()) {
-                Token token = tokenizer.current();
-                Log.d("SearchDebug", "Tokenizer: " + tokenizer.current().getToken());
-                tokenizer.next();
-            }
-            searchBar.setText("");
+            Parser parser = new Parser(tokenizer);
+//            while (tokenizer.hasNext()) {
+//                Token token = tokenizer.current();
+//                Log.d("SearchDebug", "Tokenizer: " + tokenizer.current().getToken());
+//                tokenizer.next();
+//            }
+            String key = parser.parseInput();
+            Toast.makeText(this, "Key:" + key, Toast.LENGTH_SHORT).show();
+            searchBar.setText(key);
         });
 
         suburbSpinner = findViewById(R.id.suburbSpinner);

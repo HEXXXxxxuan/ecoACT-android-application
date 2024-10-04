@@ -6,15 +6,27 @@ public class SearchRecord {
     private String selectedHour;
     private String key;
 
-    public SearchRecord(String suburb, String date, String hour) {
-        this.selectedSuburb = suburb;
-        this.selectedDate = date;
-        this.selectedHour = hour;
+    public SearchRecord() {
+        this.selectedSuburb = "";
+        this.selectedDate = "";
+        this.selectedHour = "";
         this.key = generateKey();
     }
 
     private String generateKey() {
         return selectedSuburb + "_" + selectedDate + " " + selectedHour + ":00:00";
+    }
+
+    public void setSelectedSuburb(String suburb) {
+        this.selectedSuburb = suburb;
+    }
+
+    public void setSelectedDate(String date) {
+        this.selectedDate = date;
+    }
+
+    public void setSelectedHour(String hour) {
+        this.selectedHour = hour;
     }
 
     public String getSelectedSuburb() {
@@ -30,6 +42,7 @@ public class SearchRecord {
     }
 
     public String getKey() {
+        this.key = generateKey();
         return key;
     }
 }
