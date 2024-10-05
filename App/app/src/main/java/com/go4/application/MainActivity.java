@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        FirebaseAuth.getInstance().signOut();
+        //FirebaseAuth.getInstance().signOut();
         getUser.launch(new Intent(this, FirebaseLoginActivity.class));
 
 
-        //startActivity(new Intent(this, SuburbHistoricalActivity.class));
+        startActivity(new Intent(this, SuburbHistoricalActivity.class));
         finish();
     }
 }

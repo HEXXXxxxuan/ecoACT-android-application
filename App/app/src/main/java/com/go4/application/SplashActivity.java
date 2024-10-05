@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         //Fetching historical data and parse it to CSV and AVLTree
-        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 1, apiKey);
+        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
         dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
     }
 
