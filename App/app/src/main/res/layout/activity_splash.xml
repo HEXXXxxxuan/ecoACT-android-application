@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/gp_logo_only"
+        android:src="@drawable/gp_logo"
         android:contentDescription="App Logo"
         android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
