@@ -1,4 +1,4 @@
-package com.go4.application.Model;
+package com.go4.application.historical.MovieDemo.Model;
 
 public class User {
 
