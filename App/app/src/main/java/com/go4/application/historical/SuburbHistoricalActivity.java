@@ -1,9 +1,11 @@
 package com.go4.application.historical;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -11,6 +13,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.R;
+import com.go4.application.live_data.SuburbLiveActivity;
+import com.go4.application.tree.AVLTree;
+import com.go4.utils.CsvParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,9 +28,14 @@ import java.util.List;
 
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
+    private Spinner hourSpinner;
     private EditText editTextDate;
-    private List<Record> recordList;
+    private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
     private TextView resultTextView;
+    private Button searchButton;
+
+
+    private Button liveDataButton;
 
 
 
@@ -35,24 +45,55 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         setContentView(R.layout.suburb_historical);
 
         suburbSpinner = findViewById(R.id.suburbSpinner);
+        hourSpinner = findViewById(R.id.hourSpinner);
         editTextDate = findViewById(R.id.editTextDate);
         resultTextView = findViewById(R.id.resultTextView);
+        searchButton = findViewById(R.id.searchButton);
+        liveDataButton = findViewById(R.id.livePageButton);
 
         editTextDate.setOnClickListener(view -> showDatePickerDialog());
+        searchButton.setOnClickListener(v -> searchForRecord());
 
-        List<String> suburbList = loadSuburbsFromJson();
+        //suburb spinner
+        suburbSpinner();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suburbSpinner.setAdapter(adapter);
+        //hour spinner
+        hourSpinner();
 
-        CsvParser csvParser = new CsvParser();
-        recordList = csvParser.parseCsV(this, "environment_monitoring_data.csv");
+        liveDataButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
+            startActivity(intent);
+        });
 
-        findViewById(R.id.searchButton).setOnClickListener(v -> searchForRecord());
+        //parseCSV and insert it in AVLTree
+        createAVLTree();
 
     }
 
+    //parsing to avl tree
+    private void createAVLTree() {
+        CsvParser csvParser = new CsvParser();
+        recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
+    }
+
+    private void hourSpinner() {
+        List<String> hours = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            hours.add(String.format("%02d:00", i)); // Add hours in format 00:00, 01:00, etc.
+        }
+        ArrayAdapter<String> hourAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hours);
+        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hourSpinner.setAdapter(hourAdapter);
+    }
+
+    private void suburbSpinner() {
+        List<String> suburbList = loadSuburbsFromJson();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        suburbSpinner.setAdapter(adapter);
+    }
+
+    //populating the list (just for test)
     private List<String> loadSuburbsFromJson(){
         List<String> suburbs = new ArrayList<>();
         try {
@@ -76,6 +117,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     }
 
+    //method for select the date
     private void showDatePickerDialog() {
         // Get the current date
         final Calendar calendar = Calendar.getInstance();
@@ -100,6 +142,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        String selectedHour = hourSpinner.getSelectedItem().toString().substring(0, 2);
+
 
         Log.d("SearchDebug", "Selected Suburb: " + selectedSuburb);
 
@@ -115,24 +159,29 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             return;
         }
 
+        selectedDate += " " + selectedHour + ":00:00";
+
         Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
 
-        boolean recordFound = false;
+        //search in tree
+        String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
 
-        for (Record record : recordList) {
+        // Search the AVLTree for the key
+        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
 
-            if (record.getDate().equals(selectedDate) && record.getLocation().equalsIgnoreCase(selectedSuburb)) {
-                String result = "Temperature: " + record.getTemperature() + "°C\n" +
-                        "Smoke Level: " + record.getSmokeLevel() + " ppm\n" +
-                        "Carbon Monoxide: " + record.getCarbonMonoxide() + " ppm";
-                resultTextView.setText(result);
-                recordFound = true;
-                break;
-            }
-
-            if (!recordFound) {
-                resultTextView.setText("No matching records.");
-            }
+        //if the record is found use this method
+        if (record != null) {
+            String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
+                    "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
+                    "Nitrogen Dioxide (NO2): " + record.getNo2() + " ppm\n" +
+                    "Ozone (O3): " + record.getO3() + " ppm\n" +
+                    "Sulfur Dioxide (SO2): " + record.getSo2() + " ppm\n" +
+                    "PM2.5: " + record.getPm2_5() + " µg/m³\n" +
+                    "PM10: " + record.getPm10() + " µg/m³\n" +
+                    "Ammonia (NH3): " + record.getNh3() + " ppm";
+            resultTextView.setText(result);
+        } else {
+            resultTextView.setText("No matching records.");
         }
 
     }

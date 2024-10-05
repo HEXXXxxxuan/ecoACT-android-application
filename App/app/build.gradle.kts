@@ -30,17 +30,17 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.swiperefreshlayout)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.ui.auth)
-    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.mpandroidchart)
 
 }

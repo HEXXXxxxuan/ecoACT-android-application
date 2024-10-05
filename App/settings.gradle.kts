@@ -1,5 +1,9 @@
 pluginManagement {
     repositories {
+
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -16,9 +20,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "Application"
 include(":app")
+//name change
  

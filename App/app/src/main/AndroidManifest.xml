@@ -10,11 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Application"
-        tools:targetApi="31"
-        tools:ignore="WrongManifestParent">
-
-
+        android:theme="@style/Theme.Application">
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -24,15 +20,21 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".FirebaseLoginActivity"
             android:exported="false" />
-
-
+        <activity
+            android:name=".historical.MovieDemo.DetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".historical.SuburbHistoricalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".live_data.SuburbLiveActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>
