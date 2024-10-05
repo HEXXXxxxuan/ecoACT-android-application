@@ -1,46 +1,30 @@
 package com.go4.application.historical;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.tree.AVLTree;
+import com.go4.utils.CsvParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.io.File;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
@@ -88,7 +72,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
-        recordTreeLocationAndDateKey = csvParser.createAVLTreeFromCsv(this, false);
+        recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
     }
 
     private void hourSpinner() {

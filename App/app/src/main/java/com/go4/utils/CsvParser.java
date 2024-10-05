@@ -1,8 +1,9 @@
-package com.go4.application.historical;
+package com.go4.utils;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.go4.application.historical.AirQualityRecord;
 import com.go4.application.tree.AVLTree;
 
 import java.io.BufferedReader;
@@ -12,10 +13,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvParser {
+public class CsvParser implements DataAccessObject{
     AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
 
-    public List<AirQualityRecord> parseCsV(Context context, String fileName){
+    public List<AirQualityRecord> parseData(Context context, String fileName){
 
         //File localFile = new File(context.getFilesDir(), fileName); //localfile
         File localFile = new File(context.getCacheDir(), fileName);   //cache file
@@ -57,8 +58,8 @@ public class CsvParser {
 
     }
 
-    public AVLTree<String, AirQualityRecord> createAVLTreeFromCsv(Context context, boolean useLocationOnly){
-        List<AirQualityRecord> recordList = parseCsV(context, "historical_data.csv");
+    public AVLTree<String, AirQualityRecord> createAVLTree(Context context, boolean useLocationOnly){
+        List<AirQualityRecord> recordList = parseData(context, "historical_data.csv");
         for (AirQualityRecord record : recordList) {
             String key;
             if (useLocationOnly) {

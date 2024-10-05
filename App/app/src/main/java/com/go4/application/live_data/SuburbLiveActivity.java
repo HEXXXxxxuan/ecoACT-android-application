@@ -1,6 +1,5 @@
 package com.go4.application.live_data;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.StrictMode;
 import android.util.Log;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,8 +21,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.go4.application.R;
 import com.go4.application.historical.AirQualityRecord;
-import com.go4.application.historical.CsvParser;
-import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.utils.CsvParser;
 import com.go4.application.tree.AVLTree;
 
 import org.json.JSONArray;
@@ -38,9 +35,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -79,7 +74,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         suburbSpinnerLive.setAdapter(adapter);
 
         CsvParser csvParser = new CsvParser();
-        records = csvParser.createAVLTreeFromCsv(this, false);
+        records = csvParser.createAVLTree(this, false);
 
         suburbSpinnerLive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
