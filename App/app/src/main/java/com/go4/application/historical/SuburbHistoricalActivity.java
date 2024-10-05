@@ -70,6 +70,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     }
 
+    //parsing to avl tree
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
@@ -92,6 +93,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         suburbSpinner.setAdapter(adapter);
     }
 
+    //populating the list (just for test)
     private List<String> loadSuburbsFromJson(){
         List<String> suburbs = new ArrayList<>();
         try {
@@ -115,6 +117,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     }
 
+    //method for select the date
     private void showDatePickerDialog() {
         // Get the current date
         final Calendar calendar = Calendar.getInstance();
@@ -161,10 +164,12 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
 
         //search in tree
-
         String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
 
-        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);  // Search the AVLTree for the key
+        // Search the AVLTree for the key
+        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
+
+        //if the record is found use this method
         if (record != null) {
             String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
                     "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
