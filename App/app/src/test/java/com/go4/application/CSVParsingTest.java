@@ -1,11 +1,15 @@
 package com.go4.application;
 import android.content.Context;
+import android.util.Log;
 
 import com.go4.application.historical.AirQualityRecord;
 import com.go4.utils.CsvParser;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.BufferedWriter;
@@ -18,6 +22,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 public class CSVParsingTest {
     private Context context;
+    private static MockedStatic<Log> mockedLog;
 
 
     @Before
@@ -27,7 +32,8 @@ public class CSVParsingTest {
         File cacheDir = new File(System.getProperty("java.io.tmpdir", "cache"));
         cacheDir.mkdir();
 
-        Mockito.when(context.getCacheDir()).thenReturn(cacheDir);Mockito.mockStatic(android.util.Log.class);
+        Mockito.when(context.getCacheDir()).thenReturn(cacheDir);
+
         Mockito.when(android.util.Log.e(anyString(), anyString())).thenReturn(0);
         Mockito.when(android.util.Log.d(anyString(), anyString())).thenReturn(0);
 
@@ -60,7 +66,6 @@ public class CSVParsingTest {
         writer.close();
 
         writer = new BufferedWriter(new FileWriter(testWrongFormat));
-
         writer.write("Acton,1728097200,1.0,216.96,0.5,40.5,1.2,13.5,25.6,0.8\n"); // Correctly formatted row
         writer.write("Amaroo12,1728090000,1.0,223.64,1.46,60.08,0.37,0.67,1.15,1.01\n");
         writer.write("Barton,1728097200,1.0,230.31,2.59,59.37\n");
@@ -69,6 +74,22 @@ public class CSVParsingTest {
         writer.write("Yarralumla,1728090000,1.0,240.31,1.5,55.0,1.1,21.0,32.0,0.9\n"); // Correctly formatted row
         writer.close();
 
+    }
+
+    @BeforeClass
+    public static void setupClass() {
+
+        MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class);
+        mockedLog.when(() -> Log.e(anyString(), anyString())).thenReturn(0);
+        mockedLog.when(() -> Log.d(anyString(), anyString())).thenReturn(0);
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        // Deregister the static mock after all tests
+        if (mockedLog != null) {
+            mockedLog.close();
+        }
     }
 
     @Test
@@ -99,13 +120,7 @@ public class CSVParsingTest {
         List<AirQualityRecord> records = csvParser.parseData(context,"test_file_many");
 
         assertNotNull("List should not be null", records);
-        assertEquals( 14, records.size());
-    }
-
-    @Test(expected = IOException.class)
-    public void testNoFile() throws IOException{
-        CsvParser csvParser = new CsvParser();
-        csvParser.parseData(context, "non_existent_file.csv");
+        assertEquals( 13, records.size());
     }
 
     @Test

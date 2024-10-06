@@ -2,6 +2,7 @@ package com.go4.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.go4.application.historical.AirQualityRecord;
 import com.go4.application.tree.AVLTree;
@@ -38,11 +39,10 @@ public class CsvParser implements DataAccessObject{
                     continue; // Skip incorrectly formatted row
                 }
 
-
                 String location = values[0];
 
                 // Check if the location string valid
-                if (!location.matches("[a-zA-Z]+")) {
+                if (!location.matches("[a-zA-Z']+")) {
                     Log.e("CSVParser", "Invalid location (non-alphabetic characters): " + location);
                     continue;
                 }
