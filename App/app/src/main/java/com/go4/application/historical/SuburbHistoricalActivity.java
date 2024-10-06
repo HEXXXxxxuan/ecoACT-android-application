@@ -183,17 +183,23 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         parser.parseInput();
 
         String suburb = parser.getData()[0];
-        int suburbPosition = suburbList.indexOf(suburb);
-        suburbSpinner.setSelection(suburbPosition);
+        if (!suburb.isEmpty()) {
+            int suburbPosition = suburbList.indexOf(suburb);
+            suburbSpinner.setSelection(suburbPosition);
+        }
 
         String date = parser.getData()[1];
-        String[] dateParts = date.split("-");
-        String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
-        editTextDate.setText(selectedDate);
+        if (!date.isEmpty()) {
+            String[] dateParts = date.split("-");
+            String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
+            editTextDate.setText(selectedDate);
+        }
 
         String time = parser.getData()[2];
-        int hourPosition = Integer.parseInt(time.split(":")[0]);
-        hourSpinner.setSelection(hourPosition);
+        if (!time.isEmpty()) {
+            int hourPosition = Integer.parseInt(time.split(":")[0]);
+            if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
+        }
 
         String key = parser.getData()[3];
 

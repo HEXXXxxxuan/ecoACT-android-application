@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Token {
     // The following enum defines different types of tokens. Example of accessing these: Token.Type.INT
-    public enum Type {LOCATION, YEAR, MONTH, DATE, TIME, YEARMONTHDATE, YEARMONTHDATETIME, SEPERATOR}
+    public enum Type {LOCATION, YEAR, MONTH, DATE, TIME, SEPARATOR, INVALID};
 
     /**
      * The following exception should be thrown if a tokenizer attempts to tokenize something that is not of one

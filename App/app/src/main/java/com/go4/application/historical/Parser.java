@@ -1,15 +1,7 @@
 package com.go4.application.historical;
 
-import android.util.Log;
 import android.content.Context;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.Toast;
 
 public class Parser {
     public static class IllegalProductionException extends IllegalArgumentException {
@@ -44,10 +36,12 @@ public class Parser {
             parseDate();
         } else if (currentType == Token.Type.TIME) {
             parseTime();
-        } else if (currentType == Token.Type.SEPERATOR) {
+        } else if (currentType == Token.Type.SEPARATOR) {
             tokenizer.next();
         } else {
-            tokenizer.next();
+            record.setInvalidSearch(true);
+            Toast.makeText(context, "Invalid Search", Toast.LENGTH_SHORT).show();
+            return;
         }
         parseInput();
     }
@@ -55,12 +49,8 @@ public class Parser {
     public void parseLocation() {
         // Parse the location token
         Token location = tokenizer.current();
-        if (location.getType() == Token.Type.LOCATION) {
-            tokenizer.next();
-            this.record.setSelectedSuburb(location.getToken());
-        } else {
-            throw new IllegalProductionException("Expected a location");
-        }
+        tokenizer.next();
+        record.setSelectedSuburb(location.getToken());
     }
 
     public void parseDate() {
@@ -69,14 +59,14 @@ public class Parser {
         if (date.getType() == Token.Type.YEAR) {
             Token year = tokenizer.current();
             tokenizer.next();
-            if (tokenizer.current().getType() == Token.Type.MONTH) {
+            if (tokenizer.current() != null && tokenizer.current().getType() == Token.Type.MONTH) {
                 Token month = tokenizer.current();
                 tokenizer.next();
-                if (tokenizer.current().getType() == Token.Type.DATE) {
+                if (tokenizer.current() != null && tokenizer.current().getType() == Token.Type.DATE) {
                     Token day = tokenizer.current();
                     tokenizer.next();
                     String selectedDate = year.getToken() + "-" + month.getToken() + "-" + day.getToken();
-                    this.record.setSelectedDate(selectedDate);
+                    record.setSelectedDate(selectedDate);
                 }
             }
         }
@@ -95,12 +85,8 @@ public class Parser {
     public void parseTime() {
         // Parse the hour token
         Token time = tokenizer.current();
-        if (time.getType() == Token.Type.TIME) {
-            tokenizer.next();
-            this.record.setSelectedTime(time.getToken());
-        } else {
-            throw new IllegalProductionException("Expected an hour");
-        }
+        tokenizer.next();
+        record.setSelectedTime(time.getToken());
     }
 
 }

@@ -5,11 +5,13 @@ public class SearchRecord {
     private String selectedDate;
     private String selectedTime;
     private String key;
+    private boolean invalidSearch;
 
     public SearchRecord() {
         this.selectedSuburb = "";
         this.selectedDate = "";
         this.selectedTime = "";
+        this.invalidSearch = false;
         this.key = generateKey();
     }
 
@@ -29,6 +31,10 @@ public class SearchRecord {
         this.selectedTime = hour;
     }
 
+    public void setInvalidSearch(boolean invalid) {
+        this.invalidSearch = invalid;
+    }
+
     public String getSelectedSuburb() {
         return selectedSuburb;
     }
@@ -39,6 +45,10 @@ public class SearchRecord {
 
     public String getSelectedTime() {
         return selectedTime;
+    }
+
+    public boolean getInvalidSearch() {
+        return invalidSearch;
     }
 
     public String getKey() {

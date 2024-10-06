@@ -72,6 +72,10 @@ public class Tokenizer {
                     }
                 }
             }
+
+            if (currentToken == null) {
+                currentToken = new Token(String.valueOf(firstChar), Token.Type.INVALID, 1);
+            }
         }
         else if (Character.isDigit(firstChar)) {
             // Handle time suffixes
@@ -103,23 +107,22 @@ public class Tokenizer {
                         currentToken = new Token(digits, Token.Type.YEAR, digits.length());
                     } else if (value >= 0 && value <= 31) {
                         currentToken = new Token(digits, Token.Type.DATE, digits.length());
+                    } else {
+                        currentToken = new Token(String.valueOf(firstChar), Token.Type.INVALID, 1);
                     }
                 }
             }
+        } else if (firstChar == ',' || firstChar == ';' || firstChar == '_') {
+            currentToken = new Token(String.valueOf(firstChar), Token.Type.SEPARATOR, 1);
         } else {
-            if (firstChar == ',' || firstChar == ';' || firstChar == '_') {
-                currentToken = new Token(firstChar + "", Token.Type.SEPERATOR, 1);
-            }
-            //                else {
-            //                    throw new Token.IllegalTokenException("Unrecognized token");
-            //                }
+            currentToken = new Token(String.valueOf(firstChar), Token.Type.INVALID, 1);
         }
 
         // Remove the extracted token from buffer
         int tokenLen = currentToken.getLength();
-        Log.d("SearchDebug", "Current Token Length: " + tokenLen);
+        Log.d("SearchDebug", "Current Token Length:" + tokenLen);
         buffer = buffer.substring(tokenLen);
-        Log.d("SearchDebug", "Shortened Buffer: " + buffer);
+        Log.d("SearchDebug", "Shortened Buffer:" + buffer);
     }
 
     public Token current() {
