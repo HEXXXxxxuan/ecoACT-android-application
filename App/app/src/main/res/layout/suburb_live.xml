@@ -149,4 +149,20 @@
         app:layout_constraintTop_toBottomOf="@+id/lineChart"
         app:layout_constraintVertical_bias="0.135" />
 
+    <ProgressBar
+        android:id="@+id/verticalProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="20dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:backgroundTint="#E0E0E0"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="50"
+        android:progressTint="#02DB5C"
+        android:rotation="270"
+        tools:layout_editor_absoluteX="60dp"
+        tools:layout_editor_absoluteY="157dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

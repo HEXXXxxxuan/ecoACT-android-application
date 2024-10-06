@@ -33,19 +33,40 @@ public class CsvParser implements DataAccessObject{
             while ((line = reader.readLine()) != null){
                 String[] values = line.split(",");
 
+                if (values.length != 10) {
+                    Log.e("CSVParser", "Invalid number of columns in line: " + line);
+                    continue; // Skip incorrectly formatted row
+                }
+
+
                 String location = values[0];
-                long timestamp = Long.parseLong(values[1]);
-                double aqi = Double.parseDouble(values[2]);
-                double co = Double.parseDouble(values[3]);
-                double no2 = Double.parseDouble(values[4]);
-                double o3 = Double.parseDouble(values[5]);
-                double so2 = Double.parseDouble(values[6]);
-                double pm2_5 = Double.parseDouble(values[7]);
-                double pm10 = Double.parseDouble(values[8]);
-                double nh3 = Double.parseDouble(values[9]);
+
+                // Check if the location string valid
+                if (!location.matches("[a-zA-Z]+")) {
+                    Log.e("CSVParser", "Invalid location (non-alphabetic characters): " + location);
+                    continue;
+                }
+
+                long timestamp;
+                double aqi, co, no2, o3, so2, pm2_5, pm10, nh3;
+
+
+                try {
+                    timestamp = parseLongSafely(values[1], 0L);
+                    aqi = parseDoubleSafely(values[2], 0.0);
+                    co = parseDoubleSafely(values[3], 0.0);
+                    no2 = parseDoubleSafely(values[4], 0.0);
+                    o3 = parseDoubleSafely(values[5], 0.0);
+                    so2 = parseDoubleSafely(values[6], 0.0);
+                    pm2_5 = parseDoubleSafely(values[7], 0.0);
+                    pm10 = parseDoubleSafely(values[8], 0.0);
+                    nh3 = parseDoubleSafely(values[9], 0.0);
+                } catch (NumberFormatException e) {
+                    Log.e("CSVParser", "Error parsing numeric values in line: " + line, e);
+                    continue; // Skip this record if there’s an error
+                }
 
                 records.add(new AirQualityRecord(location, aqi, co, no2, o3, so2, pm2_5, pm10, nh3, timestamp));
-
             }
 
             reader.close();
@@ -71,6 +92,26 @@ public class CsvParser implements DataAccessObject{
             avlTree.insert(key, record);  // Insert into AVL tree
         }
         return avlTree;
+    }
+
+    // Helper method to safely parse long values
+    public long parseLongSafely(String value, long defaultValue) {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            Log.e("CSVParser", "Invalid long value: " + value);
+            return defaultValue;
+        }
+    }
+
+    // Helper method to safely parse double values
+    public double parseDoubleSafely(String value, double defaultValue) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            Log.e("CSVParser", "Invalid double value: " + value);
+            return defaultValue;
+        }
     }
 
 

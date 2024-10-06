@@ -133,4 +133,8 @@ public class AVLTree<K extends Comparable<K>, T>{
     public Node getRoot() {
         return root;
     }
+
+    public int getHeight(){
+        return calculateHeight(root);
+    }
 }

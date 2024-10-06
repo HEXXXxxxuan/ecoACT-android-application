@@ -42,5 +42,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.mpandroidchart)
+    testImplementation("org.mockito:mockito-core:5.0.0")
+    testImplementation("org.robolectric:robolectric:4.9")
 
 }
