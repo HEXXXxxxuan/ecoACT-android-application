@@ -1,18 +1,9 @@
 pluginManagement {
     repositories {
-
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 dependencyResolutionManagement {
@@ -26,5 +17,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Application"
 include(":app")
-//name change
- 

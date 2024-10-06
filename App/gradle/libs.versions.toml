@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+arcprogressstackview = "1.0.4"
 firebaseAnalyticsImpl = "16.3.0"
 firebaseBom = "33.3.0"
 junit = "4.13.2"
@@ -10,9 +11,12 @@ material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 mpandroidchart = "v3.1.0"
+semicirclearcprogressbar = "1.0.2"
+semicirclearcprogressbarVersion = "1.1.1"
 swiperefreshlayout = "1.1.0"
 
 [libraries]
+arcprogressstackview = { module = "com.github.Devlight:ArcProgressStackView", version.ref = "arcprogressstackview" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-analytics-impl = { module = "com.google.firebase:firebase-analytics-impl", version.ref = "firebaseAnalyticsImpl" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
@@ -25,6 +29,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+semicirclearcprogressbar = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbar" }
+semicirclearcprogressbar-v111 = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbarVersion" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
