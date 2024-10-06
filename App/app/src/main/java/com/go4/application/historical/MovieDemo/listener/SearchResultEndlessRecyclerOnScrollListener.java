@@ -1,4 +1,4 @@
-package com.go4.application.listener;
+package com.go4.application.historical.MovieDemo.listener;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

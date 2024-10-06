@@ -1,4 +1,4 @@
-package com.go4.application.adapter;
+package com.go4.application.historical.MovieDemo.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,0 +1,118 @@
+package com.go4.utils;
+
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.go4.application.historical.AirQualityRecord;
+import com.go4.application.tree.AVLTree;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CsvParser implements DataAccessObject{
+    AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
+
+    public List<AirQualityRecord> parseData(Context context, String fileName){
+
+        //File localFile = new File(context.getFilesDir(), fileName); //localfile
+        File localFile = new File(context.getCacheDir(), fileName);   //cache file
+
+        List<AirQualityRecord> records = new ArrayList<>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(localFile));
+
+            String line;
+
+            reader.readLine();
+
+            while ((line = reader.readLine()) != null){
+                String[] values = line.split(",");
+
+                if (values.length != 10) {
+                    Log.e("CSVParser", "Invalid number of columns in line: " + line);
+                    continue; // Skip incorrectly formatted row
+                }
+
+                String location = values[0];
+
+                // Check if the location string valid
+                if (!location.matches("[a-zA-Z']+")) {
+                    Log.e("CSVParser", "Invalid location (non-alphabetic characters): " + location);
+                    continue;
+                }
+
+                long timestamp;
+                double aqi, co, no2, o3, so2, pm2_5, pm10, nh3;
+
+
+                try {
+                    timestamp = parseLongSafely(values[1], 0L);
+                    aqi = parseDoubleSafely(values[2], 0.0);
+                    co = parseDoubleSafely(values[3], 0.0);
+                    no2 = parseDoubleSafely(values[4], 0.0);
+                    o3 = parseDoubleSafely(values[5], 0.0);
+                    so2 = parseDoubleSafely(values[6], 0.0);
+                    pm2_5 = parseDoubleSafely(values[7], 0.0);
+                    pm10 = parseDoubleSafely(values[8], 0.0);
+                    nh3 = parseDoubleSafely(values[9], 0.0);
+                } catch (NumberFormatException e) {
+                    Log.e("CSVParser", "Error parsing numeric values in line: " + line, e);
+                    continue; // Skip this record if there’s an error
+                }
+
+                records.add(new AirQualityRecord(location, aqi, co, no2, o3, so2, pm2_5, pm10, nh3, timestamp));
+            }
+
+            reader.close();
+
+        } catch (IOException e) {
+            Log.e("CSVParser", "Error reading file", e);
+        }
+
+        return records;
+
+    }
+
+    public AVLTree<String, AirQualityRecord> createAVLTree(Context context, boolean useLocationOnly){
+        List<AirQualityRecord> recordList = parseData(context, "historical_data.csv");
+        for (AirQualityRecord record : recordList) {
+            String key;
+            if (useLocationOnly) {
+                key = record.getLocation();  // Suburb only as the key
+            } else {
+                key = record.getLocation() + "_" + record.getTimestamp();  // Suburb + timestamp as the key
+            }
+
+            avlTree.insert(key, record);  // Insert into AVL tree
+        }
+        return avlTree;
+    }
+
+    // Helper method to safely parse long values
+    public long parseLongSafely(String value, long defaultValue) {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            Log.e("CSVParser", "Invalid long value: " + value);
+            return defaultValue;
+        }
+    }
+
+    // Helper method to safely parse double values
+    public double parseDoubleSafely(String value, double defaultValue) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            Log.e("CSVParser", "Invalid double value: " + value);
+            return defaultValue;
+        }
+    }
+
+
+}
