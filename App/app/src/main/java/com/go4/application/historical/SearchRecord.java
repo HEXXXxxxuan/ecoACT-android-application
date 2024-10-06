@@ -3,18 +3,18 @@ package com.go4.application.historical;
 public class SearchRecord {
     private String selectedSuburb;
     private String selectedDate;
-    private String selectedHour;
+    private String selectedTime;
     private String key;
 
     public SearchRecord() {
         this.selectedSuburb = "";
         this.selectedDate = "";
-        this.selectedHour = "";
+        this.selectedTime = "";
         this.key = generateKey();
     }
 
     private String generateKey() {
-        return selectedSuburb + "_" + selectedDate + " " + selectedHour + ":00:00";
+        return selectedSuburb + "_" + selectedDate + " " + selectedTime + ":00";
     }
 
     public void setSelectedSuburb(String suburb) {
@@ -25,8 +25,8 @@ public class SearchRecord {
         this.selectedDate = date;
     }
 
-    public void setSelectedHour(String hour) {
-        this.selectedHour = hour;
+    public void setSelectedTime(String hour) {
+        this.selectedTime = hour;
     }
 
     public String getSelectedSuburb() {
@@ -37,8 +37,8 @@ public class SearchRecord {
         return selectedDate;
     }
 
-    public String getSelectedHour() {
-        return selectedHour;
+    public String getSelectedTime() {
+        return selectedTime;
     }
 
     public String getKey() {

@@ -1,14 +1,17 @@
 package com.go4.application.historical;
 
 import android.util.Log;
+import android.content.Context;
 
-import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Parser {
-    /**
-     * The following exception should be thrown if the parse is faced with series of tokens that do not
-     * correlate with any possible production rule.
-     */
     public static class IllegalProductionException extends IllegalArgumentException {
         public IllegalProductionException(String errorMessage) {
             super(errorMessage);
@@ -18,32 +21,35 @@ public class Parser {
     // The tokenizer (class field) this parser will use.
     Tokenizer tokenizer;
     SearchRecord record;
+    Context context;
 
-    /**
-     * Parser class constructor
-     * Simply sets the tokenizer field.
-     * **** please do not modify this part ****
-     */
-    public Parser(Tokenizer tokenizer) {
+    public Parser(Tokenizer tokenizer, Context context) {
         this.tokenizer = tokenizer;
         this.record = new SearchRecord();
+        this.context = context;
     }
 
-    /**
-     * To help you both test and understand what this parser is doing, we have included a main method
-     * which you can run. Once running, provide a mathematical string to the terminal and you will
-     * receive back the result of your parsing.
-     */
-    public String parseInput() {
+    public String[] getData() {
+        return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime(), record.getKey()};
+    }
+
+    public void parseInput() {
         if (tokenizer.current() == null) {
-            throw new IllegalProductionException("Illegal Production");
+            return;
         }
-
-        parseLocation();
-        parseDate();
-        parseHour();
-
-        return this.record.getKey();
+        Token.Type currentType = tokenizer.current().getType();
+        if (currentType == Token.Type.LOCATION) {
+            parseLocation();
+        } else if (currentType == Token.Type.YEAR) {
+            parseDate();
+        } else if (currentType == Token.Type.TIME) {
+            parseTime();
+        } else if (currentType == Token.Type.SEPERATOR) {
+            tokenizer.next();
+        } else {
+            tokenizer.next();
+        }
+        parseInput();
     }
 
     public void parseLocation() {
@@ -51,7 +57,6 @@ public class Parser {
         Token location = tokenizer.current();
         if (location.getType() == Token.Type.LOCATION) {
             tokenizer.next();
-            Log.d("SearchDebug", "location: " + location.getToken());
             this.record.setSelectedSuburb(location.getToken());
         } else {
             throw new IllegalProductionException("Expected a location");
@@ -70,11 +75,16 @@ public class Parser {
                 if (tokenizer.current().getType() == Token.Type.DATE) {
                     Token day = tokenizer.current();
                     tokenizer.next();
-                    String selectedDate = year.getToken() + month.getToken() + day.getToken();
+                    String selectedDate = year.getToken() + "-" + month.getToken() + "-" + day.getToken();
                     this.record.setSelectedDate(selectedDate);
                 }
             }
         }
+//        else if (date.getType() == Token.Type.YEARMONTHDATE) {
+//            Token yearMonthDate = tokenizer.current();
+//            tokenizer.next();
+//            this.record.setSelectedDate(yearMonthDate.getToken());
+//        }
 //        else if (date.getType() == Token.Type.YEARMONTHDATE || date.getType() == Token.Type.YEARMONTHDATETIME) {
 //            tokenizer.next();
 //        } else {
@@ -82,12 +92,12 @@ public class Parser {
 //        }
     }
 
-    public void parseHour() {
+    public void parseTime() {
         // Parse the hour token
-        Token hour = tokenizer.current();
-        if (hour.getType() == Token.Type.TIME) {
+        Token time = tokenizer.current();
+        if (time.getType() == Token.Type.TIME) {
             tokenizer.next();
-            this.record.setSelectedDate(hour.getToken());
+            this.record.setSelectedTime(time.getToken());
         } else {
             throw new IllegalProductionException("Expected an hour");
         }

@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,6 +52,10 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private TextView resultTextView;
     private Button searchButton;
 
+    private EditText searchBar;
+    private Button testButton;
+    private List<String> suburbList;
+
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -63,22 +68,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_historical);
-
-        EditText searchBar = (EditText) findViewById(R.id.sh_search);
-        Button testButton = (Button) findViewById(R.id.sh_testbutton);
-
-        testButton.setOnClickListener(v-> {
-            Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString());
-            Parser parser = new Parser(tokenizer);
-//            while (tokenizer.hasNext()) {
-//                Token token = tokenizer.current();
-//                Log.d("SearchDebug", "Tokenizer: " + tokenizer.current().getToken());
-//                tokenizer.next();
-//            }
-            String key = parser.parseInput();
-            Toast.makeText(this, "Key:" + key, Toast.LENGTH_SHORT).show();
-            searchBar.setText(key);
-        });
 
         suburbSpinner = findViewById(R.id.suburbSpinner);
         hourSpinner = findViewById(R.id.hourSpinner);
@@ -95,6 +84,13 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         //hour spinner
         hourSpinner();
+
+        searchBar = findViewById(R.id.sh_search);
+        testButton = findViewById(R.id.sh_testbutton);
+
+        suburbList = loadSuburbsFromJson();
+
+        testButton.setOnClickListener(v-> parseSearchBarInput());
 
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
@@ -157,9 +153,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
-
         return suburbs;
-
     }
 
     private void showDatePickerDialog() {
@@ -181,6 +175,29 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         );
 
         datePickerDialog.show();
+    }
+
+    private void parseSearchBarInput() {
+        Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString(), suburbList);
+        Parser parser = new Parser(tokenizer, getApplicationContext());
+        parser.parseInput();
+
+        String suburb = parser.getData()[0];
+        int suburbPosition = suburbList.indexOf(suburb);
+        suburbSpinner.setSelection(suburbPosition);
+
+        String date = parser.getData()[1];
+        String[] dateParts = date.split("-");
+        String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
+        editTextDate.setText(selectedDate);
+
+        String time = parser.getData()[2];
+        int hourPosition = Integer.parseInt(time.split(":")[0]);
+        hourSpinner.setSelection(hourPosition);
+
+        String key = parser.getData()[3];
+
+        searchForRecord();
     }
 
     private void searchForRecord() {

@@ -19,10 +19,12 @@ public class Token {
     // Fields of the class Token.
     private final String token; // Token representation in String form.
     private final Type type;    // Type of the token.
+    private final int length;
 
-    public Token(String token, Type type) {
+    public Token(String token, Type type, int length) {
         this.token = token;
         this.type = type;
+        this.length = length;
     }
 
     public String getToken() {
@@ -32,6 +34,8 @@ public class Token {
     public Type getType() {
         return type;
     }
+
+    public int getLength() { return length; }
 
     @Override
     public String toString() {
