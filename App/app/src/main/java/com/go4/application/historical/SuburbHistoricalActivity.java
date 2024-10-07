@@ -129,10 +129,16 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private void showDatePickerDialog() {
         // Get the current date
         final Calendar calendar = Calendar.getInstance();
+
+        String currentSelectedDate = editTextDate.getText().toString();
+        String[] dateParts = currentSelectedDate.split("/");
+        if (dateParts.length == 3) {
+            calendar.set(Integer.parseInt(dateParts[2]), Integer.parseInt(dateParts[1]) - 1, Integer.parseInt(dateParts[0]));
+        }
+
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
