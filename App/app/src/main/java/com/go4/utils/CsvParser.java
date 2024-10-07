@@ -66,7 +66,7 @@ public class CsvParser implements DataAccessObject{
                     continue; // Skip this record if there’s an error
                 }
 
-                records.add(new AirQualityRecord(location, aqi, co, no2, o3, so2, pm2_5, pm10, nh3, timestamp));
+                records.add(new AirQualityRecord(location, (int)aqi, co, no2, o3, so2, pm2_5, pm10, nh3, timestamp));
             }
 
             reader.close();
