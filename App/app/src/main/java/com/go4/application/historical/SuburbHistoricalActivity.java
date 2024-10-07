@@ -34,6 +34,9 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private TextView resultTextView;
     private Button searchButton;
 
+    private EditText searchBar;
+    private Button testButton;
+    private List<String> suburbList;
 
     private Button liveDataButton;
 
@@ -59,6 +62,11 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         //hour spinner
         hourSpinner();
+
+        searchBar = findViewById(R.id.sh_search);
+        testButton = findViewById(R.id.sh_testbutton);
+        suburbList = loadSuburbsFromJson();
+        testButton.setOnClickListener(v-> parseSearchBarInput());
 
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
@@ -137,6 +145,35 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         );
 
         datePickerDialog.show();
+    }
+
+    private void parseSearchBarInput() {
+        Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString(), suburbList);
+        Parser parser = new Parser(tokenizer, getApplicationContext());
+        parser.parseInput();
+
+        String suburb = parser.getData()[0];
+        if (!suburb.isEmpty()) {
+            int suburbPosition = suburbList.indexOf(suburb);
+            suburbSpinner.setSelection(suburbPosition);
+        }
+
+        String date = parser.getData()[1];
+        if (!date.isEmpty()) {
+            String[] dateParts = date.split("-");
+            String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
+            editTextDate.setText(selectedDate);
+        }
+
+        String time = parser.getData()[2];
+        if (!time.isEmpty()) {
+            int hourPosition = Integer.parseInt(time.split(":")[0]);
+            if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
+        }
+
+        String key = parser.getData()[3];
+
+        searchForRecord();
     }
 
     private void searchForRecord() {
