@@ -1,104 +1,321 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray_background"
+    tools:context="com.go4.application.historical.SuburbHistoricalActivity">
 
-    <TextView
-        android:id="@+id/suburbLabel"
-        android:layout_width="wrap_content"
+    <!-- container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/date_location_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/select_a_suburb_txt"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sh_search" />
-
-    <Spinner
-        android:id="@+id/suburbSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/suburbLabel"
-        app:layout_constraintVertical_bias="0.044"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <Spinner
-        android:id="@+id/hourSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate"
+        android:layout_margin="16dp"
+        android:background="@color/primary_ColorW"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        />
+        android:elevation="4dp">
 
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="@string/click_to_select_date_txt"
-        android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/suburbSpinner"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="0dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:dividerPadding="12dp">
 
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
+            <!-- search bar -->
+            <EditText
+                android:id="@+id/sh_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- location -->
+            <TextView
+                android:id="@+id/locationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
+
+            <Spinner
+                android:id="@+id/suburbSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
+
+            <!-- Date and Time in horizontal layout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <!-- date -->
+                <TextView
+                    android:id="@+id/dateLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Date"
+                    android:textSize="18sp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/editTextDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="Select Date"
+                    android:inputType="date"
+                    android:clickable="true"
+                    android:focusable="false" />
+
+                <!-- time -->
+                <TextView
+                    android:id="@+id/hourLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Time"
+                    android:textSize="18sp"
+                    android:textColor="@color/black" />
+
+                <Spinner
+                    android:id="@+id/hourSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <!-- Search Button -->
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/round_button" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- bar container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/progress_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Search"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:background="@color/primary_ColorW"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/date_location_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/resultTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchButton"
-        app:layout_constraintVertical_bias="0.011"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <Button
-        android:id="@+id/livePageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Live Data"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultTextView"
-        app:layout_constraintVertical_bias="0.915" />
+        android:elevation="4dp">
 
-    <EditText
-        android:id="@+id/sh_search"
-        android:layout_width="348dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.154"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- semi bar -->
+            <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
+                android:id="@+id/semiCircleArcProgressBar"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                app:progressBarColor="@color/secondaryColorLG"
+                app:progressBarWidth="10"
+                app:progressPlaceHolderColor="@color/accendColorB"
+                app:progressPlaceHolderWidth="10" />
+
+            <!-- AQI text -->
+            <TextView
+                android:id="@+id/aqiStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/secondaryColorLG"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Separated Line -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/dividerColor" />
+
+            <!-- vertical bar (2 rows, 3 columns) -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="3"
+                android:columnOrderPreserved="false"
+                android:rowCount="2">
+
+                <!-- PM2.5 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PM2.5"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/pm25ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- PM10 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PM10"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/pm10ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- O3 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="O3"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/o3ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- SO2 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SO2"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/so2ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- CO -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CO"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/coProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- NO2 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NO2"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:id="@+id/no2ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+            </GridLayout>
+
+            <!-- Separated Line -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/dividerColor"
+                />
+
+            <!-- Live Data Button -->
+            <Button
+                android:id="@+id/livePageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LIVE DATA"
+                android:background="@drawable/rounded_button" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

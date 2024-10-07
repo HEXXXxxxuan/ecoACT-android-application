@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class AirQualityRecord {
     private String location;  // Suburb name
-    private double aqi;  // Air Quality Index
+    private int aqi;  // Air Quality Index
     private double co;  // Carbon Monoxide
     private double no2;  // Nitrogen Dioxide
     private double o3;  // Ozone
@@ -17,7 +17,7 @@ public class AirQualityRecord {
     private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // Constructor
-    public AirQualityRecord(String location, double aqi, double co, double no2, double o3, double so2, double pm2_5, double pm10, double nh3, long unixTimestamp) {
+    public AirQualityRecord(String location, int aqi, double co, double no2, double o3, double so2, double pm2_5, double pm10, double nh3, long unixTimestamp) {
         this.location = location;
         this.aqi = aqi;
         this.co = co;
@@ -35,7 +35,7 @@ public class AirQualityRecord {
         return location;
     }
 
-    public double getAqi() {
+    public int getAqi() {
         return aqi;
     }
 

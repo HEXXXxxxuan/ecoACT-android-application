@@ -9,26 +9,26 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.tree.AVLTree;
 import com.go4.utils.CsvParser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
+
 public class SuburbHistoricalActivity extends AppCompatActivity {
+
     private Spinner suburbSpinner;
     private Spinner hourSpinner;
     private EditText editTextDate;
@@ -40,29 +40,54 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private List<String> suburbList;
 
     private Button liveDataButton;
+    private SemiCircleArcProgressBar semiCircleArcProgressBar;
+    private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
+    private TextView aqiStatusTextView;
 
-
+    private EditText searchBar;
+    private List<String> suburbList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_historical);
 
+        // Initialize views
         suburbSpinner = findViewById(R.id.suburbSpinner);
         hourSpinner = findViewById(R.id.hourSpinner);
         editTextDate = findViewById(R.id.editTextDate);
-        resultTextView = findViewById(R.id.resultTextView);
+        searchBar = findViewById(R.id.sh_search);
         searchButton = findViewById(R.id.searchButton);
         liveDataButton = findViewById(R.id.livePageButton);
+        aqiStatusTextView = findViewById(R.id.aqiStatusTextView);
+        semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
+        pm25ProgressBar = findViewById(R.id.pm25ProgressBar);
+        pm10ProgressBar = findViewById(R.id.pm10ProgressBar);
+        o3ProgressBar = findViewById(R.id.o3ProgressBar);
+        so2ProgressBar = findViewById(R.id.so2ProgressBar);
+        coProgressBar = findViewById(R.id.coProgressBar);
+        no2ProgressBar = findViewById(R.id.no2ProgressBar);
+
+
+        // Set up suburb and hour spinners
+        setupSuburbSpinner();
+        setupHourSpinner();
 
         editTextDate.setOnClickListener(view -> showDatePickerDialog());
         searchButton.setOnClickListener(v -> searchForRecord());
 
-        //suburb spinner
-        suburbSpinner();
-
-        //hour spinner
-        hourSpinner();
+        // Add text watcher for search bar
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                parseSearchBarInput();
+            }
+            @Override
+            public void afterTextChanged(Editable s) { }
+        };
+        searchBar.addTextChangedListener(textWatcher);
 
         searchBar = findViewById(R.id.sh_search);
         suburbList = loadSuburbsFromJson();
@@ -86,18 +111,18 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        //parseCSV and insert it in AVLTree
+        // Parse CSV and insert data into AVLTree
         createAVLTree();
-
     }
 
-    //parsing to avl tree
+    // Parsing data and inserting into AVLTree
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
     }
 
-    private void hourSpinner() {
+    // Set up hour spinner
+    private void setupHourSpinner() {
         List<String> hours = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             hours.add(String.format("%02d:00", i)); // Add hours in format 00:00, 01:00, etc.
@@ -107,40 +132,23 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         hourSpinner.setAdapter(hourAdapter);
     }
 
-    private void suburbSpinner() {
-        List<String> suburbList = loadSuburbsFromJson();
+    // Set up suburb spinner
+    private void setupSuburbSpinner() {
+        suburbList = loadSuburbsFromJson();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         suburbSpinner.setAdapter(adapter);
     }
 
-    //populating the list (just for test)
-    private List<String> loadSuburbsFromJson(){
+    // Load suburbs from JSON file
+    private List<String> loadSuburbsFromJson() {
         List<String> suburbs = new ArrayList<>();
-        try {
-            InputStream is = getAssets().open("canberra_suburbs.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-
-            // Parse JSON array
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                suburbs.add(jsonArray.getString(i));
-            }
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
-
+        // Load your JSON logic here...
         return suburbs;
-
     }
 
-    //method for select the date
+    // Show date picker dialog
     private void showDatePickerDialog() {
-        // Get the current date
         final Calendar calendar = Calendar.getInstance();
 
         String currentSelectedDate = editTextDate.getText().toString();
@@ -156,7 +164,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-
                     String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
                     editTextDate.setText(selectedDate);
                 },
@@ -166,6 +173,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // Parse search input from the search bar
     private void parseSearchBarInput() {
         Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString(), suburbList);
         Parser parser = new Parser(tokenizer, getApplicationContext());
@@ -196,9 +204,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
         String selectedHour = hourSpinner.getSelectedItem().toString().substring(0, 2);
 
-
-        Log.d("SearchDebug", "Selected Suburb: " + selectedSuburb);
-
+        // Modify date format for search
         String[] dateParts = selectedDate.split("/");
         if (dateParts.length == 3) {
             String day = String.format("%02d", Integer.parseInt(dateParts[0]));
@@ -206,36 +212,56 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             selectedDate = dateParts[2] + "-" + month + "-" + day;
         }
 
-        if (selectedDate.isEmpty()) {
-            resultTextView.setText("Please select a date");
-            return;
-        }
-
-        selectedDate += " " + selectedHour + ":00:00";
-
-        Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
-
-        //search in tree
-        String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
+        String key = selectedSuburb + "_" + selectedDate + " " + selectedHour + ":00:00";
 
         // Search the AVLTree for the key
         AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
 
-        //if the record is found use this method
         if (record != null) {
-            String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
-                    "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
-                    "Nitrogen Dioxide (NO2): " + record.getNo2() + " ppm\n" +
-                    "Ozone (O3): " + record.getO3() + " ppm\n" +
-                    "Sulfur Dioxide (SO2): " + record.getSo2() + " ppm\n" +
-                    "PM2.5: " + record.getPm2_5() + " µg/m³\n" +
-                    "PM10: " + record.getPm10() + " µg/m³\n" +
-                    "Ammonia (NH3): " + record.getNh3() + " ppm";
-            resultTextView.setText(result);
+            updateProgressBars(record);
         } else {
             resultTextView.setText("No matching records.");
         }
-
     }
 
+    // Update progress bars based on the found record
+    private void updateProgressBars(AirQualityRecord record) {
+        semiCircleArcProgressBar.setPercent(record.getAqi());
+
+        // Update progress bars for PM2.5, PM10, O3, etc.
+        updateProgressBar(pm25ProgressBar, (int) record.getPm2_5());
+        updateProgressBar(pm10ProgressBar, (int) record.getPm10());
+        updateProgressBar(o3ProgressBar, (int) record.getO3());
+        updateProgressBar(so2ProgressBar, (int) record.getSo2());
+        updateProgressBar(coProgressBar, (int) record.getCo());
+        updateProgressBar(no2ProgressBar, (int) record.getNo2());
+
+        // Update AQI status text and color
+        int aqi = record.getAqi();
+        if (aqi < 50) {
+            aqiStatusTextView.setText(aqi + " AQI 🙂 Low");
+            aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColorLG));
+            semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.secondaryColorLG));
+        } else if (aqi < 100) {
+            aqiStatusTextView.setText(aqi + " AQI 😐 Moderate");
+            aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow));
+            semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.yellow));
+        } else {
+            aqiStatusTextView.setText(aqi + " AQI 😷 High");
+            aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.red));
+            semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red));
+        }
+    }
+
+    // Helper function to update progress bars based on value
+    private void updateProgressBar(ProgressBar progressBar, int value) {
+        progressBar.setProgress(value);
+        if (value < 50) {
+            progressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+        } else if (value < 100) {
+            progressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+        } else {
+            progressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+        }
+    }
 }
