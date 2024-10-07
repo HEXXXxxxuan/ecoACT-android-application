@@ -2,7 +2,7 @@ package com.go4.application;
 import android.content.Context;
 import android.util.Log;
 
-import com.go4.application.historical.AirQualityRecord;
+import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 
 import org.junit.AfterClass;
@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;

@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
 
-import com.go4.application.historical.AirQualityRecord;
-import com.go4.application.tree.AVLTree;
+import com.go4.application.model.AirQualityRecord;
+import com.go4.utils.tree.AVLTree;
 
 
 import org.junit.Before;

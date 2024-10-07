@@ -1,7 +1,9 @@
-package com.go4.application.historical;
+package com.go4.utils.tokenizer_parser;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.go4.application.historical.SearchRecord;
 
 public class Parser {
     public static class IllegalProductionException extends IllegalArgumentException {

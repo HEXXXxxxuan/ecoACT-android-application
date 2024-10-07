@@ -1,6 +1,9 @@
 package com.go4.application.live_data;
 
 import android.graphics.Color;
+import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,9 +24,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.go4.application.R;
-import com.go4.application.historical.AirQualityRecord;
+import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
-import com.go4.application.tree.AVLTree;
+import com.go4.utils.LocationService;
+import com.go4.utils.tree.AVLTree;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +48,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class SuburbLiveActivity extends AppCompatActivity {
+public class SuburbLiveActivity extends AppCompatActivity implements LocationService.LocationListener {
     private Spinner suburbSpinnerLive;
     private Spinner intervalSpinner;
     private TextView resultTextViewLive;
@@ -56,11 +63,22 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private AVLTree<String, AirQualityRecord> records;
     private LineChart lineChart;
     private IntervalOption option;
+    private LocationService locationService;
+    private String selectedSuburb;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_live);
+
+        suburbMap = loadSuburbsFromJson();
+
+        locationService = new LocationService(this, this);
+        locationService.startLocationUpdates();
+
+
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
         intervalSpinner = findViewById(R.id.intervalSpinner);
         resultTextViewLive = findViewById(R.id.resultTextView2);
@@ -68,22 +86,41 @@ public class SuburbLiveActivity extends AppCompatActivity {
         no2TextView = findViewById(R.id.no2TextView);
         pm25TextView = findViewById(R.id.pm25TextView);
         lineChart = findViewById(R.id.lineChart);
+
         selectSuburbSpinner();
         selectIntervalSpinner();
 
-        option = IntervalOption.LAST24;
+        option = IntervalOption.TODAY;
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
     }
 
+    @Override
+    public void onLocationUpdated(Location location) {
+        NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
+        selectedSuburb = nearestSuburbStrategy.getNearestSuburb(location.getLatitude(), location.getLongitude(), suburbMap);
+
+        Log.d("LocationDebug: ", "Nearest suburb = " + selectedSuburb);
+
+        // Set the spinner to display the nearest suburb
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
+        int position = adapter.getPosition(selectedSuburb);
+        if (position >= 0) {
+            suburbSpinnerLive.setSelection(position);
+        }
+
+        // Fetch and display data based on the nearest suburb
+        fetchAndDisplayData(selectedSuburb);
+    }
+
     public enum IntervalOption {
-        LAST24, YESTERDAY, LASTWEEK
+        TODAY, YESTERDAY, LASTWEEK
     }
 
     private void selectIntervalSpinner() {
         List<String> intervals = new ArrayList<>();
-        intervals.add("Last 24 hour");
+        intervals.add("Today");
         intervals.add("Yesterday");
         intervals.add("Last week");
 
@@ -96,25 +133,30 @@ public class SuburbLiveActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedInterval = intervals.get(position);
 
-
-
                 switch (selectedInterval) {
-                    case "Last 24 hour":
-                        option = IntervalOption.LAST24;
-                        selectSuburbSpinner();
+                    case "Today":
+                        option = IntervalOption.TODAY;
                         break;
                     case "Yesterday":
                         option = IntervalOption.YESTERDAY;
-                        selectSuburbSpinner();
                         break;
                     case "Last week":
                         option = IntervalOption.LASTWEEK;
-                        selectSuburbSpinner();
                         break;
                     default:
-
                 }
+
+                Toast.makeText(SuburbLiveActivity.this, "Fetching data, please wait...", Toast.LENGTH_SHORT).show();
+
+                // Fetch data in a background thread
+                executor.execute(() -> {
+                    if (selectedSuburb != null) {
+                        fetchAndDisplayData(selectedSuburb);
+                    }
+                });
             }
+
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -126,105 +168,111 @@ public class SuburbLiveActivity extends AppCompatActivity {
         AQI, CO, NO2, PM2_5
     }
 
+    private void fetchAndDisplayData(String selectedSuburb) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        double[] coordinates = suburbMap.get(selectedSuburb);
+
+        fetchAirQualityData(coordinates[0], coordinates[1]);
+
+        List<AirQualityRecord> recordsInSelectedSuburb = fetchRecordsForSuburbAndInterval(selectedSuburb);
+        Log.d("LocationDebug: ", "records in nearest suburb final" + recordsInSelectedSuburb);
+
+
+
+        plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
+
+        resultTextViewLive.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.AQI));
+        coTextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.CO));
+        no2TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.NO2));
+        pm25TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.PM2_5));
+
+    }
+
+    private List<AirQualityRecord> fetchRecordsForSuburbAndInterval(String selectedSuburb) {
+        ArrayList<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String startDate = null;
+        String endDate = null;
+
+        switch (option) {
+            case TODAY:
+                startCalendar.set(Calendar.HOUR_OF_DAY, 0);  // Start of today
+                startCalendar.set(Calendar.MINUTE, 0);
+                startCalendar.set(Calendar.SECOND, 0);
+                startCalendar.set(Calendar.MILLISECOND, 0);
+                startDate = dateFormat.format(startCalendar.getTime());
+                endDate = dateFormat.format(Calendar.getInstance().getTime());
+                break;
+            case YESTERDAY:
+                startCalendar.add(Calendar.DAY_OF_YEAR, -1);
+                startCalendar.set(Calendar.HOUR_OF_DAY, 0); // Start of yesterday
+                startCalendar.set(Calendar.MINUTE, 0);
+                startCalendar.set(Calendar.SECOND, 0);
+                startDate = dateFormat.format(startCalendar.getTime());
+
+                endCalendar.set(Calendar.HOUR_OF_DAY, 23); // End of yesterday
+                endCalendar.set(Calendar.MINUTE, 59);
+                endCalendar.set(Calendar.SECOND, 59);
+                endDate = dateFormat.format(endCalendar.getTime());
+                break;
+            case LASTWEEK:
+                startCalendar.add(Calendar.DAY_OF_YEAR, -7); // Last 7 days
+                startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                startCalendar.set(Calendar.MINUTE, 0);
+                startCalendar.set(Calendar.SECOND, 0);
+                startDate = dateFormat.format(startCalendar.getTime());
+
+                endCalendar.add(Calendar.DAY_OF_YEAR, -1);
+                endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                endCalendar.set(Calendar.MINUTE, 59);
+                endCalendar.set(Calendar.SECOND, 59);
+                endDate = dateFormat.format(endCalendar.getTime());
+                break;
+        }
+
+        // Filter records based on the selected suburb and time range
+
+        recordsInSelectedSuburb = (ArrayList<AirQualityRecord>) filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
+
+        Log.d("LocationDebug: ", "filtering in nearest suburb filtered by "+ startDate + endDate + recordsInSelectedSuburb);
+
+
+        return recordsInSelectedSuburb;
+    }
+
+
     private void selectSuburbSpinner() {
         suburbMap = loadSuburbsFromJson();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbMap.keySet().toArray(new String[0]));
+
+
+        List<String> suburbsList = new ArrayList<>();
+        suburbsList.add("Select different city");  // Default entry
+        suburbsList.addAll(suburbMap.keySet());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbsList.toArray(new String[0]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         suburbSpinnerLive.setAdapter(adapter);
 
 
         suburbSpinnerLive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedSuburb = parentView.getItemAtPosition(position).toString();
-                double[] coordinates = suburbMap.get(selectedSuburb);
-                String startDate = null;
-                String endDate = null;
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSuburb = (String) parent.getItemAtPosition(position);
 
-                /////////(for testing only!!)
-               StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-               StrictMode.setThreadPolicy(policy);
-
-                // Fetch air quality data using coordinates and display the result
-                fetchAirQualityData(coordinates[0], coordinates[1]);
-
-                ArrayList<AirQualityRecord> recordsInSelecetedSuburb = new ArrayList<>();
-
-                Calendar startCalendar = Calendar.getInstance();
-                Calendar endCalendar = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-                switch (option) {
-                    case LAST24:
-                        startCalendar.add(Calendar.DAY_OF_YEAR, -1);  // Last 24 hours
-                        startDate = dateFormat.format(startCalendar.getTime());
-                        endDate = dateFormat.format(Calendar.getInstance().getTime());
-                        recordsInSelecetedSuburb = (ArrayList<AirQualityRecord>) filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
-                        Log.d("Plot Last 24 Result:", recordsInSelecetedSuburb.toString());
-                        break;
-
-                    case YESTERDAY:
-                        startCalendar.add(Calendar.DAY_OF_YEAR, -1);
-                        startCalendar.set(Calendar.HOUR_OF_DAY, 0); // Start of yesterday
-                        startCalendar.set(Calendar.MINUTE, 0);
-                        startCalendar.set(Calendar.SECOND, 0);
-                        startDate = dateFormat.format(startCalendar.getTime());
-
-                        endCalendar = (Calendar) startCalendar.clone();
-                        endCalendar.set(Calendar.HOUR_OF_DAY, 23); // End of yesterday
-                        endCalendar.set(Calendar.MINUTE, 59);
-                        endCalendar.set(Calendar.SECOND, 59);
-                        endDate = dateFormat.format(endCalendar.getTime());
-
-                        recordsInSelecetedSuburb = (ArrayList<AirQualityRecord>) filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
-                        Log.d("Plot Yesterday Result:", recordsInSelecetedSuburb.toString());
-                        break;
-
-                    case LASTWEEK:
-                        startCalendar.add(Calendar.DAY_OF_YEAR, -7); // Last 7 days
-                        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                        startCalendar.set(Calendar.MINUTE, 0);
-                        startCalendar.set(Calendar.SECOND, 0);
-                        startDate = dateFormat.format(startCalendar.getTime());
-
-                        endCalendar.add(Calendar.DAY_OF_YEAR, -1);
-                        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-                        endCalendar.set(Calendar.MINUTE, 59);
-                        endCalendar.set(Calendar.SECOND, 59);
-                        endDate = dateFormat.format(endCalendar.getTime());
-
-                        recordsInSelecetedSuburb = (ArrayList<AirQualityRecord>) filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
-                        Log.d("Plot Lastweek Result:", String.valueOf(recordsInSelecetedSuburb.size()));
-                        break;
-
+                // Only fetch data if a valid suburb is selected
+                if (!"Select different city".equals(selectedSuburb)) {
+                    fetchAndDisplayData(selectedSuburb);
                 }
-
-                final List<AirQualityRecord> finalRecordsInSelecetedSuburb = recordsInSelecetedSuburb;
-
-
-                //traverse the tree
-//                records.inOrderTraversal(records.getRoot(), (k, r) -> {
-//                    if(k.startsWith(selectedSuburb)){
-//                        recordsInSelecetedSuburb.add(r);
-//                        Log.d("AQI Result", "found " + selectedSuburb);
-//                    }
-//                });
-
-                Log.d("AQI Result", recordsInSelecetedSuburb.toString());
-                plotData(recordsInSelecetedSuburb, AirQualityMetric.AQI);
-
-                resultTextViewLive.setOnClickListener(v -> plotData(finalRecordsInSelecetedSuburb, AirQualityMetric.AQI));
-                coTextView.setOnClickListener(v -> plotData(finalRecordsInSelecetedSuburb, AirQualityMetric.CO));
-                no2TextView.setOnClickListener(v -> plotData(finalRecordsInSelecetedSuburb, AirQualityMetric.NO2));
-                pm25TextView.setOnClickListener(v -> plotData(finalRecordsInSelecetedSuburb, AirQualityMetric.PM2_5));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // nothing selected
-            }
+            }`
         });
+
     }
+
 
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
                                                                     String selectedSuburb, String startTimestamp,
@@ -239,8 +287,12 @@ public class SuburbLiveActivity extends AppCompatActivity {
             Date startDate = dateFormat.parse(startTimestamp);
             Date endDate = dateFormat.parse(endTimestamp);
 
+            Log.d("Location Debug:", "AVL height= " + records.getHeight());
+            Log.d("Location Debug:", "searching for: " + selectedSuburb + " between " + startDate + " and " + endDate);
+
             // Traverse the AVL tree and filter by suburb and timestamp range
             records.inOrderTraversal(records.getRoot(), (k, r) -> {
+
                 if (k.startsWith(selectedSuburb)) {
                     // Extract the timestamp from the key
                     String[] keyParts = k.split("_");
@@ -250,6 +302,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
                         try {
                             // Convert record timestamp to Date object
                             Date recordDate = dateFormat.parse(recordTimestamp);
+
 
                             // Check if the record's timestamp is within the range
                             if (recordDate != null && !recordDate.before(startDate) && !recordDate.after(endDate)) {
@@ -411,5 +464,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         yAxisRight.setEnabled(false); // Disable right Y axis
 
         lineChart.invalidate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Force a location update when returning to this activity
+        if (locationService != null) {
+            locationService.forceLocationUpdate();
+            Toast.makeText(this, "Requesting GPS update...", Toast.LENGTH_SHORT).show();
+        }
     }
 }

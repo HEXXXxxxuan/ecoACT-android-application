@@ -1,4 +1,4 @@
-package com.go4.application.tree;
+package com.go4.utils.tree;
 
 public class AVLTree<K extends Comparable<K>, T>{
     class Node {
