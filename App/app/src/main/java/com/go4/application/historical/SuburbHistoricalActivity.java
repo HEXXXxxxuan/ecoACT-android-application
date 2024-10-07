@@ -44,8 +44,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
     private TextView aqiStatusTextView;
 
-    private EditText searchBar;
-    private List<String> suburbList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,19 +90,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         searchBar = findViewById(R.id.sh_search);
         suburbList = loadSuburbsFromJson();
 
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                parseSearchBarInput();
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        };
-        searchBar.addTextChangedListener(textWatcher);
+
 
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
