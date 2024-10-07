@@ -2,6 +2,8 @@ package com.go4.application;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +32,17 @@ public class MainActivity extends AppCompatActivity {
         getUser.launch(new Intent(this, FirebaseLoginActivity.class));
 
 
-//        startActivity(new Intent(this, SuburbHistoricalActivity.class));
         startActivity(new Intent(this, ProfileActivity.class));
+//        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+//        if (user != null) {
+//            Intent intent = new Intent(this, ProfileActivity.class);
+//            intent.putExtra("userEmail", user.getEmail());
+//            intent.putExtra("userName", user.getDisplayName());
+//            // Add other user details as needed
+//            startActivity(intent);
+//        } else {
+//            Toast.makeText(this, "user null", Toast.LENGTH_LONG).show();
+//        }
         finish();
     }
 }
