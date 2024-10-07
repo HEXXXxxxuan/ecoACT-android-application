@@ -27,7 +27,7 @@ public class LocationService {
     @SuppressLint("MissingPermission")
     public void forceLocationUpdate() {
         LocationRequest locationRequest = new LocationRequest.Builder(
-                Priority.PRIORITY_HIGH_ACCURACY, 1000
+                Priority.PRIORITY_HIGH_ACCURACY, 0
         ).setMaxUpdates(1)
                 .build();
 
@@ -64,7 +64,7 @@ public class LocationService {
     public void startLocationUpdates() {
         LocationRequest locationRequest = new LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY, 9000000
-        ).setMinUpdateIntervalMillis(1000)
+        ).setMinUpdateIntervalMillis(60000)
                 .setMaxUpdateDelayMillis(1800000)
                 .build();
 

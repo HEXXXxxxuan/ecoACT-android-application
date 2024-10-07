@@ -103,7 +103,6 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
 
         Log.d("LocationDebug: ", "Nearest suburb = " + selectedSuburb);
 
-        // Set the spinner to display the nearest suburb
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
         int position = adapter.getPosition(selectedSuburb);
         if (position >= 0) {
@@ -249,7 +248,7 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
     private void selectSuburbSpinner() {
         suburbMap = loadSuburbsFromJson();
 
-
+        // Create a list of suburbs and add the default entry as the first item
         List<String> suburbsList = new ArrayList<>();
         suburbsList.add("Select different city");  // Default entry
         suburbsList.addAll(suburbMap.keySet());
@@ -258,21 +257,31 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         suburbSpinnerLive.setAdapter(adapter);
 
-
+        // Set listener to handle suburb selection
         suburbSpinnerLive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedSuburb = (String) parent.getItemAtPosition(position);
 
-                // Only fetch data if a valid suburb is selected
+                // Only fetch data if a valid suburb is selected (i.e., not the default entry)
                 if (!"Select different city".equals(selectedSuburb)) {
                     fetchAndDisplayData(selectedSuburb);
+                } else {
+                    // Show no results or reset the chart/text views when default entry is selected
+                    resultTextViewLive.setText("No suburb selected.");
+                    coTextView.setText("");
+                    no2TextView.setText("");
+                    pm25TextView.setText("");
+                    lineChart.clear();  // Clear the chart
                 }
-            }`
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Optional: handle case where no item is selected
+            }
         });
-
     }
-
 
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
                                                                     String selectedSuburb, String startTimestamp,
