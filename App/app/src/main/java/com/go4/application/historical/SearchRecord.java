@@ -4,7 +4,6 @@ public class SearchRecord {
     private String selectedSuburb;
     private String selectedDate;
     private String selectedTime;
-    private String key;
     private boolean invalidSearch;
 
     public SearchRecord() {
@@ -12,7 +11,6 @@ public class SearchRecord {
         this.selectedDate = "";
         this.selectedTime = "";
         this.invalidSearch = false;
-        this.key = generateKey();
     }
 
     private String generateKey() {
@@ -49,10 +47,5 @@ public class SearchRecord {
 
     public boolean getInvalidSearch() {
         return invalidSearch;
-    }
-
-    public String getKey() {
-        this.key = generateKey();
-        return key;
     }
 }
