@@ -171,8 +171,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
         }
 
-        String key = parser.getData()[3];
-
         searchForRecord();
     }
 

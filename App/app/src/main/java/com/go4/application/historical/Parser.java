@@ -22,7 +22,7 @@ public class Parser {
     }
 
     public String[] getData() {
-        return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime(), record.getKey()};
+        return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime()};
     }
 
     public void parseInput() {
@@ -41,7 +41,7 @@ public class Parser {
         } else {
             record.setInvalidSearch(true);
             Toast.makeText(context, "Invalid Search", Toast.LENGTH_SHORT).show();
-            return;
+            tokenizer.next();
         }
         parseInput();
     }
