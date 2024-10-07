@@ -191,16 +191,16 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             int aqi = record.getAqi();
             if (aqi < 50) {
                 aqiStatusTextView.setText(aqi + " AQI 🙂 Low");
-                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColorLG)); // 绿色
-                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.secondaryColorLG)); // 绿色
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColorLG));
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.secondaryColorLG));
             } else if (aqi < 100) {
                 aqiStatusTextView.setText(aqi + " AQI 😐 Moderate");
-                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow)); // 黄色
-                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.yellow)); // 黄色
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow));
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.yellow));
             } else {
                 aqiStatusTextView.setText(aqi + " AQI 😷 High");
-                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.red)); // 红色
-                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red)); // 红色
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.red));
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red));
             }
 
  //PM2.5
@@ -214,73 +214,73 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
                 pm25ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
             }
 
-// //PM10
-//          int pm10 = (int) record.getPm10();
-//            pm10ProgressBar.setProgress(pm10);
-//            if (pm10 < 50) {
-//                pm10ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.secondaryColorLG), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else if (pm10 < 100) {
-//                pm10ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else {
-//                pm10ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
-//
-// //O3
-//          int o3 = (int) record.getO3();
-//            o3ProgressBar.setProgress(o3);
-//            if (o3 < 50) {
-//                o3ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.secondaryColorLG), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else if (o3 < 100) {
-//                o3ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else {
-//                o3ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
-//
-// //SO2
-//          int so2 = (int) record.getSo2();
-//            so2ProgressBar.setProgress(so2);
-//            if (so2 < 50) {
-//                so2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.secondaryColorLG), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else if (so2 < 100) {
-//                so2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else {
-//                so2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
-//
-// //CO
-//          int co = (int) record.getCo();
-//          coProgressBar.setProgress(co);
-//            if (co < 50) {
-//                coProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.secondaryColorLG), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else if (co < 100) {
-//                coProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else {
-//                coProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
-//
-// //NO2
-//          int no2 = (int) record.getNo2();
-//          no2ProgressBar.setProgress(no2);
-//            if (no2 < 50) {
-//                no2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.secondaryColorLG), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else if (no2 < 100) {
-//                no2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//            } else {
-//                no2ProgressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
+            // PM10
+            int pm10 = (int) Math.round(record.getPm10());
+            pm10ProgressBar.setProgress(pm10);
+            if (pm10 < 50) {
+                pm10ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+            } else if (pm10 < 100) {
+                pm10ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+            } else {
+                pm10ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+            }
+
+// O3
+            int o3 = (int) record.getO3();
+            o3ProgressBar.setProgress(o3);
+            if (o3 < 50) {
+                o3ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+            } else if (o3 < 100) {
+                o3ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+            } else {
+                o3ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+            }
+
+// SO2
+            int so2 = (int) record.getSo2();
+            so2ProgressBar.setProgress(so2);
+            if (so2 < 50) {
+                so2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+            } else if (so2 < 100) {
+                so2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+            } else {
+                so2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+            }
+
+// CO
+            int co = (int) record.getCo();
+            coProgressBar.setProgress(co);
+            if (co < 50) {
+                coProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+            } else if (co < 100) {
+                coProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+            } else {
+                coProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+            }
+
+// NO2
+            int no2 = (int) record.getNo2();
+            no2ProgressBar.setProgress(no2);
+            if (no2 < 50) {
+                no2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.secondaryColorLG));
+            } else if (no2 < 100) {
+                no2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.yellow));
+            } else {
+                no2ProgressBar.setProgressTintList(ContextCompat.getColorStateList(this, R.color.red));
+            }
 
 
-            // Display other data in TextView
-//            String result = "PM2.5: " + record.getPm2_5() + " μg/m³\n" +
-//                    "PM10: " + record.getPm10() + " μg/m³\n" +
-//                    "O3: " + record.getO3() + " μg/m³\n" +
-//                    "SO2: " + record.getSo2() + " μg/m³\n" +
-//                    "CO: " + record.getCo() + " ppm\n" +
-//                    "NO2: " + record.getNo2() + " ppm";
-//            resultTextView.setText(result);
-//        } else {
-//            resultTextView.setText("No matching records.");
-//
-        }
+          // Display other data in TextView
+            String result = "PM2.5: " + record.getPm2_5() + " μg/m³\n" +
+                    "PM10: " + record.getPm10() + " μg/m³\n" +
+                    "O3: " + record.getO3() + " μg/m³\n" +
+                    "SO2: " + record.getSo2() + " μg/m³\n" +
+                    "CO: " + record.getCo() + " ppm\n" +
+                    "NO2: " + record.getNo2() + " ppm";
+            resultTextView.setText(result);
+        } else {
+            resultTextView.setText("No matching records.");
+
+      }
     }
 }
