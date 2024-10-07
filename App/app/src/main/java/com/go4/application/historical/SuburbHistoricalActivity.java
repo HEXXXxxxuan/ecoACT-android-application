@@ -3,6 +3,8 @@ package com.go4.application.historical;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,7 +37,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private Button searchButton;
 
     private EditText searchBar;
-    private Button testButton;
     private List<String> suburbList;
 
     private Button liveDataButton;
@@ -64,9 +65,21 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         hourSpinner();
 
         searchBar = findViewById(R.id.sh_search);
-        testButton = findViewById(R.id.sh_testbutton);
         suburbList = loadSuburbsFromJson();
-        testButton.setOnClickListener(v-> parseSearchBarInput());
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                parseSearchBarInput();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        searchBar.addTextChangedListener(textWatcher);
 
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
@@ -176,8 +189,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             int hourPosition = Integer.parseInt(time.split(":")[0]);
             if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
         }
-
-        searchForRecord();
     }
 
     private void searchForRecord() {
