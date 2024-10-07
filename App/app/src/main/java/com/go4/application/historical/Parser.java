@@ -40,7 +40,6 @@ public class Parser {
             tokenizer.next();
         } else {
             record.setInvalidSearch(true);
-            Toast.makeText(context, "Invalid Search", Toast.LENGTH_SHORT).show();
             tokenizer.next();
         }
         parseInput();
