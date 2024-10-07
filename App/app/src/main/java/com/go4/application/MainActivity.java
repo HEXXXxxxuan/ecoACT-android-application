@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         getUser.launch(new Intent(this, FirebaseLoginActivity.class));
 
 
-        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+//        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+        startActivity(new Intent(this, ProfileActivity.class));
         finish();
     }
 }
