@@ -35,6 +35,10 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
     private TextView resultTextView;
     private Button searchButton;
+
+    private EditText searchBar;
+    private List<String> suburbList;
+
     private Button liveDataButton;
     private SemiCircleArcProgressBar semiCircleArcProgressBar;
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
@@ -85,6 +89,23 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         };
         searchBar.addTextChangedListener(textWatcher);
 
+        searchBar = findViewById(R.id.sh_search);
+        suburbList = loadSuburbsFromJson();
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                parseSearchBarInput();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        searchBar.addTextChangedListener(textWatcher);
+
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
             startActivity(intent);
@@ -129,6 +150,13 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     // Show date picker dialog
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
+
+        String currentSelectedDate = editTextDate.getText().toString();
+        String[] dateParts = currentSelectedDate.split("/");
+        if (dateParts.length == 3) {
+            calendar.set(Integer.parseInt(dateParts[2]), Integer.parseInt(dateParts[1]) - 1, Integer.parseInt(dateParts[0]));
+        }
+
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -152,32 +180,25 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         parser.parseInput();
 
         String suburb = parser.getData()[0];
-        String date = parser.getData()[1];
-        String time = parser.getData()[2];
-
-        // Update spinners and editText based on the search input
         if (!suburb.isEmpty()) {
             int suburbPosition = suburbList.indexOf(suburb);
-            if (suburbPosition != -1) {
-                suburbSpinner.setSelection(suburbPosition);
-            }
+            suburbSpinner.setSelection(suburbPosition);
         }
 
+        String date = parser.getData()[1];
         if (!date.isEmpty()) {
             String[] dateParts = date.split("-");
             String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
             editTextDate.setText(selectedDate);
         }
 
+        String time = parser.getData()[2];
         if (!time.isEmpty()) {
             int hourPosition = Integer.parseInt(time.split(":")[0]);
-            if (hourPosition >= 0 && hourPosition <= 24) {
-                hourSpinner.setSelection(hourPosition);
-            }
+            if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
         }
     }
 
-    // Search for the record in AVLTree and update the progress bars
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
