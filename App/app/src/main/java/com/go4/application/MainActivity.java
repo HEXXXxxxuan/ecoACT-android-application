@@ -28,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         firebaseLogin();
         Log.d("Debugging", "User: " + user.getEmail());
-        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+//        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("displayName", user.getEmail());
+        startActivity(intent);
     }
 
     private void firebaseLogin(){
