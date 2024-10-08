@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.go4.application.MainActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
@@ -71,27 +72,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private IntervalOption option;
     private String selectedSuburb;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private GPSService gpsService;
-    private boolean isBound = false;
-
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
-            gpsService = binder.getService();
-            isBound = true;
-
-
-            Location currentLocation = gpsService.getRecentLocation();
-            updateLocationUsingGPS(currentLocation);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +88,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
-
-        Intent intent = new Intent(this, GPSService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        Location testLocation = MainActivity.gpsService.getRecentLocation();
+        Log.d("Debugging", testLocation.toString());
     }
 
     private void initializeView() {

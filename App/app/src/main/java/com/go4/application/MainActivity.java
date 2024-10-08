@@ -22,8 +22,8 @@ import com.go4.utils.GPSService.LocalBinder;
 public class MainActivity extends AppCompatActivity {
     public FirebaseUser user;
     private FirebaseAuth mAuth;
-    public GPSService gpsService;
-    public boolean bound;
+    public static GPSService gpsService;
+    public static boolean bound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
