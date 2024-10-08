@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -33,23 +34,25 @@
             android:textSize="12sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+            android:gravity="start"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
 
             <ImageView
                 android:id="@+id/pa_card_image"
-                android:layout_width="wrap_content"
+                android:layout_width="14dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/quality_good" />
 
             <TextView
                 android:id="@+id/pa_card_quality"
-                android:layout_width="236dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:text="Low"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />

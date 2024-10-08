@@ -49,4 +49,5 @@ dependencies {
     androidTestImplementation(libs.rules)
     androidTestImplementation(libs.junit.v113)
     implementation(libs.semicirclearcprogressbar.v111)
+    implementation(libs.circleimageview)
 }

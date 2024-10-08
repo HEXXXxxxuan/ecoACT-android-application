@@ -1,20 +1,29 @@
 package com.go4.application;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,16 +31,15 @@ import androidx.core.view.WindowInsetsCompat;
 import com.go4.application.historical.AirQualityRecord;
 import com.go4.application.tree.AVLTree;
 import com.go4.utils.CsvParser;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     private LayoutInflater inflater;
     private LinearLayout cardList;
     private Spinner suburbSpinner;
-    private Button addButton;
+    private ImageView imageView;
     private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
 //    private FirebaseAuth mAuth;
 
@@ -53,14 +61,6 @@ public class ProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        cardList = (LinearLayout) findViewById(R.id.pa_cardList);
-        suburbSpinner = (Spinner) findViewById(R.id.pa_suburb_spinner);
-        addButton = (Button) findViewById(R.id.pa_add_button);
-        inflater = getLayoutInflater();
-
-        addButton.setOnClickListener(v -> addSuburb());
-
-        suburbSpinner();
 
         Intent intent = getIntent();
         String usernameString = intent.getStringExtra("displayName");
@@ -68,11 +68,86 @@ public class ProfileActivity extends AppCompatActivity {
         username.setText(usernameString);
 
         createAVLTree();
+
+        cardList = findViewById(R.id.pa_cardList);
+        suburbSpinner = findViewById(R.id.pa_suburb_spinner);
+        inflater = getLayoutInflater();
+        Button addButton = findViewById(R.id.pa_add_button);
+        addButton.setOnClickListener(v -> addSuburb());
+
+        suburbSpinner();
+
+        imageView = findViewById(R.id.pa_profile);
+
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+
+                        try {
+                            // Load the bitmap from the URI
+                            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            // Call the Save function
+                            String savedPath = saveProfilePicture(bitmapImage);
+                            Log.d("PhotoPicker", "Image saved at: " + savedPath);
+                            loadProfilePicture();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.e("PhotoPicker", "Error loading image: " + e.getMessage());
+                        }
+
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
+
+        loadProfilePicture();
     }
 
-    @Override
-    protected void onStart(){
-        super.onStart();
+    public String saveProfilePicture(Bitmap bitmapImage) {
+        String uniqueNamePath = generatePath(true);
+        File path = new File(uniqueNamePath);
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Filename", e.getMessage());
+            return "";
+        }
+
+        return path.toString();
+    }
+
+    public String generatePath(Boolean returnFullPath) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        String filename = "profile_picture.jpg";
+        if (returnFullPath) {
+            File directory = cw.getDir("images", Context.MODE_PRIVATE);
+            return String.format("%s/%s", directory, filename);
+        } else {
+            return filename;
+        }
+    }
+
+    public void loadProfilePicture() {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        File file = new File(directory, "profile_picture" + ".jpg");
+
+        if (file.exists()) {
+            imageView.setImageDrawable(Drawable.createFromPath(file.toString()));
+        } else {
+            imageView.setImageResource(R.drawable.default_profile);
+        }
     }
 
     private void createAVLTree() {
@@ -84,12 +159,9 @@ public class ProfileActivity extends AppCompatActivity {
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
-
         String currentDateAndTime = sdf.format(new Date());
 
         String key = selectedSuburb + "_" + currentDateAndTime;
-
-        Toast.makeText(this, "key:" + key, Toast.LENGTH_SHORT).show();
 
         double pm10Number = 0;
         String quality = "N/A";
@@ -102,10 +174,10 @@ public class ProfileActivity extends AppCompatActivity {
             // Update semiCircleArcProgressBar and AQI status
 
             int aqi = (int) Math.round(record.getAqi());
-            if (aqi < 50) {
+            if (aqi <= 3) {
                 quality = "good"; // Green
-            } else if (aqi < 100) {
-                quality = "medium"; // Yellow
+            } else if (aqi <= 6) {
+                quality = "moderate"; // Yellow
             } else {
                 quality = "bad";// Red
             }
