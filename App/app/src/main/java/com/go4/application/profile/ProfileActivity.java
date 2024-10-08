@@ -1,4 +1,4 @@
-package com.go4.application;
+package com.go4.application.profile;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -32,6 +32,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;

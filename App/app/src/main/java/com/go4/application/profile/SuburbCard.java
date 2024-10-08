@@ -1,12 +1,4 @@
-package com.go4.application;
-
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+package com.go4.application.profile;
 
 public class SuburbCard {
     private String label;

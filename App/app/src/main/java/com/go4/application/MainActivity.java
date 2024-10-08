@@ -13,8 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.go4.application.historical.SuburbHistoricalActivity;
-import com.go4.application.live_data.SuburbLiveActivity;
+import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
