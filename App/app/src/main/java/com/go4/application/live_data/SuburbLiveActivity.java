@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.go4.application.MainActivity;
+import com.go4.application.historical.SuburbHistoricalActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
@@ -56,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 public class SuburbLiveActivity extends AppCompatActivity {
     private Spinner suburbSpinnerLive;
@@ -63,6 +66,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private TextView resultTextViewLive;
     private TextView coTextView, no2TextView, pm25TextView, pm10TextView, o3TextView, so2TexView;
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
+    private Button historicalButton;
+    private SemiCircleArcProgressBar semiCircleArcProgressBar;
 
 
     private HashMap<String, double[]> suburbMap;
@@ -72,6 +77,28 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private IntervalOption option;
     private String selectedSuburb;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private GPSService gpsService;
+    private boolean isBound = false;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
+            gpsService = binder.getService();
+            isBound = true;
+
+            // Get the recent location and update the UI
+            Location currentLocation = gpsService.getRecentLocation();
+            updateLocationUsingGPS(currentLocation);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +115,23 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
-        Location testLocation = MainActivity.gpsService.getRecentLocation();
-        Log.d("Debugging", testLocation.toString());
+        //Location testLocation = MainActivity.gpsService.getRecentLocation();
+        //Log.d("Debugging", testLocation.toString());
+
+        // Bind the GPS service
+        Intent intent = new Intent(this, GPSService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+        historicalButton.setOnClickListener(v -> {
+            Intent intent1 = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
+            startActivity(intent1);
+        });
     }
 
     private void initializeView() {
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
         intervalSpinner = findViewById(R.id.intervalSpinner);
+        intervalSpinner.setVisibility(View.GONE);
         resultTextViewLive = findViewById(R.id.aqiStatusTextView);
         coTextView = findViewById(R.id.coTextView);
         no2TextView = findViewById(R.id.no2TextView);
@@ -114,7 +151,10 @@ public class SuburbLiveActivity extends AppCompatActivity {
         pm25ProgressBar.setMax(20);
         no2ProgressBar.setMax(5);
         so2ProgressBar.setMax(10);
+        historicalButton = findViewById(R.id.historicalPageButton);
+        semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
         lineChart = findViewById(R.id.lineChart);
+        lineChart.setVisibility(View.GONE);
     }
 
     public void updateLocationUsingGPS(Location location) {
@@ -180,7 +220,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
@@ -206,13 +245,47 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
 
-        resultTextViewLive.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.AQI));
-        coTextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.CO));
-        no2TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.NO2));
-        pm25TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.PM2_5));
-        pm10TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.PM10));
-        o3TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.O3));
-        so2TexView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.SO2));
+        resultTextViewLive.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        coTextView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.CO);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        no2TextView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.NO2);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        pm25TextView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.PM2_5);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        pm10TextView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.PM10);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        o3TextView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.O3);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
+
+        so2TexView.setOnClickListener(v -> {
+            plotData(recordsInSelectedSuburb, AirQualityMetric.SO2);
+            lineChart.setVisibility(View.VISIBLE);
+            intervalSpinner.setVisibility(View.VISIBLE);
+        });
 
     }
 
@@ -425,9 +498,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
             JSONObject components = firstRecord.getJSONObject("components");
             JSONObject main = firstRecord.getJSONObject("main");
 
-            String displayText = String.valueOf(main.getDouble("aqi"));
-
-            resultTextViewLive.setText(displayText);
             coTextView.setText(String.valueOf(components.getDouble("co")));
             no2TextView.setText(String.valueOf(components.getDouble("no2")));
             pm25TextView.setText(String.valueOf(components.getDouble("pm2_5")));
@@ -441,6 +511,26 @@ public class SuburbLiveActivity extends AppCompatActivity {
             updateProgressBar(so2ProgressBar, "SO2", components.getDouble("so2"));
             updateProgressBar(coProgressBar, "CO", components.getDouble("co"));
             updateProgressBar(no2ProgressBar, "NO2", components.getDouble("no2"));
+
+            // Update semiCircleArcProgressBar and AQI status
+
+            int aqi = (int) Math.round(main.getDouble("aqi"));
+
+            // Ensure AQI is an integer
+            semiCircleArcProgressBar.setPercent(aqi);
+            if (aqi < 50) {
+                resultTextViewLive.setText(aqi + " AQI 🙂 Low");
+                resultTextViewLive.setTextColor(ContextCompat.getColor(this, R.color.secondaryColorLG));  // Green
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.secondaryColorLG));  // Green
+            } else if (aqi < 100) {
+                resultTextViewLive.setText(aqi + " AQI 😐 Moderate");
+                resultTextViewLive.setTextColor(ContextCompat.getColor(this, R.color.yellow));  // Yellow
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.yellow));  // Yellow
+            } else {
+                resultTextViewLive.setText(aqi + " AQI 😷 High");
+                resultTextViewLive.setTextColor(ContextCompat.getColor(this, R.color.red));  // Red
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red));  // Red
+            }
 
         } catch (JSONException e) {
             resultTextViewLive.setText("Error parsing JSON response.");
