@@ -15,6 +15,7 @@ constraintlayout = "2.1.4"
 mockitoCore = "5.0.0"
 mockitoInline = "4.6.1"
 mpandroidchart = "v3.1.0"
+playServicesLocation = "21.3.0"
 rules = "1.6.1"
 semicirclearcprogressbar = "1.0.2"
 semicirclearcprogressbarVersion = "1.1.1"
@@ -40,6 +41,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 rules = { module = "androidx.test:rules", version.ref = "rules" }
 semicirclearcprogressbar = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbar" }
 semicirclearcprogressbar-v111 = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbarVersion" }

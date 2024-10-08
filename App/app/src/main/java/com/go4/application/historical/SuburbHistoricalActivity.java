@@ -59,7 +59,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchButton);
         liveDataButton = findViewById(R.id.livePageButton);
         searchBar = findViewById(R.id.sh_search);
-        semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar); // 确保这个view存在布局中
+        semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
         pm25ProgressBar = findViewById(R.id.pm25ProgressBar);
         pm10ProgressBar = findViewById(R.id.pm10ProgressBar);
         o3ProgressBar = findViewById(R.id.o3ProgressBar);
@@ -67,6 +67,14 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         coProgressBar = findViewById(R.id.coProgressBar);
         no2ProgressBar = findViewById(R.id.no2ProgressBar);
         aqiStatusTextView = findViewById(R.id.aqiStatusTextView);
+        //need to lower tha max scale cuz air quality in Canberra so good
+        coProgressBar.setMax(1000);
+        o3ProgressBar.setMax(200);
+        pm10ProgressBar.setMax(20);
+        pm25ProgressBar.setMax(20);
+        no2ProgressBar.setMax(5);
+        so2ProgressBar.setMax(10);
+
     }
 
     @Override
@@ -248,15 +256,18 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         if (record != null) {
             // Update progress bars and their colors in one method call
-            updateProgressBar(pm25ProgressBar, (int) record.getPm2_5());
-            updateProgressBar(pm10ProgressBar, (int) record.getPm10());
-            updateProgressBar(o3ProgressBar, (int) record.getO3());
-            updateProgressBar(so2ProgressBar, (int) record.getSo2());
-            updateProgressBar(coProgressBar, (int) record.getCo());
-            updateProgressBar(no2ProgressBar, (int) record.getNo2());
+            updateProgressBar(pm25ProgressBar, "PM2.5", record.getPm2_5());
+            updateProgressBar(pm10ProgressBar, "PM10", record.getPm10());
+            updateProgressBar(o3ProgressBar, "O3", record.getO3());
+            updateProgressBar(so2ProgressBar, "SO2", record.getSo2());
+            updateProgressBar(coProgressBar, "CO", record.getCo());
+            updateProgressBar(no2ProgressBar, "NO2", record.getNo2());
 
             // Update semiCircleArcProgressBar and AQI status
-            int aqi = (int) Math.round(record.getAqi());  // Ensure AQI is an integer
+
+            int aqi = (int) Math.round(record.getAqi());
+
+            // Ensure AQI is an integer
             semiCircleArcProgressBar.setPercent(aqi);
             if (aqi < 50) {
                 aqiStatusTextView.setText(aqi + " AQI 🙂 Low");
@@ -277,14 +288,82 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     }
 
     // Unified method to update progress bars and their colors
-    private void updateProgressBar(ProgressBar progressBar, int value) {
-        progressBar.setProgress(value);
-        if (value < 50) {
-            progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, R.color.secondaryColorLG));  // Green
-        } else if (value < 100) {
-            progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, R.color.yellow));  // Yellow
-        } else {
-            progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, R.color.red));  // Red
+    private void updateProgressBar(ProgressBar progressBar, String type, double value) {
+        int colorResId;
+
+        int scaledValue = (int) value;  // Default is no scaling
+
+        switch (type) {
+            case "PM2.5":
+                scaledValue = (int) (value * 10);  // Scale PM2.5 by 10
+                if (value <= 1.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 2.5) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "PM10":
+                scaledValue = (int) (value * 10);  // Scale PM10 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 5.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "SO2":
+                scaledValue = (int) (value * 10);  // Scale SO2 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 8.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "O3":
+                if (value <= 60) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 100) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+
+            case "CO":
+                if (value <= 4700) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 9400) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "NO2":
+                if (value <= 40) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 70) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            default:
+                colorResId = R.color.secondaryColorLG;  // Default to green if no match
+                break;
         }
+
+        progressBar.setProgress(scaledValue);
+        progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, colorResId));
     }
 }
