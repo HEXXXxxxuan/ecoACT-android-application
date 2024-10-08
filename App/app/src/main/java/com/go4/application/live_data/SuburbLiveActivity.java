@@ -33,8 +33,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.go4.application.MainActivity;
-import com.go4.application.ProfileActivity;
+
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
