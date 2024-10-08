@@ -21,7 +21,7 @@
         android:theme="@style/Theme.Application">
         <service android:name="com.go4.utils.GPSService"/>
         <activity
-            android:name=".ProfileActivity"
+            android:name=".profile.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
