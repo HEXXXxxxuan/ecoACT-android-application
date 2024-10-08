@@ -67,14 +67,13 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         coProgressBar = findViewById(R.id.coProgressBar);
         no2ProgressBar = findViewById(R.id.no2ProgressBar);
         aqiStatusTextView = findViewById(R.id.aqiStatusTextView);
-        //need to lower tha max scale cuz air quality in Canberra so good
+        // Lower tha max scale because air quality in Canberra so good
         coProgressBar.setMax(1000);
         o3ProgressBar.setMax(200);
         pm10ProgressBar.setMax(20);
         pm25ProgressBar.setMax(20);
         no2ProgressBar.setMax(5);
         so2ProgressBar.setMax(10);
-
     }
 
     @Override
@@ -97,8 +96,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         // Add listener for search bar
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -106,8 +104,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         liveDataButton.setOnClickListener(v -> {

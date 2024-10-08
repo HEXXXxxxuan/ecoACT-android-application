@@ -26,7 +26,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user!=null){
+        if(user != null){
             // Already logged-in user, return to app flow
             Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
             setResult(RESULT_OK);
