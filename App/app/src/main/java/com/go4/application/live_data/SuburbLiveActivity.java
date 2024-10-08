@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -61,7 +62,7 @@ import java.util.concurrent.Executors;
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 public class SuburbLiveActivity extends AppCompatActivity {
-    private Spinner suburbSpinnerLive;
+    private AutoCompleteTextView suburbSpinnerLive;
     private Spinner intervalSpinner;
     private TextView resultTextViewLive;
     private TextView coTextView, no2TextView, pm25TextView, pm10TextView, o3TextView, so2TexView;
@@ -126,6 +127,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             Intent intent1 = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
             startActivity(intent1);
         });
+
     }
 
     private void initializeView() {
@@ -166,7 +168,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
         int position = adapter.getPosition(selectedSuburb);
         if (position >= 0) {
-            suburbSpinnerLive.setSelection(position);
+            suburbSpinnerLive.setText(selectedSuburb, false);
         }
 
         // Fetch and display data based on the nearest suburb
@@ -350,35 +352,35 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         // Create a list of suburbs and add the default entry as the first item
         List<String> suburbsList = new ArrayList<>();
-        suburbsList.add("Select different city");  // Default entry
         suburbsList.addAll(suburbMap.keySet());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbsList.toArray(new String[0]));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
         suburbSpinnerLive.setAdapter(adapter);
 
-        // Set listener to handle suburb selection
-        suburbSpinnerLive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedSuburb = (String) parent.getItemAtPosition(position);
+        suburbSpinnerLive.setThreshold(1);
 
-                // Only fetch data if a valid suburb is selected (i.e., not the default entry)
-                if (!"Select different city".equals(selectedSuburb)) {
-                    fetchAndDisplayData(selectedSuburb);
-                } else {
-                    // Show no results or reset the chart/text views when default entry is selected
-                    resultTextViewLive.setText("No suburb selected.");
-                    coTextView.setText("");
-                    no2TextView.setText("");
-                    pm25TextView.setText("");
-                    lineChart.clear();  // Clear the chart
-                }
+        suburbSpinnerLive.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                // Clear the text when user clicks the text
+                suburbSpinnerLive.setText("");
             }
+        });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Optional: handle case where no item is selected
+
+        // Set listener to handle suburb selection
+        suburbSpinnerLive.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedSuburb = (String) parent.getItemAtPosition(position);
+
+            // Only fetch data if a valid suburb is selected
+            if (!"Select different city".equals(selectedSuburb)) {
+                fetchAndDisplayData(selectedSuburb);
+            } else {
+                // Show no results or reset the chart/text views when default entry is selected
+                resultTextViewLive.setText("No suburb selected.");
+                coTextView.setText("");
+                no2TextView.setText("");
+                pm25TextView.setText("");
+                lineChart.clear();  // Clear the chart
             }
         });
     }
