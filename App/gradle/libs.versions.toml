@@ -16,6 +16,7 @@ constraintlayout = "2.1.4"
 mockitoCore = "5.0.0"
 mockitoInline = "4.6.1"
 mpandroidchart = "v3.1.0"
+playServicesLocation = "21.3.0"
 rules = "1.6.1"
 semicirclearcprogressbar = "1.0.2"
 semicirclearcprogressbarVersion = "1.1.1"
@@ -45,6 +46,7 @@ rules = { module = "androidx.test:rules", version.ref = "rules" }
 semicirclearcprogressbar = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbar" }
 semicirclearcprogressbar-v111 = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbarVersion" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

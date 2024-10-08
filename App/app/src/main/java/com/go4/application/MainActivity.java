@@ -1,7 +1,11 @@
 package com.go4.application;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,17 +14,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.live_data.SuburbLiveActivity;
+import com.go4.utils.GPSService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.go4.utils.GPSService.LocalBinder;
 
 public class MainActivity extends AppCompatActivity {
     public FirebaseUser user;
     private FirebaseAuth mAuth;
+    public static GPSService gpsService;
+    public static boolean bound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        gpsService = new GPSService();
     }
 
     @Override
@@ -28,17 +38,48 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         firebaseLogin();
         Log.d("Debugging", "User: " + user.getEmail());
-//        startActivity(new Intent(this, SuburbHistoricalActivity.class));
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("displayName", user.getEmail());
-        startActivity(intent);
+
+        Intent intent = new Intent(this, GPSService.class);
+        Log.d("Debugging", "Trying to bindService");
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+        Log.d("Debugging", gpsService.getRecentLocation().toString());
+        // use gpsService.getRecentLocation() to get a location...
+
+        startActivity(new Intent(this, SuburbLiveActivity.class));
     }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        unbindService(connection);
+        bound = false;
+    }
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocalBinder binder = (LocalBinder) iBinder;
+            gpsService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
 
     private void firebaseLogin(){
         user = mAuth.getCurrentUser();
         if(user!=null){
             // Already logged-in user, return to app flow
             Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
+
+            //notify when gps is bound
+            Intent intent = new Intent("GPS_SERVICE_BOUND");
+            sendBroadcast(intent);
+
         }
         else {
             signIn();

@@ -1,8 +1,8 @@
-package com.go4.utils;
+package com.go4.utils.design_pattern;
 
 import android.content.Context;
 
-import com.go4.application.tree.AVLTree;
+import com.go4.utils.tree.AVLTree;
 
 import java.util.List;
 
