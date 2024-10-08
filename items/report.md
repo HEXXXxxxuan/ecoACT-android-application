@@ -1,17 +1,5 @@
 # [G0 - Team Name] Report
 
-The following is a report template to help your team successfully provide all the details necessary for your report in a structured and organised manner. Please give a straightforward and concise report that best demonstrates your project. Note that a good report will give a better impression of your project to the reviewers.
-
-Note that you should have removed ALL TEMPLATE/INSTRUCTION textes in your submission (like the current sentence), otherwise it hampers the professionality in your documentation.
-
-*Here are some tips to write a good report:*
-
-* `Bullet points` are allowed and strongly encouraged for this report. Try to summarise and list the highlights of your project (rather than give long paragraphs).*
-
-* *Try to create `diagrams` for parts that could greatly benefit from it.*
-
-* *Try to make your report `well structured`, which is easier for the reviewers to capture the necessary information.*
-
 *We give instructions enclosed in square brackets [...] and examples for each sections to demonstrate what are expected for your project report. Note that they only provide part of the skeleton and your description should be more content-rich. Quick references about markdown by [CommonMark](https://commonmark.org/help/)*
 
 ## Table of Contents
@@ -31,10 +19,10 @@ Note that you should have removed ALL TEMPLATE/INSTRUCTION textes in your submis
 
 *Instruction: please place the CORRECT link to your firebase repository here (with comp21006442@gmail.com added as an Editor)*
 
-- Firebase Repository Link: <insert-link-to-firebase-repository OR write "I do not use Firebase"> // TODO
+- Firebase Repository Link: <"https://console.firebase.google.com/u/1/project/go4gp-s2/overview"> // TODO
    - Confirm: [ ] I have already added comp21006442@gmail.com as a Editor to the Firebase project prior to due date.
 - Two user accounts for markers' access are usable on the app's APK (do not change the username and password unless there are exceptional circumstances. Note that they are not real e-mail addresses in use):
-   - Username: comp2100@anu.edu.au	Password: comp2100 [ ] // TODO: check if done
+   - Username: comp2100@anu.edu.au	Password: comp2100 [X] // TODO: check if done
    - Username: comp6442@anu.edu.au	Password: comp6442 [ ] // TODO: check if done
 
 ## Team Members and Roles
@@ -42,10 +30,11 @@ The key area(s) of responsibilities for each member
 
 | UID   |  Name  |   Role |
 |:------|:------:|-------:|
-| [uid] | [name] | [role] |
-| [uid] | [name] | [role] |
-| [uid] | [name] | [role] |
-| [uid] | [name] | [role] |
+| [u7327620] | [Ryan Foote] | [Worked on the login and using Firebase,GPS function and code review] |
+| [u7902000] | [Gea Linggar Galih]| [Worked on the back-end for data-related funtion and code review] |
+| [u8003980] | [Cheng Leong Chan] | [worked on the UI figma design and search-fliter function]] |
+| [u8006862] | [Hexuan Wang] | [worked on the UI design and Implementing the UI interface and Lego design] |
+| [u7635535] | [Zechuan Liu] | [worked on the basic function and search designate] |
 
 
 ## Summary of Individual Contributions
@@ -88,40 +77,43 @@ Note that the core criteria of contribution is based on `code contribution` (the
 
 *[What is your application, what does it do? Include photos or diagrams if necessary]*
 
-*Here is a pet specific application example*
+Our app is called "EcoACT", which aims to provide users with real-time air quality information for communities in the Canberra area. This app allows users to view the air quality index (AQI) of different areas on a map, so as to understand the current air conditions in the environment and make better life decisions.
 
-*PetBook is a social media application specifically targetting pet owners... it provides... certified practitioners, such as veterians are indicated by a label next to their profile...*
+The main features of the app include the following:
+
+Real-time air quality monitoring: Users can view the real-time air quality of various areas in Canberra on a map.
+
+Regional search: Users can quickly view the air quality of an area by entering the name of the area.
+
+Personalized collection: Users can collect frequently visited areas so that they can check the air quality of these places at any time.
+
+Historical data analysis: The app also provides historical data on air quality to help users understand the changing trends of air quality in a certain area.
+
+For example, if you live in the Bruce area and want to know whether it is suitable for outdoor activities today, you can open the app and view the air quality index of the Bruce area. In addition, the app will mark the location of nearby public facilities, such as parks, hospitals, etc., to help users make more appropriate living arrangements.
 
 ### Problem Statement
 
 *[Problem statement that defines the purpose of your App]*
+Air pollution is a growing concern for urban residents, especially for people with sensitive respiratory systems, such as the elderly and those with diseases such as asthma. Changes in air quality have a direct impact on the health of these people, and meteorological conditions, vehicle exhaust emissions, construction, etc. can affect the fluctuation of air quality.
+
+However, many people lack sufficient understanding of the changes in the air quality of the environment they live in, especially in special circumstances such as fire season and sandstorms, when air quality can change dramatically. At this time, users need to understand the air conditions around them in order to decide whether they should engage in outdoor activities or take necessary precautions.
+
+Therefore, the goal of the EcoACT application is to provide users with accurate and real-time air quality information, allowing them to make informed decisions in their lives and better protect the health of themselves and their families. This is especially important for commuters, runners, the elderly and parents of children.
 
 
 ### Application Use Cases and/or Examples
 
-*[Provide use cases and examples of people using your application. Who are the target users of your application? How do the users use your application?]*
+Our application is mainly aimed at Canberra residents, especially those who are sensitive to air quality and need to know the air conditions. Here are some specific application scenarios:
+Mr. Zhang is a running enthusiast. He likes to exercise along the running route near his home every morning. However, the air quality in Canberra has fluctuated recently, which makes Mr. Zhang a little worried about the impact of going out for a run on his health.
 
-*Here is a pet training application example*
+1. Mr. Zhang noticed that the sky was a little gloomy in the morning
+2. So he opened the "EcoACT" app to check the air quality index in his Bruce area. He found that the air quality index (AQI) showed moderate pollution, which means that the concentration of particulate matter in the air is high and not very friendly to sensitive people.
 
-*Molly wants to inquiry about her cat, McPurr's recent troublesome behaviour*
-1. *Molly notices that McPurr has been hostile since...*
-2. *She makes a post about... with the tag...*
-3. *Lachlan, a vet, writes a reply to Molly's post...*
-4. ...
-5. *Molly gives Lachlan's reply a 'tick' response*
+3. In order to confirm the specific situation, Mr. Zhang searched for the surrounding air quality in the app and checked the historical data of the past few days. He found that the air quality has declined in recent days due to construction of nearby roads.
 
-*Here is a map navigation application example*
+4. Mr. Zhang decided not to run along the outdoor running route today, but chose to go to the gym to complete the day's exercise on the treadmill.
 
-*Targets Users: Drivers*
-
-* *Users can use it to navigate in order to reach the destinations.*
-* *Users can learn the traffic conditions*
-* ...
-
-*Target Users: Those who want to find some good restaurants*
-
-* *Users can find nearby restaurants and the application can give recommendations*
-* ...
+5. Mr. Zhang also collected Bruce and several running places he often goes to, so that he can check the air quality conditions in these areas at any time, so as to make the best running plan in the next few days.
 
 *List all the use cases in text descriptions or create use case diagrams. Please refer to https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/ for use case diagram.*
 
@@ -156,28 +148,97 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 
 *I used the following data structures in my project:*
 
-1. *LinkedList*
-   * *Objective: used for storing xxxx for xxx feature.*
-   * *Code Locations: defined in [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and [class AnotherClass, lines l1-l2](url); processed using [dataStructureHandlerMethod](url) and ...
-   * *Reasons:*
-      * *It is more efficient than Arraylist for insertion with a time complexity O(1)*
-      * *We don't need to access the item by index for xxx feature because...*
-      * For the (part), the data ... (characteristics) ...
+1. LinkedList
 
-2. ...
+Objective: Used for storing historical air quality data for the historical view feature.
 
-3. ...
+Code Locations: Defined in DataFetcher class, methods fetchHistoricalData, storeData and SuburbHistoricalActivity class, lines 45-78; processed using addData and getHistory.
+
+Reasons:
+It is more efficient than ArrayList for insertion with a time complexity of O(1).
+We don't need to access the item by index for the historical feature because data is processed sequentially for each time period.
+For historical air quality data, LinkedList is well-suited due to the sequential nature of the data flow and frequent additions.
+
+2. HashMap
+
+Objective: Used for storing the mapping between suburb names and corresponding air quality data for the live data feature.
+
+Code Locations: Defined in SuburbLiveActivity class, methods fetchLiveData, getSuburbData, lines 60-120; processed using put and get methods.
+
+Reasons:
+HashMap provides O(1) average-time complexity for lookups, making it ideal for fetching data quickly based on suburb names.
+We need to frequently access the air quality data for each suburb without iterating over all entries.
+The data structure ensures fast retrieval of data, which is crucial for displaying live air quality information to users in real time.
+
+3.  ArrayList
+
+Objective: Used for storing the list of favorite suburbs for the user's personalized view feature.
+
+Code Locations: Defined in MainActivity class, methods addFavorite, removeFavorite, lines 110-140; processed using add, remove, and get.
+
+Reasons:
+ArrayList provides O(1) access time for indexed data, allowing quick retrieval of favorite suburbs.
+We don't need to perform frequent insertions/deletions other than at the end, making ArrayList a suitable choice.
+For storing a small list of favorite suburbs that users can update, ArrayList provides simple and efficient management.
+
+4.AVL Tree
+Objective: Used for storing real-time air quality data to maintain balanced and efficient lookup and insertion operations.
+
+Code Locations: Defined in AVLTree.java class, methods insert, delete, balance, lines 10-150; processed using insertNode and rebalance.
+
+Reasons:
+AVL Tree maintains balance through rotations, ensuring O(log n) time complexity for insertions, deletions, and lookups.
+We need to maintain a sorted structure with fast access to the data without compromising efficiency during updates.
+For real-time air quality monitoring, AVL Tree helps in ensuring that newly incoming data is organized, allowing efficient retrieval and display of data.
+
+5.TreeMap
+
+Objective: Used for storing air quality data sorted by timestamp for the historical data viewing feature.
+
+Code Locations: Defined in SuburbHistoricalActivity class, methods storeHistoricalData, queryDateRange, lines 130-200; processed using put and subMap.
+
+Reasons:
+TreeMap maintains sorted keys, which makes it easy to handle date-based data for historical queries.
+We need to frequently access air quality data in a sorted order to facilitate date-range queries.
+It ensures that the data is always sorted by timestamp, making it easy to visualize historical trends in air quality.
 
 <hr>
 
 ### Design Patterns
 *[What design patterns did your team utilise? Where and why?]*
 
-1. *xxx Pattern*
-   * *Objective: used for storing xxxx for xxx feature.*
-   * *Code Locations: defined in [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and [class AnotherClass, lines l1-l2](url); processed using [dataStructureHandlerMethod](url) and ...
-   * *Reasons:*
-      * ...
+1. Factory Pattern
+
+Objective: Used for creating instances of different data parsers (e.g., JSON parser, CSV parser) based on the input data type.
+
+Code Locations: Defined in ParserFactory.java class, methods createParser, getParserType, lines 10-70; processed using createParser in DataFetcher.
+
+Reasons:
+We need to create specific parser objects depending on the data format.
+Factory Pattern allows encapsulating the logic of object creation, promoting loose coupling by delegating instantiation responsibility.
+It provides flexibility for easily extending the system to support new data formats by adding new parser classes without modifying the existing codebase.
+
+      * Data Access Object (DAO) Pattern
+
+Objective: Used for abstracting and encapsulating all access to the application's data source, providing a simple API for querying and updating data.
+
+Code Locations: Defined in DataAccessObject.java class, methods getData, insertData, updateData, lines 20-85; processed using getConnection and executeQuery.
+
+Reasons:
+We need to separate the low-level data accessing operations from the higher-level business logic, ensuring clear and maintainable code.
+DAO Pattern provides a clear interface for interacting with the data source, minimizing code duplication and ensuring all data-related operations are performed consistently.
+It improves code readability and makes it easier to change or replace the data source without affecting the rest of the application, promoting a modular architecture.
+
+ Singleton Pattern
+
+Objective: Used for managing a single instance of the data access object (DAO) to ensure efficient resource management and centralized database access.
+
+Code Locations: Defined in DataAccessObject.java class, methods getInstance, getConnection, lines 15-55; processed using getInstance to ensure a single object is created.
+
+Reasons:
+We need to manage a single instance of the DAO for accessing the database throughout the application, avoiding multiple connections and potential conflicts.
+Singleton Pattern ensures there is only one instance of the DAO, minimizing overhead and ensuring consistency in data access.
+It provides a global point of access to the database connection, making it easier to manage and reuse the same instance.
 
 <hr>
 
