@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pa_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/rounded_bg"
+    android:background="@drawable/rounded_bg_good"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -21,9 +22,9 @@
             android:id="@+id/pa_card_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="text"
-            android:background="@android:color/transparent"
             android:text="Name" />
 
         <TextView
@@ -46,7 +47,7 @@
                 android:layout_width="14dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/quality_good" />
+                app:srcCompat="@drawable/quality_not_good" />
 
             <TextView
                 android:id="@+id/pa_card_quality"
