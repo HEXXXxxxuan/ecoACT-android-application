@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,11 +28,13 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
@@ -48,6 +51,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 public class ProfileActivity extends AppCompatActivity {
     private LayoutInflater inflater;
     private LinearLayout cardList;
@@ -57,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,27 +96,53 @@ public class ProfileActivity extends AppCompatActivity {
         // Upload Profile Picture
         imageView = findViewById(R.id.pa_profile);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                if (uri != null) {
-                    try {
-                        // Load the bitmap from the URI
-                        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                        writeProfilePicture(bitmapImage);
-                        readProfilePicture();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        try {
+                            // Load the bitmap from the URI
+                            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            writeProfilePicture(bitmapImage);
+                            readProfilePicture();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
                     }
-                } else {
-                    Log.d("PhotoPicker", "No media selected");
-                }
-            });
+                });
 
         imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
-            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-            .build()));
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
 
         readProfilePicture();
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_profile) {
+
+                    return true;
+                } else if (itemId == R.id.nav_suburb_live) {
+
+                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
+
+
+
+
 
     @Override
     protected void onStart() {
