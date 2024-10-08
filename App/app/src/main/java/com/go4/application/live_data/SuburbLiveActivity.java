@@ -63,6 +63,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
+    private AutoCompleteTextView comparingSpinner;
     private Spinner intervalSpinner;
     private TextView resultTextViewLive;
     private TextView coTextView, no2TextView, pm25TextView, pm10TextView, o3TextView, so2TexView;
@@ -76,10 +77,14 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private AVLTree<String, AirQualityRecord> records;
     private LineChart lineChart;
     private IntervalOption option;
+    private AirQualityMetric metricOption;
     private String selectedSuburb;
+    private String comparedSuburb;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private GPSService gpsService;
     private boolean isBound = false;
+    private List<AirQualityRecord> primarySuburbs;
+    private List<AirQualityRecord> comparedSuburbs;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -107,12 +112,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         setContentView(R.layout.suburb_live);
 
         suburbMap = loadSuburbsFromJson();
+        selectedSuburb = "";
+        comparedSuburb = "";
 
         initializeView();
         selectSuburbSpinner();
+        selectComparingSpinner();
         selectIntervalSpinner();
 
         option = IntervalOption.TODAY;
+        metricOption = AirQualityMetric.AQI;
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
@@ -128,12 +137,19 @@ public class SuburbLiveActivity extends AppCompatActivity {
             startActivity(intent1);
         });
 
+        suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
+        comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
+        textViewClickListener();
+
+
     }
 
     private void initializeView() {
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
+        comparingSpinner = findViewById(R.id.compareSuburb);
         intervalSpinner = findViewById(R.id.intervalSpinner);
         intervalSpinner.setVisibility(View.GONE);
+        comparingSpinner.setVisibility(View.GONE);
         resultTextViewLive = findViewById(R.id.aqiStatusTextView);
         coTextView = findViewById(R.id.coTextView);
         no2TextView = findViewById(R.id.no2TextView);
@@ -172,7 +188,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
 
         // Fetch and display data based on the nearest suburb
-        fetchAndDisplayData(selectedSuburb);
+        fetchAndDisplayData();
     }
 
     public enum IntervalOption {
@@ -205,20 +221,29 @@ public class SuburbLiveActivity extends AppCompatActivity {
                         option = IntervalOption.LASTWEEK;
                         break;
                     default:
+                        option = IntervalOption.TODAY;
                 }
 
-                Toast.makeText(SuburbLiveActivity.this, "Fetching data, please wait...", Toast.LENGTH_SHORT).show();
+                if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
+                    Toast.makeText(SuburbLiveActivity.this, "Fetching data, please wait...", Toast.LENGTH_SHORT).show();
 
-                // Fetch data in a background thread
-                executor.execute(() -> {
-                    if (selectedSuburb != null) {
-                        List<AirQualityRecord> data = fetchRecordsForSuburbAndInterval(selectedSuburb);
+                    // Fetch data in the background based on the selected interval
+                    executor.execute(() -> {
+                        primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+                        if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                            comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                        }
 
+                        // Update the UI with the new data
                         runOnUiThread(() -> {
-                            fetchAndDisplayData(selectedSuburb);
+                            plotPrimaryData(primarySuburbs, metricOption);
+
+                            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                                plotComparisonData(comparedSuburbs, metricOption);
+                            }
                         });
-                    }
-                });
+                    });
+                }
             }
 
 
@@ -232,67 +257,150 @@ public class SuburbLiveActivity extends AppCompatActivity {
         AQI, CO, NO2, PM2_5, PM10, O3, SO2
     }
 
-    private void fetchAndDisplayData(String selectedSuburb) {
+    private void fetchAndDisplayData() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         double[] coordinates = suburbMap.get(selectedSuburb);
 
         fetchAirQualityData(coordinates[0], coordinates[1]);
+    }
 
-        List<AirQualityRecord> recordsInSelectedSuburb = fetchRecordsForSuburbAndInterval(selectedSuburb);
-        Log.d("LocationDebug: ", "records in nearest suburb final" + recordsInSelectedSuburb);
+    private void textViewClickListener() {
 
-
-
-        plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
+        //plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
 
         resultTextViewLive.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.AQI;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
         });
 
         coTextView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.CO);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.CO;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
+
         });
 
         no2TextView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.NO2);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.NO2;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
         });
 
         pm25TextView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.PM2_5);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.PM2_5;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
         });
 
         pm10TextView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.PM10);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.PM10;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
         });
 
         o3TextView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.O3);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
+            comparingSpinner.setVisibility(View.VISIBLE);
+            metricOption = AirQualityMetric.O3;
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
         });
 
         so2TexView.setOnClickListener(v -> {
-            plotData(recordsInSelectedSuburb, AirQualityMetric.SO2);
             lineChart.setVisibility(View.VISIBLE);
             intervalSpinner.setVisibility(View.VISIBLE);
-        });
+            metricOption = AirQualityMetric.SO2;
+            comparingSpinner.setVisibility(View.VISIBLE);
+            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+            plotPrimaryData(primarySuburbs, metricOption);
+            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
 
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+            }
+
+
+        });
     }
 
     private List<AirQualityRecord> fetchRecordsForSuburbAndInterval(String selectedSuburb) {
-        ArrayList<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
+        List<AirQualityRecord> recordsInSelectedSuburb;
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -338,19 +446,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         // Filter records based on the selected suburb and time range
 
-        recordsInSelectedSuburb = (ArrayList<AirQualityRecord>) filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
+        recordsInSelectedSuburb = filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
 
-        Log.d("LocationDebug: ", "filtering in nearest suburb filtered by "+ startDate + endDate + recordsInSelectedSuburb);
-
+        Log.d("Comparing debug: ", "filtering in nearest suburb filtered by "+ startDate + endDate + recordsInSelectedSuburb);
 
         return recordsInSelectedSuburb;
     }
 
 
     private void selectSuburbSpinner() {
-        suburbMap = loadSuburbsFromJson();
-
-        // Create a list of suburbs and add the default entry as the first item
+        // Create a list of suburbs
         List<String> suburbsList = new ArrayList<>();
         suburbsList.addAll(suburbMap.keySet());
 
@@ -369,18 +474,44 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         // Set listener to handle suburb selection
         suburbSpinnerLive.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedSuburb = (String) parent.getItemAtPosition(position);
+            selectedSuburb = (String) parent.getItemAtPosition(position);
 
-            // Only fetch data if a valid suburb is selected
-            if (!"Select different city".equals(selectedSuburb)) {
-                fetchAndDisplayData(selectedSuburb);
+            if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
+                fetchAndDisplayData();
+                primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+                plotPrimaryData(primarySuburbs, metricOption);
+                Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
+                Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
+
+                comparedSuburb = "";
+                comparingSpinner.setText("");
+                Log.d("Comparing debug", "primary location: " + selectedSuburb);
             } else {
-                // Show no results or reset the chart/text views when default entry is selected
                 resultTextViewLive.setText("No suburb selected.");
-                coTextView.setText("");
-                no2TextView.setText("");
-                pm25TextView.setText("");
-                lineChart.clear();  // Clear the chart
+            }
+        });
+    }
+
+    private void selectComparingSpinner(){
+
+        // Create a list of suburbs and add the default entry as the first item
+        List<String> suburbsList = new ArrayList<>();
+        suburbsList.addAll(suburbMap.keySet());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
+        comparingSpinner.setAdapter(adapter);
+
+        comparingSpinner.setThreshold(1);
+        comparingSpinner.setOnItemClickListener((parent, view, position, id) -> {
+
+            comparedSuburb = (String) parent.getItemAtPosition(position);
+
+            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+                // Fetch data for the second suburb
+                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                plotComparisonData(comparedSuburbs, metricOption);
+                Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
+                Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
             }
         });
     }
@@ -539,79 +670,212 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
-    private void plotData(List<AirQualityRecord> data, AirQualityMetric metric) {
+//    private void plotData(List<AirQualityRecord> data, AirQualityMetric metric) {
+//        ArrayList<Entry> entries = new ArrayList<>();
+//        ArrayList<String> hourIndex = new ArrayList<>();
+//
+//        // data points to the entries list
+//        for (int i = 0; i < data.size(); i++) {
+//            String formattedTime = data.get(i).getTimestamp().substring(11, 16);
+//
+//            float value = 0f;
+//            switch (metric) {
+//                case AQI:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getAqi()));
+//                    break;
+//                case CO:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getCo()));
+//                    break;
+//                case NO2:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getNo2()));
+//                    break;
+//                case PM2_5:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getPm2_5()));
+//                    break;
+//                case O3:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getO3()));
+//                    break;
+//                case SO2:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getSo2()));
+//                    break;
+//                case PM10:
+//                    value = Float.parseFloat(String.valueOf(data.get(i).getPm10()));
+//            }
+//
+//            entries.add(new Entry(i, value));
+//            hourIndex.add(formattedTime);
+//        }
+//
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "AQI over Time");
+//        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//
+//        //customize the appearance
+//        dataSet.setMode(LineDataSet.Mode.LINEAR); //smooth line
+//        dataSet.setLineWidth(4f);
+//        dataSet.setCircleRadius(0f); // Remove circles at data points
+//        dataSet.setDrawValues(false); // Hide values at the data points
+//        dataSet.setColor(Color.GREEN); // Line color
+//
+//        lineChart.getDescription().setEnabled(false);
+//
+//        // Fill the area under the chart
+//        dataSet.setDrawFilled(true);
+//        dataSet.setFillColor(Color.GREEN);
+//        dataSet.setFillAlpha(40);
+//
+//        // Create a LineData object with the dataset and set it to the chart
+//        LineData lineData = new LineData(dataSet);
+//        lineChart.setData(lineData);
+//
+//        // Remove grid lines
+//        lineChart.getXAxis().setDrawGridLines(false);
+//        lineChart.getAxisLeft().setDrawGridLines(false);
+//        lineChart.getAxisRight().setDrawGridLines(false);
+//
+//        // Customize X and Y axis
+//        XAxis xAxis = lineChart.getXAxis();
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(hourIndex));
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        YAxis yAxisLeft = lineChart.getAxisLeft();
+//        YAxis yAxisRight = lineChart.getAxisRight();
+//        yAxisRight.setEnabled(false); // Disable right Y axis
+//
+//        lineChart.invalidate();
+//    }
+
+    private void plotPrimaryData(List<AirQualityRecord> data, AirQualityMetric metric) {
+        if (data == null || data.isEmpty()) {
+            Log.d("Plotting Error", "Primary data is empty or null");
+            return;
+        }
+
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> hourIndex = new ArrayList<>();
 
-        // data points to the entries list
+        // Prepare the entries and labels
         for (int i = 0; i < data.size(); i++) {
             String formattedTime = data.get(i).getTimestamp().substring(11, 16);
-
-            float value = 0f;
-            switch (metric) {
-                case AQI:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getAqi()));
-                    break;
-                case CO:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getCo()));
-                    break;
-                case NO2:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getNo2()));
-                    break;
-                case PM2_5:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getPm2_5()));
-                    break;
-                case O3:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getO3()));
-                    break;
-                case SO2:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getSo2()));
-                    break;
-                case PM10:
-                    value = Float.parseFloat(String.valueOf(data.get(i).getPm10()));
-            }
-
+            float value = getMetricValue(data.get(i), metric);
             entries.add(new Entry(i, value));
             hourIndex.add(formattedTime);
         }
 
+        // Get or create the LineData object
+        LineData lineData = lineChart.getData();
+        if (lineData == null) {
+            lineData = new LineData();
+            lineChart.setData(lineData);
+        }
 
-        LineDataSet dataSet = new LineDataSet(entries, "AQI over Time");
+        // Remove the existing "Primary" dataset if it exists to avoid overlap
+        LineDataSet primaryDataSet = (LineDataSet) lineData.getDataSetByLabel("Primary", true);
+        if (primaryDataSet != null) {
+            lineData.removeDataSet(primaryDataSet);
+        }
+
+        // Create a new dataset and add it to the chart
+        primaryDataSet = createDataSet(entries, "Primary", Color.GREEN);
+        lineData.addDataSet(primaryDataSet);
+
+        // Set the labels for the X-axis
+        setXAxisLabels(hourIndex);
+
+        // Log for debugging
+        Log.d("PrimaryPlotDebug", "Primary plot data : " + data);
+
+        // Update and refresh the chart
+        lineChart.notifyDataSetChanged();
+        lineChart.invalidate();
+    }
+
+    private void plotComparisonData(List<AirQualityRecord> data, AirQualityMetric metric) {
+        if (data == null || data.isEmpty()) {
+            Log.d("Plotting Error", "Comparison data is empty or null");
+            return;
+        }
+
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> hourIndex = new ArrayList<>();
+
+        // Prepare the entries and labels
+        for (int i = 0; i < data.size(); i++) {
+            String formattedTime = data.get(i).getTimestamp().substring(11, 16);
+            float value = getMetricValue(data.get(i), metric);
+            entries.add(new Entry(i, value));
+            hourIndex.add(formattedTime);
+        }
+
+        // Get or create the LineData object
+        LineData lineData = lineChart.getData();
+        if (lineData == null) {
+            lineData = new LineData();
+            lineChart.setData(lineData);
+        }
+
+        // Remove the existing "Comparison" dataset if it exists to avoid overlap
+        LineDataSet comparisonDataSet = (LineDataSet) lineData.getDataSetByLabel("Comparison", true);
+        if (comparisonDataSet != null) {
+            lineData.removeDataSet(comparisonDataSet);
+        }
+
+        // Create a new dataset and add it to the chart
+        comparisonDataSet = createDataSet(entries, "Comparison", Color.BLUE);
+        lineData.addDataSet(comparisonDataSet);
+
+        // Set the labels for the X-axis
+        setXAxisLabels(hourIndex);
+
+        // Log for debugging
+        Log.d("ComparisonPlotDebug", "Comparison plot data: " + data);
+
+        // Update and refresh the chart
+        lineChart.notifyDataSetChanged();
+        lineChart.invalidate();
+    }
+
+    private float getMetricValue(AirQualityRecord record, AirQualityMetric metric) {
+        switch (metric) {
+            case AQI:
+                return (float) record.getAqi();
+            case CO:
+                return (float) record.getCo();
+            case NO2:
+                return (float) record.getNo2();
+            case PM2_5:
+                return (float) record.getPm2_5();
+            case O3:
+                return (float) record.getO3();
+            case SO2:
+                return (float) record.getSo2();
+            case PM10:
+                return (float) record.getPm10();
+            default:
+                return 0;
+        }
+    }
+
+    private LineDataSet createDataSet(ArrayList<Entry> entries, String label, int color) {
+        LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        //customize the appearance
-        dataSet.setMode(LineDataSet.Mode.LINEAR); //smooth line
         dataSet.setLineWidth(4f);
-        dataSet.setCircleRadius(0f); // Remove circles at data points
-        dataSet.setDrawValues(false); // Hide values at the data points
-        dataSet.setColor(Color.GREEN); // Line color
-
-        lineChart.getDescription().setEnabled(false);
-
-        // Fill the area under the chart
+        dataSet.setDrawValues(false);
+        dataSet.setColor(color);
         dataSet.setDrawFilled(true);
-        dataSet.setFillColor(Color.GREEN);
+        dataSet.setFillColor(color);
         dataSet.setFillAlpha(40);
+        return dataSet;
+    }
 
-        // Create a LineData object with the dataset and set it to the chart
-        LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
-
-        // Remove grid lines
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.getAxisLeft().setDrawGridLines(false);
-        lineChart.getAxisRight().setDrawGridLines(false);
-
-        // Customize X and Y axis
+    private void setXAxisLabels(ArrayList<String> hourIndex) {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(hourIndex));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        YAxis yAxisLeft = lineChart.getAxisLeft();
-        YAxis yAxisRight = lineChart.getAxisRight();
-        yAxisRight.setEnabled(false); // Disable right Y axis
-
-        lineChart.invalidate();
+        xAxis.setDrawGridLines(false);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getAxisRight().setDrawGridLines(false);
     }
+
 
     // Unified method to update progress bars and their colors
     private void updateProgressBar(ProgressBar progressBar, String type, double value) {
