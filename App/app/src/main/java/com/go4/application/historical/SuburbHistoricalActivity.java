@@ -9,10 +9,13 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
@@ -28,70 +31,92 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
+
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
     private Spinner hourSpinner;
     private EditText editTextDate;
     private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
-    private TextView resultTextView;
+
     private Button searchButton;
 
     private EditText searchBar;
     private List<String> suburbList;
 
     private Button liveDataButton;
+    private SemiCircleArcProgressBar semiCircleArcProgressBar;
+    private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
+    private TextView aqiStatusTextView;
 
+    private void initializeViews() {
+        suburbSpinner = findViewById(R.id.suburbSpinner);
+        hourSpinner = findViewById(R.id.hourSpinner);
+        editTextDate = findViewById(R.id.editTextDate);
+        searchButton = findViewById(R.id.searchButton);
+        liveDataButton = findViewById(R.id.livePageButton);
+        searchBar = findViewById(R.id.sh_search);
+        semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
+        pm25ProgressBar = findViewById(R.id.pm25ProgressBar);
+        pm10ProgressBar = findViewById(R.id.pm10ProgressBar);
+        o3ProgressBar = findViewById(R.id.o3ProgressBar);
+        so2ProgressBar = findViewById(R.id.so2ProgressBar);
+        coProgressBar = findViewById(R.id.coProgressBar);
+        no2ProgressBar = findViewById(R.id.no2ProgressBar);
+        aqiStatusTextView = findViewById(R.id.aqiStatusTextView);
+        //need to lower tha max scale cuz air quality in Canberra so good
+        coProgressBar.setMax(1000);
+        o3ProgressBar.setMax(200);
+        pm10ProgressBar.setMax(20);
+        pm25ProgressBar.setMax(20);
+        no2ProgressBar.setMax(5);
+        so2ProgressBar.setMax(10);
 
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_historical);
 
-        suburbSpinner = findViewById(R.id.suburbSpinner);
-        hourSpinner = findViewById(R.id.hourSpinner);
-        editTextDate = findViewById(R.id.editTextDate);
-        resultTextView = findViewById(R.id.resultTextView);
-        searchButton = findViewById(R.id.searchButton);
-        liveDataButton = findViewById(R.id.livePageButton);
+        initializeViews();
 
         editTextDate.setOnClickListener(view -> showDatePickerDialog());
         searchButton.setOnClickListener(v -> searchForRecord());
 
-        //suburb spinner
+        // Populate spinners
         suburbSpinner();
-
-        //hour spinner
         hourSpinner();
 
         searchBar = findViewById(R.id.sh_search);
         suburbList = loadSuburbsFromJson();
 
-        TextWatcher textWatcher = new TextWatcher() {
+        // Add listener for search bar
+        searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 parseSearchBarInput();
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
-        };
-        searchBar.addTextChangedListener(textWatcher);
+        });
 
         liveDataButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
             startActivity(intent);
         });
 
-        //parseCSV and insert it in AVLTree
+        // Parse CSV and insert data into AVL tree
         createAVLTree();
-
     }
 
-    //parsing to avl tree
+    // Parse data and create AVL tree
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
@@ -114,8 +139,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         suburbSpinner.setAdapter(adapter);
     }
 
-    //populating the list (just for test)
-    private List<String> loadSuburbsFromJson(){
+    // Populate the suburb list from JSON file
+    private List<String> loadSuburbsFromJson() {
         List<String> suburbs = new ArrayList<>();
         try {
             InputStream is = getAssets().open("canberra_suburbs.json");
@@ -133,14 +158,11 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
-
         return suburbs;
-
     }
 
-    //method for select the date
+    // Date picker dialog
     private void showDatePickerDialog() {
-        // Get the current date
         final Calendar calendar = Calendar.getInstance();
 
         String currentSelectedDate = editTextDate.getText().toString();
@@ -156,7 +178,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-
                     String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
                     editTextDate.setText(selectedDate);
                 },
@@ -174,7 +195,12 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         String suburb = parser.getData()[0];
         if (!suburb.isEmpty()) {
             int suburbPosition = suburbList.indexOf(suburb);
-            suburbSpinner.setSelection(suburbPosition);
+            if (suburbPosition != -1) {
+                Log.d("SearchDebug", "Parsed Suburb: " + suburb);
+                suburbSpinner.setSelection(suburbPosition);
+            } else {
+                Log.d("SearchDebug", "Suburb not found: " + suburb);
+            }
         }
 
         String date = parser.getData()[1];
@@ -182,12 +208,18 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             String[] dateParts = date.split("-");
             String selectedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
             editTextDate.setText(selectedDate);
+            Log.d("SearchDebug", "Parsed Date: " + selectedDate);
         }
 
         String time = parser.getData()[2];
         if (!time.isEmpty()) {
             int hourPosition = Integer.parseInt(time.split(":")[0]);
-            if (hourPosition >= 0 && hourPosition <= 24) hourSpinner.setSelection(hourPosition);
+            if (hourPosition >= 0 && hourPosition <= 24) {
+                hourSpinner.setSelection(hourPosition);
+                Log.d("SearchDebug", "Parsed Time: " + time);
+            } else {
+                Log.d("SearchDebug", "Invalid Time: " + time);
+            }
         }
     }
 
@@ -195,7 +227,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         String selectedDate = editTextDate.getText().toString();
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
         String selectedHour = hourSpinner.getSelectedItem().toString().substring(0, 2);
-
 
         Log.d("SearchDebug", "Selected Suburb: " + selectedSuburb);
 
@@ -207,7 +238,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         }
 
         if (selectedDate.isEmpty()) {
-            resultTextView.setText("Please select a date");
+            Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -215,27 +246,121 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
         Log.d("SearchDebug", "Selected Date UI: " + selectedDate);
 
-        //search in tree
-        String key = selectedSuburb + "_" + selectedDate;  // Generate key for search
+        // Search in AVL tree
+        String key = selectedSuburb + "_" + selectedDate;
 
-        // Search the AVLTree for the key
         AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
 
-        //if the record is found use this method
         if (record != null) {
-            String result = "Air Quality Index (AQI): " + record.getAqi() + "\n" +
-                    "Carbon Monoxide (CO): " + record.getCo() + " ppm\n" +
-                    "Nitrogen Dioxide (NO2): " + record.getNo2() + " ppm\n" +
-                    "Ozone (O3): " + record.getO3() + " ppm\n" +
-                    "Sulfur Dioxide (SO2): " + record.getSo2() + " ppm\n" +
-                    "PM2.5: " + record.getPm2_5() + " µg/m³\n" +
-                    "PM10: " + record.getPm10() + " µg/m³\n" +
-                    "Ammonia (NH3): " + record.getNh3() + " ppm";
-            resultTextView.setText(result);
-        } else {
-            resultTextView.setText("No matching records.");
-        }
+            // Update progress bars and their colors in one method call
+            updateProgressBar(pm25ProgressBar, "PM2.5", record.getPm2_5());
+            updateProgressBar(pm10ProgressBar, "PM10", record.getPm10());
+            updateProgressBar(o3ProgressBar, "O3", record.getO3());
+            updateProgressBar(so2ProgressBar, "SO2", record.getSo2());
+            updateProgressBar(coProgressBar, "CO", record.getCo());
+            updateProgressBar(no2ProgressBar, "NO2", record.getNo2());
 
+            // Update semiCircleArcProgressBar and AQI status
+
+            int aqi = (int) Math.round(record.getAqi());
+
+            // Ensure AQI is an integer
+            semiCircleArcProgressBar.setPercent(aqi);
+            if (aqi < 50) {
+                aqiStatusTextView.setText(aqi + " AQI 🙂 Low");
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColorLG));  // Green
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.secondaryColorLG));  // Green
+            } else if (aqi < 100) {
+                aqiStatusTextView.setText(aqi + " AQI 😐 Moderate");
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow));  // Yellow
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.yellow));  // Yellow
+            } else {
+                aqiStatusTextView.setText(aqi + " AQI 😷 High");
+                aqiStatusTextView.setTextColor(ContextCompat.getColor(this, R.color.red));  // Red
+                semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red));  // Red
+            }
+        } else {
+            Toast.makeText(this, "No matching records.", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    // Unified method to update progress bars and their colors
+    private void updateProgressBar(ProgressBar progressBar, String type, double value) {
+        int colorResId;
+
+        int scaledValue = (int) value;  // Default is no scaling
+
+        switch (type) {
+            case "PM2.5":
+                scaledValue = (int) (value * 10);  // Scale PM2.5 by 10
+                if (value <= 1.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 2.5) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "PM10":
+                scaledValue = (int) (value * 10);  // Scale PM10 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 5.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "SO2":
+                scaledValue = (int) (value * 10);  // Scale SO2 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 8.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "O3":
+                if (value <= 60) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 100) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+
+            case "CO":
+                if (value <= 4700) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 9400) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "NO2":
+                if (value <= 40) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 70) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            default:
+                colorResId = R.color.secondaryColorLG;  // Default to green if no match
+                break;
+        }
+
+        progressBar.setProgress(scaledValue);
+        progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, colorResId));
+    }
 }
