@@ -2,10 +2,10 @@ package com.go4.utils;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.go4.application.historical.AirQualityRecord;
-import com.go4.application.tree.AVLTree;
+import com.go4.application.model.AirQualityRecord;
+import com.go4.utils.tree.AVLTree;
+import com.go4.utils.design_pattern.DataAccessObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvParser implements DataAccessObject{
+public class CsvParser implements DataAccessObject {
     AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
 
     public List<AirQualityRecord> parseData(Context context, String fileName){
@@ -42,7 +42,7 @@ public class CsvParser implements DataAccessObject{
                 String location = values[0];
 
                 // Check if the location string valid
-                if (!location.matches("[a-zA-Z']+")) {
+                if (!location.matches("[a-zA-Z' ]+")) {
                     Log.e("CSVParser", "Invalid location (non-alphabetic characters): " + location);
                     continue;
                 }

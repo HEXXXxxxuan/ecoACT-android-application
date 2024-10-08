@@ -1,15 +1,8 @@
-package com.go4.application.historical;
+package com.go4.utils.tokenizer_parser;
 
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

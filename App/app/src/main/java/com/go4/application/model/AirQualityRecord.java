@@ -1,4 +1,4 @@
-package com.go4.application.historical;
+package com.go4.application.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

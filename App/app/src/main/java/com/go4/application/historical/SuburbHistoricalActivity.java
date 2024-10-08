@@ -19,8 +19,11 @@ import androidx.core.content.ContextCompat;
 
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
-import com.go4.application.tree.AVLTree;
+import com.go4.application.model.AirQualityRecord;
+import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
+import com.go4.utils.tokenizer_parser.Parser;
+import com.go4.utils.tokenizer_parser.Tokenizer;
 
 import org.json.JSONArray;
 import org.json.JSONException;

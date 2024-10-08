@@ -11,20 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.live_data.SuburbLiveActivity;
+import com.go4.utils.GPSService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.go4.application.GPSService.LocalBinder;
+import com.go4.utils.GPSService.LocalBinder;
 
 public class MainActivity extends AppCompatActivity {
     public FirebaseUser user;
     private FirebaseAuth mAuth;
-    public GPSService gpsService;
-    public boolean bound;
+    public static GPSService gpsService;
+    public static boolean bound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debugging", gpsService.getRecentLocation().toString());
         // use gpsService.getRecentLocation() to get a location...
 
-        startActivity(new Intent(this, SuburbHistoricalActivity.class));
+        startActivity(new Intent(this, SuburbLiveActivity.class));
     }
 
     @Override
@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         if(user!=null){
             // Already logged-in user, return to app flow
             Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
+
+            //notify when gps is bound
+            Intent intent = new Intent("GPS_SERVICE_BOUND");
+            sendBroadcast(intent);
+
         }
         else {
             signIn();

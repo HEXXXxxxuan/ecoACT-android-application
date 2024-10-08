@@ -40,11 +40,11 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 rules = { module = "androidx.test:rules", version.ref = "rules" }
 semicirclearcprogressbar = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbar" }
 semicirclearcprogressbar-v111 = { module = "com.github.hadibtf:SemiCircleArcProgressBar", version.ref = "semicirclearcprogressbarVersion" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

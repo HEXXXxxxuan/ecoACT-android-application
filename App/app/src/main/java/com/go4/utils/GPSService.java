@@ -1,4 +1,4 @@
-package com.go4.application;
+package com.go4.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,13 +13,12 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.go4.application.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.CancellationToken;
 
 import java.util.Comparator;
 
@@ -32,7 +31,7 @@ public class GPSService extends Service {
     private NotificationManager notificationManager;
 
     public class LocalBinder extends Binder {
-       GPSService getService(){
+       public GPSService getService(){
            return GPSService.this;
        }
     }
@@ -65,6 +64,11 @@ public class GPSService extends Service {
                 locationResult.getLocations().stream()
                         .min(Comparator.comparingInt(x -> (int) x.getTime()))
                         .ifPresent(x -> latestLocation = x);
+                //debug location
+                if (latestLocation != null) {
+                    Log.d("Location Debug", "Latitude: " + latestLocation.getLatitude() + ", Longitude: " + latestLocation.getLongitude());
+                }
+
                 Notification notification = new Notification.Builder(getApplicationContext())
                         .setContentTitle("YOU EXIST")
                         .setContentText("YOU ARE LITERALLY HERE: " + latestLocation.getLatitude() + ", " + latestLocation.getLongitude())
