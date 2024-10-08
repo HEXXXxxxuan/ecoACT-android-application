@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debugging", gpsService.getRecentLocation().toString());
         // use gpsService.getRecentLocation() to get a location...
 
-        startActivity(new Intent(this, SuburbLiveActivity.class));
+//        startActivity(new Intent(this, SuburbLiveActivity.class));
+
+        Intent profileIntent = new Intent(this, ProfileActivity.class);
+        profileIntent.putExtra("displayName", user.getEmail());
+        startActivity(profileIntent);
     }
 
     @Override
