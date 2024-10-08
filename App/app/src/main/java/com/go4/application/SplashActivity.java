@@ -47,8 +47,8 @@ public class SplashActivity extends AppCompatActivity {
         apiKey = "4f6d63b7d7512fc4b14ee2aeb89d3128";
 
         //Fetching historical data and parse it to CSV and AVLTree
-        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
-        dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
+        //DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
+        //dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
 
         // Check for location permissions before proceeding
         checkLocationPermission();
@@ -72,7 +72,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void fetchData() {
-        // Fetching historical data and parse it to CSV and AVLTree
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
         dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
     }

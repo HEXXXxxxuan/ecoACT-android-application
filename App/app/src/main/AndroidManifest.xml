@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Application">
-        <service android:name=".GPSService"/>
+        <service android:name="com.go4.utils.GPSService"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true">

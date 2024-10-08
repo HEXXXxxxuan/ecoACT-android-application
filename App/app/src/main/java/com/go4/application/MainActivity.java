@@ -11,14 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.utils.GPSService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.go4.application.GPSService.LocalBinder;
+import com.go4.utils.GPSService.LocalBinder;
 
 public class MainActivity extends AppCompatActivity {
     public FirebaseUser user;

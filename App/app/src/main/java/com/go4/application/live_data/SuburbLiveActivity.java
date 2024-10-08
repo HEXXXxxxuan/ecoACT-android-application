@@ -1,20 +1,25 @@
 package com.go4.application.live_data;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,10 +28,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
-import com.go4.utils.LocationService;
 import com.go4.utils.tree.AVLTree;
 
 import org.json.JSONArray;
@@ -51,22 +56,42 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SuburbLiveActivity extends AppCompatActivity implements LocationService.LocationListener {
+public class SuburbLiveActivity extends AppCompatActivity {
     private Spinner suburbSpinnerLive;
     private Spinner intervalSpinner;
     private TextView resultTextViewLive;
-    private TextView coTextView;
-    private TextView no2TextView;
-    private TextView pm25TextView;
+    private TextView coTextView, no2TextView, pm25TextView, pm10TextView, o3TextView, so2TexView;
+    private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
+
+
     private HashMap<String, double[]> suburbMap;
     private static final String API_KEY = "4f6d63b7d7512fc4b14ee2aeb89d3128";
     private AVLTree<String, AirQualityRecord> records;
     private LineChart lineChart;
     private IntervalOption option;
-    private LocationService locationService;
     private String selectedSuburb;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private GPSService gpsService;
+    private boolean isBound = false;
+
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
+            gpsService = binder.getService();
+            isBound = true;
+
+
+            Location currentLocation = gpsService.getRecentLocation();
+            updateLocationUsingGPS(currentLocation);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +100,7 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
 
         suburbMap = loadSuburbsFromJson();
 
-        locationService = new LocationService(this, this);
-        locationService.startLocationUpdates();
-
-
-        suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
-        intervalSpinner = findViewById(R.id.intervalSpinner);
-        resultTextViewLive = findViewById(R.id.resultTextView2);
-        coTextView = findViewById(R.id.coTextView);
-        no2TextView = findViewById(R.id.no2TextView);
-        pm25TextView = findViewById(R.id.pm25TextView);
-        lineChart = findViewById(R.id.lineChart);
-
+        initializeView();
         selectSuburbSpinner();
         selectIntervalSpinner();
 
@@ -94,10 +108,37 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
+
+        Intent intent = new Intent(this, GPSService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
-    @Override
-    public void onLocationUpdated(Location location) {
+    private void initializeView() {
+        suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
+        intervalSpinner = findViewById(R.id.intervalSpinner);
+        resultTextViewLive = findViewById(R.id.aqiStatusTextView);
+        coTextView = findViewById(R.id.coTextView);
+        no2TextView = findViewById(R.id.no2TextView);
+        pm25TextView = findViewById(R.id.pm25TextView);
+        pm10TextView = findViewById(R.id.pm10TextView);
+        so2TexView = findViewById(R.id.so2TextView);
+        o3TextView = findViewById(R.id.o3TextView);
+        pm25ProgressBar = findViewById(R.id.pm25ProgressBar);
+        pm10ProgressBar = findViewById(R.id.pm10ProgressBar);
+        o3ProgressBar = findViewById(R.id.o3ProgressBar);
+        so2ProgressBar = findViewById(R.id.so2ProgressBar);
+        coProgressBar = findViewById(R.id.coProgressBar);
+        no2ProgressBar = findViewById(R.id.no2ProgressBar);
+        coProgressBar.setMax(1000);
+        o3ProgressBar.setMax(200);
+        pm10ProgressBar.setMax(20);
+        pm25ProgressBar.setMax(20);
+        no2ProgressBar.setMax(5);
+        so2ProgressBar.setMax(10);
+        lineChart = findViewById(R.id.lineChart);
+    }
+
+    public void updateLocationUsingGPS(Location location) {
         NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
         selectedSuburb = nearestSuburbStrategy.getNearestSuburb(location.getLatitude(), location.getLongitude(), suburbMap);
 
@@ -150,7 +191,11 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
                 // Fetch data in a background thread
                 executor.execute(() -> {
                     if (selectedSuburb != null) {
-                        fetchAndDisplayData(selectedSuburb);
+                        List<AirQualityRecord> data = fetchRecordsForSuburbAndInterval(selectedSuburb);
+
+                        runOnUiThread(() -> {
+                            fetchAndDisplayData(selectedSuburb);
+                        });
                     }
                 });
             }
@@ -164,7 +209,7 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
     }
 
     public enum AirQualityMetric {
-        AQI, CO, NO2, PM2_5
+        AQI, CO, NO2, PM2_5, PM10, O3, SO2
     }
 
     private void fetchAndDisplayData(String selectedSuburb) {
@@ -186,6 +231,9 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
         coTextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.CO));
         no2TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.NO2));
         pm25TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.PM2_5));
+        pm10TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.PM10));
+        o3TextView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.O3));
+        so2TexView.setOnClickListener(v -> plotData(recordsInSelectedSuburb, AirQualityMetric.SO2));
 
     }
 
@@ -404,6 +452,17 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
             coTextView.setText(String.valueOf(components.getDouble("co")));
             no2TextView.setText(String.valueOf(components.getDouble("no2")));
             pm25TextView.setText(String.valueOf(components.getDouble("pm2_5")));
+            pm10TextView.setText(String.valueOf(components.getDouble("pm10")));
+            o3TextView.setText(String.valueOf(components.getDouble("o3")));
+            so2TexView.setText(String.valueOf(components.getDouble("so2")));
+
+            updateProgressBar(pm25ProgressBar, "PM2.5", components.getDouble("pm2_5"));
+            updateProgressBar(pm10ProgressBar, "PM10", components.getDouble("pm10"));
+            updateProgressBar(o3ProgressBar, "O3", components.getDouble("o3"));
+            updateProgressBar(so2ProgressBar, "SO2", components.getDouble("so2"));
+            updateProgressBar(coProgressBar, "CO", components.getDouble("co"));
+            updateProgressBar(no2ProgressBar, "NO2", components.getDouble("no2"));
+
         } catch (JSONException e) {
             resultTextViewLive.setText("Error parsing JSON response.");
         }
@@ -431,6 +490,14 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
                 case PM2_5:
                     value = Float.parseFloat(String.valueOf(data.get(i).getPm2_5()));
                     break;
+                case O3:
+                    value = Float.parseFloat(String.valueOf(data.get(i).getO3()));
+                    break;
+                case SO2:
+                    value = Float.parseFloat(String.valueOf(data.get(i).getSo2()));
+                    break;
+                case PM10:
+                    value = Float.parseFloat(String.valueOf(data.get(i).getPm10()));
             }
 
             entries.add(new Entry(i, value));
@@ -475,14 +542,89 @@ public class SuburbLiveActivity extends AppCompatActivity implements LocationSer
         lineChart.invalidate();
     }
 
+    // Unified method to update progress bars and their colors
+    private void updateProgressBar(ProgressBar progressBar, String type, double value) {
+        int colorResId;
+
+        int scaledValue = (int) value;  // Default is no scaling
+
+        switch (type) {
+            case "PM2.5":
+                scaledValue = (int) (value * 10);  // Scale PM2.5 by 10
+                if (value <= 1.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 2.5) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "PM10":
+                scaledValue = (int) (value * 10);  // Scale PM10 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 5.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "SO2":
+                scaledValue = (int) (value * 10);  // Scale SO2 by 10
+                if (value <= 2.0) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 8.0) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "O3":
+                if (value <= 60) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 100) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+
+            case "CO":
+                if (value <= 4700) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 9400) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            case "NO2":
+                if (value <= 40) {
+                    colorResId = R.color.secondaryColorLG;
+                } else if (value <= 70) {
+                    colorResId = R.color.yellow;
+                } else {
+                    colorResId = R.color.red;
+                }
+                break;
+
+            default:
+                colorResId = R.color.secondaryColorLG;  // Default to green if no match
+                break;
+        }
+
+        progressBar.setProgress(scaledValue);
+        progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, colorResId));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Force a location update when returning to this activity
-        if (locationService != null) {
-            locationService.forceLocationUpdate();
-            Toast.makeText(this, "Requesting GPS update...", Toast.LENGTH_SHORT).show();
-        }
     }
 }
