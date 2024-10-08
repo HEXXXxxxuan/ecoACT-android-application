@@ -7,15 +7,11 @@
     tools:context=".live_data.SuburbLiveActivity"
     tools:ignore="MissingClass">
 
-    <Spinner
+    <AutoCompleteTextView
         android:id="@+id/SuburbSpinnerLive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
-
-        android:spinnerMode="dropdown"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:hint="Select suburb" />
 
 
     <ScrollView
