@@ -18,7 +18,7 @@
 
 
         <EditText
-            android:id="@+id/pa_card_location"
+            android:id="@+id/pa_card_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
