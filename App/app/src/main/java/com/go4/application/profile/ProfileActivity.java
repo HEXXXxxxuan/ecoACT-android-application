@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -14,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,14 +28,16 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.go4.application.R;
+import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
+import com.go4.application.profile.SuburbCard;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
 
@@ -50,7 +52,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class ProfileActivity extends AppCompatActivity {
     private LayoutInflater inflater;
@@ -61,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,27 +98,53 @@ public class ProfileActivity extends AppCompatActivity {
         // Upload Profile Picture
         imageView = findViewById(R.id.pa_profile);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                if (uri != null) {
-                    try {
-                        // Load the bitmap from the URI
-                        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                        writeProfilePicture(bitmapImage);
-                        readProfilePicture();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        try {
+                            // Load the bitmap from the URI
+                            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            writeProfilePicture(bitmapImage);
+                            readProfilePicture();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
                     }
-                } else {
-                    Log.d("PhotoPicker", "No media selected");
-                }
-            });
+                });
 
         imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
-            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-            .build()));
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
 
         readProfilePicture();
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_profile) {
+
+                    return true;
+                } else if (itemId == R.id.nav_suburb_live) {
+
+                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
+
+
+
+
 
     @Override
     protected void onStart() {
@@ -160,17 +191,44 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private String[] searchForQualityAndPm10Number(String suburb) {
-        String[] result = new String[2];
+    private void updateSuburbCards() {
+        for (SuburbCard card: pinnedSuburbs) {
+            String suburb = card.getSuburb();
+            String quality = "";
+            double pm10Number = 0;
 
-        String quality = "";
-        double pm10Number = 0;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+            String currentDateAndTime = sdf.format(new Date());
+            String key = suburb + "_" + currentDateAndTime;
+            AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+            if (record != null) {
+                pm10Number = record.getPm10();
+                int aqi = (int) Math.round(record.getAqi());
+                if (aqi <= 3) {
+                    quality = "Good"; // Green
+                } else if (aqi <= 6) {
+                    quality = "Moderate"; // Yellow
+                } else {
+                    quality = "Bad";// Red
+                }
+            }
+
+            card.setQuality(quality);
+            card.setPm10Number(String.valueOf(pm10Number));
+        }
+        writePinnedSuburbs();
+    }
+
+    private void addButtonOnClick() {
+        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
         String currentDateAndTime = sdf.format(new Date());
-        String key = suburb + "_" + currentDateAndTime;
-        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
+        String key = selectedSuburb + "_" + currentDateAndTime;
 
+        double pm10Number = 0;
+        String quality = "N/A";
+        AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
         if (record != null) {
             pm10Number = record.getPm10();
             int aqi = (int) Math.round(record.getAqi());
@@ -181,34 +239,12 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 quality = "Bad";// Red
             }
+        } else {
+            Toast.makeText(this, "No matching records.", Toast.LENGTH_SHORT).show();
         }
-
-        result[0] = quality;
-        result[1] = String.valueOf(pm10Number);
-        return result;
-    }
-
-    private void updateSuburbCards() {
-        for (SuburbCard card: pinnedSuburbs) {
-            String suburb = card.getSuburb();
-            String[] result = searchForQualityAndPm10Number(suburb);
-            String quality = result[0];
-            String pm10Number = result[1];
-
-            card.setQuality(quality);
-            card.setPm10Number(pm10Number);
-        }
-        writePinnedSuburbs();
-    }
-
-    private void addButtonOnClick() {
-        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
-        String[] result = searchForQualityAndPm10Number(selectedSuburb);
-        String quality = result[0];
-        String pm10Number = result[1];
 
         String label = "Label (e.g. Home/Work/School)";
-        addSuburbCard(label, selectedSuburb, quality, pm10Number);
+        addSuburbCard(label, selectedSuburb, quality, String.valueOf(pm10Number));
         writePinnedSuburbs();
     }
 
@@ -288,18 +324,6 @@ public class ProfileActivity extends AppCompatActivity {
         qualityTextView.setText(quality);
         TextView numberTextView = cardView.findViewById(R.id.pa_card_number);
         numberTextView.setText(String.valueOf((number)));
-
-        LinearLayout linearLayout = cardView.findViewById(R.id.pa_card);
-        if (Objects.equals(quality, "Good")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_good);
-            ImageView image = cardView.findViewById(R.id.pa_card_image);
-            image.setImageResource(R.drawable.quality_good);
-        } else if (Objects.equals(quality, "Moderate")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_moderate);
-        } else if (Objects.equals(quality, "Bad")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
-        }
-
         cardList.addView(cardView);
     }
 

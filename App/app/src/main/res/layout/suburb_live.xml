@@ -17,275 +17,306 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintTop_toBottomOf="@id/SuburbSpinnerLive"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <!-- semi bar -->
+
+            <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
+                android:id="@+id/semiCircleArcProgressBar"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                app:progressBarColor="@color/secondaryColorLG"
+                app:progressBarWidth="10"
+                app:progressPlaceHolderColor="@color/accendColorB"
+                app:progressPlaceHolderWidth="10" />
+
+            <!-- AQI text -->
+            <TextView
+                android:id="@+id/aqiStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/secondaryColorLG"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Separated Line -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/dividerColor" />
+
+            <!-- vertical bar (2 rows, 3 columns) -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="3"
+                android:columnOrderPreserved="false"
+                android:rowCount="2">
+
+                <!-- PM2.5 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="PM2.5"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/pm25TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/pm25ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- PM10 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="PM10"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/pm10TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/pm10ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- O3 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="O3"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/o3TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/o3ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- SO2 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="SO2"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/so2TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/so2ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- CO -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="CO"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/coTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/coProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+                <!-- NO2 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="NO2"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/no2TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <ProgressBar
+                        android:id="@+id/no2ProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:max="100"
+                        android:rotation="270" />
+                </LinearLayout>
+
+            </GridLayout>
+
+
+
+            <!-- Separated Line -->
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="281dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/intervalSpinner"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/compareSuburb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Compare with.." />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/dividerColor" />
+
+            <!-- Historical Data Button -->
+            <Button
+                android:id="@+id/historicalPageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Historical"
+                android:background="@drawable/round_button" />
+
+        </LinearLayout>
+    </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/secondaryColorDG"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@color/bottom_nav_color_selector"
+        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        app:menu="@menu/bottom_nav_menu" />
 
 
-        <!-- semi bar -->
-
-        <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
-            android:id="@+id/semiCircleArcProgressBar"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            app:progressBarColor="@color/secondaryColorLG"
-            app:progressBarWidth="10"
-            app:progressPlaceHolderColor="@color/accendColorB"
-            app:progressPlaceHolderWidth="10" />
-
-        <!-- AQI text -->
-        <TextView
-            android:id="@+id/aqiStatusTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/secondaryColorLG"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Separated Line -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/dividerColor" />
-
-        <!-- vertical bar (2 rows, 3 columns) -->
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alignmentMode="alignMargins"
-            android:columnCount="3"
-            android:columnOrderPreserved="false"
-            android:rowCount="2">
-
-            <!-- PM2.5 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="PM2.5"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/pm25TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/pm25ProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-            <!-- PM10 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="PM10"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/pm10TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/pm10ProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-            <!-- O3 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="O3"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/o3TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/o3ProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-            <!-- SO2 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="SO2"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/so2TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/so2ProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-            <!-- CO -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="CO"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/coTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/coProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-            <!-- NO2 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="NO2"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/no2TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="" />
-
-                <ProgressBar
-                    android:id="@+id/no2ProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:max="100"
-                    android:rotation="270" />
-            </LinearLayout>
-
-        </GridLayout>
-
-        <!-- Separated Line -->
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="281dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:layout_editor_absoluteX="0dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/dividerColor" />
-
-        <Spinner
-            android:id="@+id/intervalSpinner"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="84dp" />
-
-        <!-- Historical Data Button -->
-        <Button
-            android:id="@+id/historicalPageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Historical"
-            android:background="@drawable/round_button" />
-    </LinearLayout>
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@
 
     <color name="primary_ColorW">#FFFFFF</color>
 
+
     <color name="secondaryColorLG">#4FB236</color>
     <color name="secondaryColorMG">#24923A</color>
     <color name="secondaryColorDG">#186D37</color>
@@ -18,5 +19,15 @@
     <color name="yellow">#FFA500</color>
 
     <color name="red">#FF0000</color>
+
+
+
+
+
+
+
+
+
+
 
 </resources>
