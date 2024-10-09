@@ -132,38 +132,13 @@ This is an important section of your report and should include all technical dec
 
 - Details about the parser (describe the formal grammar and language used)
 
-Here's the updated grammar allowing any order for the components:
+- Decisions made (e.g., explain why you chose one or another data structure, why you used a specific data model, etc.)
 
-```plaintext
-<expression> ::= <suburb> <date> <time>
-               | <suburb> <time> <date>
-               | <date> <suburb> <time>
-               | <date> <time> <suburb>
-               | <time> <suburb> <date>
-               | <time> <date> <suburb>
+-  ⁠Details about the design patterns used (where in the code, justification of the choice, etc) concise, crucial reasons of your design.
 
-<suburb> ::= "Suburb1" | "Suburb2" | "Suburb3" | ...
+*Please give clear and concise descriptions for each subsections of this part. It would be better to list all the concrete items for each subsection and give no more than 5
 
-<date> ::= <year> <month> <day>
 
-<year> ::= <digit><digit><digit><digit>
-
-<month> ::= "Jan" | "January" | "Feb" | "February" | ... | "Dec" | "December"
-
-<day> ::= <digit> | <digit><digit>
-
-<time> ::= <hour24>:<minute> | <hour12><ampm>
-
-<hour24> ::= "00" | "01" | ... | "23"
-
-<minute> ::= "00" | "01" | ... | "59"
-
-<hour12> ::= "1" | "2" | ... | "12"
-
-<ampm> ::= "am" | "pm"
-
-<digit> ::= "0" | "1" | ... | "9"
-```
 
 <hr>
 
