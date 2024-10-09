@@ -171,13 +171,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
 
         bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
-
-
-
-
-
-
-
     }
 
     private void initializeView() {
@@ -222,9 +215,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
         if (position >= 0) {
             suburbSpinnerLive.setText(selectedSuburb, false);
         }
-
         // Fetch and display data based on the nearest suburb
-        fetchAndDisplayData();
+        executor.execute(this::fetchAndDisplayData);
+
     }
 
     public enum IntervalOption {
@@ -294,12 +287,35 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
     private void fetchAndDisplayData() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
-        double[] coordinates = suburbMap.get(selectedSuburb);
+            double[] coordinates = suburbMap.get(selectedSuburb);
 
-        fetchAirQualityData(coordinates[0], coordinates[1]);
+            String urlString = String.format(
+                    "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
+                    coordinates[0], coordinates[1], API_KEY);
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String inputLine;
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    runOnUiThread(() -> displayAirQualityData(response.toString()));
+                } else {
+                    runOnUiThread(() -> resultTextViewLive.setText("Failed to fetch air quality data."));
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> resultTextViewLive.setText("Error fetching data: " + e.getMessage()));
+            }
     }
 
     private void textViewClickListener() {
@@ -513,15 +529,24 @@ public class SuburbLiveActivity extends AppCompatActivity {
             selectedSuburb = (String) parent.getItemAtPosition(position);
 
             if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
-                fetchAndDisplayData();
-                primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-                plotPrimaryData(primarySuburbs, metricOption);
-                Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
-                Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
 
-                comparedSuburb = "";
-                comparingSpinner.setText("");
-                Log.d("Comparing debug", "primary location: " + selectedSuburb);
+                executor.execute(() -> {
+                    fetchAndDisplayData();
+                    primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+
+                    // Update UI on the main thread after data is fetched
+                    runOnUiThread(() -> {
+                        plotPrimaryData(primarySuburbs, metricOption);
+                    });
+
+                    Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
+                    Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
+
+                    comparedSuburb = "";
+                    Log.d("Comparing debug", "primary location: " + selectedSuburb);
+
+                });
+
             } else {
                 resultTextViewLive.setText("No suburb selected.");
             }
@@ -544,8 +569,14 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
             if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
                 // Fetch data for the second suburb
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
+
+                executor.execute(() -> {
+                    comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+                    runOnUiThread(() -> {
+                        plotComparisonData(comparedSuburbs, metricOption);
+                    });
+                });
+
                 Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
                 Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
             }
@@ -555,6 +586,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
                                                                     String selectedSuburb, String startTimestamp,
                                                                     String endTimestamp) {
+
 
         List<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
 
@@ -602,34 +634,34 @@ public class SuburbLiveActivity extends AppCompatActivity {
         return recordsInSelectedSuburb;
     }
 
-    private void fetchAirQualityData(double latitude, double longitude) {
-        String urlString = String.format(
-                "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
-                latitude, longitude, API_KEY);
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String inputLine;
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                displayAirQualityData(response.toString());
-            } else {
-                resultTextViewLive.setText("Failed to fetch air quality data.");
-            }
-        } catch (Exception e) {
-            resultTextViewLive.setText("Error fetching data: " + e.getMessage());
-        }
-    }
+//    private void fetchAirQualityData(double latitude, double longitude) {
+//        String urlString = String.format(
+//                "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
+//                latitude, longitude, API_KEY);
+//        try {
+//            URL url = new URL(urlString);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("GET");
+//
+//            int responseCode = conn.getResponseCode();
+//            if (responseCode == HttpURLConnection.HTTP_OK) {
+//                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//                StringBuilder response = new StringBuilder();
+//                String inputLine;
+//
+//                while ((inputLine = in.readLine()) != null) {
+//                    response.append(inputLine);
+//                }
+//                in.close();
+//
+//                displayAirQualityData(response.toString());
+//            } else {
+//                resultTextViewLive.setText("Failed to fetch air quality data.");
+//            }
+//        } catch (Exception e) {
+//            resultTextViewLive.setText("Error fetching data: " + e.getMessage());
+//        }
+//    }
 
     private HashMap<String, double[]> loadSuburbsFromJson() {
         HashMap<String, double[]> suburbMap = new HashMap<>();
