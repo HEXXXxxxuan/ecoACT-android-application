@@ -34,6 +34,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.go4.application.FirebaseLoginActivity;
+import com.go4.application.MainActivity;
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
@@ -55,6 +57,7 @@ import java.util.List;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
     private LayoutInflater inflater;
@@ -65,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
+    private Button logoutButton;
 
 
     @Override
@@ -76,6 +80,17 @@ public class ProfileActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(ProfileActivity.this, FirebaseLoginActivity.class);
+                startActivity(intent);
+
+            }
         });
 
         // Display User Name

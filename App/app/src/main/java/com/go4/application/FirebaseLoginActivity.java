@@ -19,7 +19,9 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        returnIntent = new Intent();
+        setContentView(R.layout.activity_firebase_login_ui);  // Show login UI
+        signIn();
+
     }
 
     @Override
@@ -38,28 +40,37 @@ public class FirebaseLoginActivity extends AppCompatActivity {
         }
     }
     private void signIn() {
-        setContentView(R.layout.activity_firebase_login_ui);
         Button loginSubmit = findViewById(R.id.bt_login);
         loginSubmit.setOnClickListener(view -> {
             String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
-            String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
+            String pass = ((EditText) findViewById(R.id.lg_password)).getText().toString();
+
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (pass.isEmpty()) {
+                Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Firebase login
             mAuth.signInWithEmailAndPassword(email, pass)
-                .addOnSuccessListener(task -> {
-                    FirebaseUser user = task.getUser();
-                    assert user != null;
-                    Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
-                    setResult(RESULT_OK);
-                    returnIntent.putExtra("User", user);
+                    .addOnSuccessListener(authResult -> {
+                        FirebaseUser user = authResult.getUser();
+                        if (user != null) {
+                            Toast.makeText(this, "Login successful!", Toast.LENGTH_LONG).show();
 
-                    startActivity(new Intent(this, SuburbHistoricalActivity.class));
-
-                    finish();
-                })
-                .addOnFailureListener(task -> {
-                    Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show();
-                    setResult(RESULT_CANCELED);
-                    finish();
-                });
+                            // Redirect back to MainActivity
+                            Intent mainIntent = new Intent(FirebaseLoginActivity.this, MainActivity.class);
+                            startActivity(mainIntent);
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
         });
     }
 }
