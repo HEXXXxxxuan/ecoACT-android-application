@@ -157,6 +157,8 @@ public class ProfileActivity extends AppCompatActivity {
         pinnedSuburbs = new ArrayList<SuburbCard>();
         readPinnedSuburbs();
 
+        handler = new Handler();
+
         // Update suburb cards every 15 minutes
         updateRunnable = new Runnable() {
             @Override public void run() {
@@ -164,6 +166,8 @@ public class ProfileActivity extends AppCompatActivity {
                 handler.postDelayed(this, 15 * 60 * 1000);
             }
         };
+
+        handler.post(updateRunnable);
     }
 
     private String getFilePath() {
