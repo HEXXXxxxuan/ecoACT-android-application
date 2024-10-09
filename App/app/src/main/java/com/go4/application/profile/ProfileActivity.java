@@ -138,32 +138,36 @@ public class ProfileActivity extends AppCompatActivity {
 
         readProfilePicture();
 
+        LinearLayout profile = findViewById(R.id.nav_profile);
+        LinearLayout suburb_live = findViewById(R.id.nav_suburb_live);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_profile) {
-
-                    return true;
-                } else if (itemId == R.id.nav_suburb_live) {
-
-                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
-                    return true;
-                }
-                return false;
+        suburb_live.setOnClickListener(
+            v -> {
+                startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
             }
-        });
+        );
 
 
-        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+//
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int itemId = item.getItemId();
+//                if (itemId == R.id.nav_profile) {
+//                    return true;
+//                } else if (itemId == R.id.nav_suburb_live) {
+//
+//                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+
+
+//        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
-
-
-
-
 
     @Override
     protected void onStart() {
@@ -172,6 +176,8 @@ public class ProfileActivity extends AppCompatActivity {
         pinnedSuburbs = new ArrayList<SuburbCard>();
         readPinnedSuburbs();
 
+        handler = new Handler();
+
         // Update suburb cards every 15 minutes
         updateRunnable = new Runnable() {
             @Override public void run() {
@@ -179,6 +185,8 @@ public class ProfileActivity extends AppCompatActivity {
                 handler.postDelayed(this, 15 * 60 * 1000);
             }
         };
+
+        handler.post(updateRunnable);
     }
 
     private String getFilePath() {
@@ -213,10 +221,10 @@ public class ProfileActivity extends AppCompatActivity {
     private void updateSuburbCards() {
         for (SuburbCard card: pinnedSuburbs) {
             String suburb = card.getSuburb();
-            String quality = "";
+            String quality = "N/A";
             double pm10Number = 0;
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
             String currentDateAndTime = sdf.format(new Date());
             String key = suburb + "_" + currentDateAndTime;
             AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
