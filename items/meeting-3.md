@@ -27,6 +27,17 @@
     - Profile page / pinned suburbs
 - See [associated meeting document](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/items/meeting-3-document.jpg) for further ui discussion and planning.
 
+Documented Plan to finish the remaining tasks:
+
+We have started writing the code for all custom features, and have implemented some of them. <br>
+Implemented: Data GPS, Search Filter, Data Graphical, Data Profile <br>
+Work in progress: Search Designate, Interact Noti <br><br>
+
+Ryan will finalize the code for Interact Noti by this Friday (Oct 11). <br>
+Zechaun has finished the Serach Designate, and will merge it after resolving conflicts by this Friday (Oct 11). <br>
+Gea will review and refactor the code throughtout the weekend (Oct 12-13). <br>
+The team will work on refining the report this week (Oct 10-16). <br>
+
 ## Action Items
 | Task                                   | Assigned To |  Due Date  |
 |:---------------------------------------|:-----------:|:----------:|
