@@ -231,18 +231,6 @@ It ensures that the data is always sorted by timestamp, making it easy to visual
 
 <hr>
 
-1. **AVL Tree**
-   - **Purpose**: Efficiently manage and retrieve sorted data.
-   - **Justification**: Provides balanced tree structure, ensuring O(log n) search, insert, and delete operations.
-
-2. **CAV (Custom Abstract Vector)**
-   - **Purpose**: Handle dynamic arrays with custom functionality.
-   - **Justification**: Offers flexibility for operations specific to our application requirements.
-
-3. **TXT and XML**
-   - **Purpose**: Store and exchange data in human-readable and structured formats.
-   - **Justification**: TXT is lightweight for simple storage; XML is ideal for structured data interchange.
-
 ### Design Patterns
 *[What design patterns did your team utilise? Where and why?]*
 
@@ -280,10 +268,6 @@ Singleton Pattern ensures there is only one instance of the DAO, minimizing over
 It provides a global point of access to the database connection, making it easier to manage and reuse the same instance.
 
 <hr>
-
-1. **Singleton Pattern**
-   - **Location**: Used for configuration management and logging.
-   - **Justification**: Ensures a single instance, maintaining consistency across application components.ƒ©
 
 ### Parser
 
