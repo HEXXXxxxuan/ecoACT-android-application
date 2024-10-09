@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         firebaseLogin();
         createNotificationChannel();
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("displayName", user.getEmail());
+        startActivity(intent);
     }
 
     @Override

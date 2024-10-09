@@ -67,6 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
+    private String email;
 
 
     @Override
@@ -82,9 +83,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Display User Name
         Intent intent = getIntent();
-        String usernameString = intent.getStringExtra("displayName");
+        email = intent.getStringExtra("displayName");
         TextView username = findViewById(R.id.pa_username);
-        username.setText(usernameString);
+        username.setText(email);
 
         // Create AVL Tree
         createAVLTree();
@@ -143,7 +144,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         suburb_live.setOnClickListener(
             v -> {
-                startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
+                Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
+                suburbLiveIntent.putExtra("displayName", email);
+                startActivity(suburbLiveIntent);
             }
         );
 
@@ -231,7 +234,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (record != null) {
                 pm10Number = record.getPm10();
-                int aqi = (int) Math.round(record.getAqi());
+                double aqi = record.getAqi();
                 if (aqi <= 3) {
                     quality = "Good"; // Green
                 } else if (aqi <= 6) {
@@ -258,7 +261,7 @@ public class ProfileActivity extends AppCompatActivity {
         AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
         if (record != null) {
             pm10Number = record.getPm10();
-            int aqi = (int) Math.round(record.getAqi());
+            double aqi = record.getAqi();
             if (aqi <= 3) {
                 quality = "Good"; // Green
             } else if (aqi <= 6) {
