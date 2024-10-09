@@ -50,7 +50,7 @@ public class GPSService extends Service {
     public void onCreate(){
         super.onCreate();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
-        request = new LocationRequest.Builder(5000).build();
+        request = new LocationRequest.Builder(20000).build();
         notificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         locationCallback = new LocationCallback() {
             @Override
