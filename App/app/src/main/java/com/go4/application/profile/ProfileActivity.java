@@ -55,6 +55,8 @@ import java.util.List;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileActivity extends AppCompatActivity {
     private LayoutInflater inflater;
@@ -93,6 +95,23 @@ public class ProfileActivity extends AppCompatActivity {
         inflater = getLayoutInflater();
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
+        findViewById(R.id.pa_button).setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
+            setContentView(R.layout.activity_firebase_login_ui);
+            Button loginSubmit = findViewById(R.id.bt_login);
+            loginSubmit.setOnClickListener(view -> {
+                String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
+                String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
+                        .addOnSuccessListener(task -> {
+                            FirebaseUser user = task.getUser();
+                            assert user != null;
+                            Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
+                        })
+                        .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
+            });
+        });
         suburbSpinner();
 
         // Upload Profile Picture

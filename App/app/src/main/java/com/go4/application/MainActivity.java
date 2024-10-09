@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.profile.ProfileActivity;
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     public static GPSService gpsService;
     public static boolean bound;
-    public static NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +56,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         firebaseLogin();
         createNotificationChannel();
-        Log.d("Debugging", "User: " + user.getEmail());
-        Intent intent = new Intent(this, GPSService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        Intent profileIntent = new Intent(this, ProfileActivity.class);
-        profileIntent.putExtra("displayName", user.getEmail());
-        startActivity(profileIntent);
     }
 
     @Override
@@ -118,7 +110,13 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(task -> {
                     FirebaseUser user = task.getUser();
                     assert user != null;
-                    Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_LONG).show();
+                    Log.d("Debugging", "User: " + user.getEmail());
+                    Intent intent = new Intent(this, GPSService.class);
+                    bindService(intent, connection, Context.BIND_AUTO_CREATE);
+                    Intent profileIntent = new Intent(this, ProfileActivity.class);
+                    profileIntent.putExtra("displayName", user.getEmail());
+                    startActivity(profileIntent);
                 })
                 .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
         });
