@@ -7,9 +7,7 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.IBinder;
-import android.os.StrictMode;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -33,7 +30,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.go4.application.MainActivity;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
 import com.go4.application.profile.ProfileActivity;
@@ -42,8 +38,6 @@ import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 import com.go4.utils.tree.AVLTree;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,8 +61,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
@@ -94,6 +86,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private boolean isBound = false;
     private List<AirQualityRecord> primarySuburbs;
     private List<AirQualityRecord> comparedSuburbs;
+    private String email;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -120,6 +113,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suburb_live);
 
+        Intent intent = getIntent();
+        email = intent.getStringExtra("displayName");
+
         suburbMap = loadSuburbsFromJson();
         selectedSuburb = "";
         comparedSuburb = "";
@@ -138,12 +134,12 @@ public class SuburbLiveActivity extends AppCompatActivity {
         //Log.d("Debugging", testLocation.toString());
 
         // Bind the GPS service
-        Intent intent = new Intent(this, GPSService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        Intent gpsIntent = new Intent(this, GPSService.class);
+        bindService(gpsIntent, connection, Context.BIND_AUTO_CREATE);
 
         historicalButton.setOnClickListener(v -> {
-            Intent intent1 = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
-            startActivity(intent1);
+            Intent suburbHistoricalIntent = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
+            startActivity(suburbHistoricalIntent);
         });
 
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
@@ -154,7 +150,12 @@ public class SuburbLiveActivity extends AppCompatActivity {
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
 
         LinearLayout profile = findViewById(R.id.nav_profile);
-        profile.setOnClickListener(v -> startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class)));
+        profile.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(SuburbLiveActivity.this, ProfileActivity.class);
+            profileIntent.putExtra("displayName", email);
+            startActivity(profileIntent);
+            ;
+        });
 //        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 //
 //        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

@@ -52,6 +52,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -67,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
+    private String email;
 
 
     @Override
@@ -82,9 +84,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Display User Name
         Intent intent = getIntent();
-        String usernameString = intent.getStringExtra("displayName");
+        email = intent.getStringExtra("displayName");
         TextView username = findViewById(R.id.pa_username);
-        username.setText(usernameString);
+        username.setText(email);
 
         // Create AVL Tree
         createAVLTree();
@@ -143,7 +145,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         suburb_live.setOnClickListener(
             v -> {
-                startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
+                Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
+                suburbLiveIntent.putExtra("displayName", email);
+                startActivity(suburbLiveIntent);
             }
         );
 
@@ -218,47 +222,20 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void updateSuburbCards() {
-        for (SuburbCard card: pinnedSuburbs) {
-            String suburb = card.getSuburb();
-            String quality = "N/A";
-            double pm10Number = 0;
+    private String[] searchForQualityAndPm10Number(String suburb) {
+        String[] result = new String[2];
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
-            String currentDateAndTime = sdf.format(new Date());
-            String key = suburb + "_" + currentDateAndTime;
-            AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
+        String quality = "N/A";
+        double pm10Number = 0;
 
-            if (record != null) {
-                pm10Number = record.getPm10();
-                int aqi = (int) Math.round(record.getAqi());
-                if (aqi <= 3) {
-                    quality = "Good"; // Green
-                } else if (aqi <= 6) {
-                    quality = "Moderate"; // Yellow
-                } else {
-                    quality = "Bad";// Red
-                }
-            }
-
-            card.setQuality(quality);
-            card.setPm10Number(String.valueOf(pm10Number));
-        }
-        writePinnedSuburbs();
-    }
-
-    private void addButtonOnClick() {
-        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
         String currentDateAndTime = sdf.format(new Date());
-        String key = selectedSuburb + "_" + currentDateAndTime;
-
-        double pm10Number = 0;
-        String quality = "N/A";
+        String key = suburb + "_" + currentDateAndTime;
         AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
+
         if (record != null) {
             pm10Number = record.getPm10();
-            int aqi = (int) Math.round(record.getAqi());
+            double aqi = record.getAqi();
             if (aqi <= 3) {
                 quality = "Good"; // Green
             } else if (aqi <= 6) {
@@ -266,12 +243,34 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 quality = "Bad";// Red
             }
-        } else {
-            Toast.makeText(this, "No matching records.", Toast.LENGTH_SHORT).show();
         }
 
+        result[0] = quality;
+        result[1] = String.valueOf(pm10Number);
+        return result;
+    }
+
+    private void updateSuburbCards() {
+        for (SuburbCard card: pinnedSuburbs) {
+            String suburb = card.getSuburb();
+            String[] result = searchForQualityAndPm10Number(suburb);
+            String quality = result[0];
+            String pm10Number = result[1];
+
+            card.setQuality(quality);
+            card.setPm10Number(pm10Number);
+        }
+        writePinnedSuburbs();
+    }
+
+    private void addButtonOnClick() {
+        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        String[] result = searchForQualityAndPm10Number(selectedSuburb);
+        String quality = result[0];
+        String pm10Number = result[1];
+
         String label = "Label (e.g. Home/Work/School)";
-        addSuburbCard(label, selectedSuburb, quality, String.valueOf(pm10Number));
+        addSuburbCard(label, selectedSuburb, quality, pm10Number);
         writePinnedSuburbs();
     }
 
@@ -351,6 +350,18 @@ public class ProfileActivity extends AppCompatActivity {
         qualityTextView.setText(quality);
         TextView numberTextView = cardView.findViewById(R.id.pa_card_number);
         numberTextView.setText(String.valueOf((number)));
+
+        LinearLayout linearLayout = cardView.findViewById(R.id.pa_card);
+        if (Objects.equals(quality, "Good")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_good);
+            ImageView image = cardView.findViewById(R.id.pa_card_image);
+            image.setImageResource(R.drawable.quality_good);
+        } else if (Objects.equals(quality, "Moderate")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_moderate);
+        } else if (Objects.equals(quality, "Bad")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
+        }
+
         cardList.addView(cardView);
     }
 
