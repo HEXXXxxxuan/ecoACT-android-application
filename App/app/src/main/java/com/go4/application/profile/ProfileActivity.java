@@ -52,6 +52,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -354,6 +355,18 @@ public class ProfileActivity extends AppCompatActivity {
         qualityTextView.setText(quality);
         TextView numberTextView = cardView.findViewById(R.id.pa_card_number);
         numberTextView.setText(String.valueOf((number)));
+
+        LinearLayout linearLayout = cardView.findViewById(R.id.pa_card);
+        if (Objects.equals(quality, "Good")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_good);
+            ImageView image = cardView.findViewById(R.id.pa_card_image);
+            image.setImageResource(R.drawable.quality_good);
+        } else if (Objects.equals(quality, "Moderate")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_moderate);
+        } else if (Objects.equals(quality, "Bad")) {
+            linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
+        }
+
         cardList.addView(cardView);
     }
 
