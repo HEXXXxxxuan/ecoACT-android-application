@@ -28,6 +28,7 @@
 - See [associated meeting document](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/items/meeting-3-document.jpg) for further ui discussion and planning.
 
 Documented Plan to finish the remaining tasks:
+
 We have started writing the code for all custom features, and have implemented some of them.
 Implemented: Data GPS, Search Filter, Data Graphical, Data Profile
 Work in progress: Search Designate, Interact Noti
