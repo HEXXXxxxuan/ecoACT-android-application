@@ -29,14 +29,14 @@
 
 Documented Plan to finish the remaining tasks:
 
-We have started writing the code for all custom features, and have implemented some of them.
-Implemented: Data GPS, Search Filter, Data Graphical, Data Profile
-Work in progress: Search Designate, Interact Noti
+We have started writing the code for all custom features, and have implemented some of them. <br>
+Implemented: Data GPS, Search Filter, Data Graphical, Data Profile <br>
+Work in progress: Search Designate, Interact Noti <br><br>
 
-Ryan will finalize the code for Interact Noti by this Friday (Oct 11).
-Zechaun has finished the Serach Designate, and will merge it after resolving conflicts by this Friday (Oct 11).
-Gea will review and refactor the code throughtout the weekend (Oct 12-13).
-The team will work on refining the report this week (Oct 10-16).
+Ryan will finalize the code for Interact Noti by this Friday (Oct 11). <br>
+Zechaun has finished the Serach Designate, and will merge it after resolving conflicts by this Friday (Oct 11). <br>
+Gea will review and refactor the code throughtout the weekend (Oct 12-13). <br>
+The team will work on refining the report this week (Oct 10-16). <br>
 
 ## Action Items
 | Task                                   | Assigned To |  Due Date  |
