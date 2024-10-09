@@ -7,18 +7,25 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.go4.application.historical.SuburbHistoricalActivity;
 import com.go4.application.live_data.SuburbLiveActivity;
+import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.go4.utils.GPSService.LocalBinder;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.content.Intent;
+import me.majiajie.pagerbottomtabstrip.PageNavigationView;
+import me.majiajie.pagerbottomtabstrip.listener.SimpleTabItemSelectedListener;
 
 public class MainActivity extends AppCompatActivity {
     public FirebaseUser user;
@@ -27,10 +34,35 @@ public class MainActivity extends AppCompatActivity {
     public static boolean bound;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         gpsService = new GPSService();
+        setContentView(R.layout.activity_main);
+        BottomNavigationView nav = findViewById(R.id.bottom_navigation);
+
+
+        nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+
+
+
+                if (itemId == R.id.nav_profile) {
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    return true;
+                } else if (itemId == R.id.nav_suburb_live) {
+                    startActivity(new Intent(MainActivity.this, SuburbLiveActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
     }
 
     @Override
@@ -46,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debugging", gpsService.getRecentLocation().toString());
         // use gpsService.getRecentLocation() to get a location...
 
-        startActivity(new Intent(this, SuburbLiveActivity.class));
+//        startActivity(new Intent(this, SuburbLiveActivity.class));
+
+        Intent profileIntent = new Intent(this, ProfileActivity.class);
+        profileIntent.putExtra("displayName", user.getEmail());
+        startActivity(profileIntent);
     }
 
     @Override

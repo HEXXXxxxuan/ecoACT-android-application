@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -31,12 +33,16 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.go4.application.MainActivity;
+
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 import com.go4.utils.tree.AVLTree;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +66,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
@@ -140,6 +148,34 @@ public class SuburbLiveActivity extends AppCompatActivity {
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
         comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
         textViewClickListener();
+
+
+        suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_profile) {
+
+                    startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class));
+                    return true;
+                } else if (itemId == R.id.nav_suburb_live) {
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
+
+
+
+
+
 
 
     }
