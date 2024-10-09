@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -151,26 +152,29 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
 
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_profile) {
+        LinearLayout profile = findViewById(R.id.nav_profile);
+        profile.setOnClickListener(v -> startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class)));
+//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+//
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int itemId = item.getItemId();
+//                if (itemId == R.id.nav_profile) {
+//
+//                    startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class));
+//                    return true;
+//                } else if (itemId == R.id.nav_suburb_live) {
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
-                    startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class));
-                    return true;
-                } else if (itemId == R.id.nav_suburb_live) {
 
-                    return true;
-                }
-                return false;
-            }
-        });
-
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
+//        bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
     }
 
     private void initializeView() {
