@@ -202,7 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void updateSuburbCards() {
         for (SuburbCard card: pinnedSuburbs) {
             String suburb = card.getSuburb();
-            String quality = "";
+            String quality = "N/A";
             double pm10Number = 0;
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
