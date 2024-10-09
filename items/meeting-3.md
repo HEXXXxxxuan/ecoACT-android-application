@@ -30,11 +30,12 @@
 Documented Plan to finish the remaining tasks:
 
 We have started writing the code for all custom features, and have implemented some of them. <br>
-Implemented: Data GPS, Search Filter, Data Graphical, Data Profile <br>
-Work in progress: Search Designate, Interact Noti <br><br>
+Implemented: Data GPS, Search Filter, Data Graphical <br>
+Work in progress: Data Profile, Search Designate, Interact Noti <br><br>
 
-Ryan will finalize the code for Interact Noti by this Friday (Oct 11). <br>
 Zechaun has finished the Serach Designate, and will merge it after resolving conflicts by this Friday (Oct 11). <br>
+Ryan will refine Data GPS and finalize the code for Interact Noti by this Sunday (Oct 13). <br>
+Leo will make sure the profile picture is the same if you login on different devices, and implement delete pinned suburbs feature by this Sunday (Oct 13). <br>
 Gea will review and refactor the code throughtout the weekend (Oct 12-13). <br>
 The team will work on refining the report this week (Oct 10-16). <br>
 
