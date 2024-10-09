@@ -132,11 +132,38 @@ This is an important section of your report and should include all technical dec
 
 - Details about the parser (describe the formal grammar and language used)
 
-- Decisions made (e.g., explain why you chose one or another data structure, why you used a specific data model, etc.)
+Here's the updated grammar allowing any order for the components:
 
-- Details about the design patterns used (where in the code, justification of the choice, etc)
+```plaintext
+<expression> ::= <suburb> <date> <time>
+               | <suburb> <time> <date>
+               | <date> <suburb> <time>
+               | <date> <time> <suburb>
+               | <time> <suburb> <date>
+               | <time> <date> <suburb>
 
-*Please give clear and concise descriptions for each subsections of this part. It would be better to list all the concrete items for each subsection and give no more than `5` concise, crucial reasons of your design.
+<suburb> ::= "Suburb1" | "Suburb2" | "Suburb3" | ...
+
+<date> ::= <year> <month> <day>
+
+<year> ::= <digit><digit><digit><digit>
+
+<month> ::= "Jan" | "January" | "Feb" | "February" | ... | "Dec" | "December"
+
+<day> ::= <digit> | <digit><digit>
+
+<time> ::= <hour24>:<minute> | <hour12><ampm>
+
+<hour24> ::= "00" | "01" | ... | "23"
+
+<minute> ::= "00" | "01" | ... | "59"
+
+<hour12> ::= "1" | "2" | ... | "12"
+
+<ampm> ::= "am" | "pm"
+
+<digit> ::= "0" | "1" | ... | "9"
+```
 
 <hr>
 
@@ -204,6 +231,18 @@ It ensures that the data is always sorted by timestamp, making it easy to visual
 
 <hr>
 
+1. **AVL Tree**
+   - **Purpose**: Efficiently manage and retrieve sorted data.
+   - **Justification**: Provides balanced tree structure, ensuring O(log n) search, insert, and delete operations.
+
+2. **CAV (Custom Abstract Vector)**
+   - **Purpose**: Handle dynamic arrays with custom functionality.
+   - **Justification**: Offers flexibility for operations specific to our application requirements.
+
+3. **TXT and XML**
+   - **Purpose**: Store and exchange data in human-readable and structured formats.
+   - **Justification**: TXT is lightweight for simple storage; XML is ideal for structured data interchange.
+
 ### Design Patterns
 *[What design patterns did your team utilise? Where and why?]*
 
@@ -241,6 +280,10 @@ Singleton Pattern ensures there is only one instance of the DAO, minimizing over
 It provides a global point of access to the database connection, making it easier to manage and reuse the same instance.
 
 <hr>
+
+1. **Singleton Pattern**
+   - **Location**: Used for configuration management and logging.
+   - **Justification**: Ensures a single instance, maintaining consistency across application components.ƒ©
 
 ### Parser
 
