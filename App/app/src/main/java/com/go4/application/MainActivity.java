@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.profile.ProfileActivity;
@@ -29,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     public static GPSService gpsService;
     public static boolean bound;
+    public static NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        checkUserLogin();
         gpsService = new GPSService();
         setContentView(R.layout.activity_main);
         BottomNavigationView nav = findViewById(R.id.bottom_navigation);
@@ -51,20 +54,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void checkUserLogin() {
+        user = mAuth.getCurrentUser();
+        if (user == null) {
+            Intent loginIntent = new Intent(MainActivity.this, FirebaseLoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        } else {
+            Intent loginIntent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(loginIntent);
+            Toast.makeText(this, "Welcome back, " + user.getEmail(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
-        firebaseLogin();
+
+        //FirebaseAuth.getInstance().signOut();
+
+        //firebaseLogin();
         createNotificationChannel();
-        Intent profileIntent = new Intent(this, ProfileActivity.class);
-        profileIntent.putExtra("displayName", user.getEmail());
-        startActivity(profileIntent);
+
+        Intent intent = new Intent(this, GPSService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onDestroy(){
-        unbindService(connection);
-        bound = false;
+        if (bound) {
+            unbindService(connection);
+            bound = false;
+        }
         super.onDestroy();
     }
 
@@ -92,36 +113,42 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.createNotificationChannel(channel);
     }
 
-    private void firebaseLogin(){
-        user = mAuth.getCurrentUser();
-        if(user!=null){
-            // Already logged-in user, return to app flow
-            Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
-        }
-        else {
-            signIn();
-        }
-    }
+//    private void firebaseLogin(){
+//        user = mAuth.getCurrentUser();
+//        if(user!=null){
+//            // Already logged-in user, return to app flow
+//            Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
+//        }
+//        else {
+//            signIn();
+//        }
+//    }
 
-    private void signIn() {
-        setContentView(R.layout.activity_firebase_login_ui);
-        Button loginSubmit = findViewById(R.id.bt_login);
-        loginSubmit.setOnClickListener(view -> {
-            String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
-            String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
-            mAuth.signInWithEmailAndPassword(email, pass)
-                    .addOnSuccessListener(task -> {
-                        FirebaseUser user = task.getUser();
-                        assert user != null;
-                        Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_LONG).show();
-                        Log.d("Debugging", "User: " + user.getEmail());
-                        Intent intent = new Intent(this, GPSService.class);
-                        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-                        Intent profileIntent = new Intent(this, ProfileActivity.class);
-                        profileIntent.putExtra("displayName", user.getEmail());
-                        startActivity(profileIntent);
-                    })
-                    .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
-        });
-    }
+//    private void signIn() {
+//        setContentView(R.layout.activity_firebase_login_ui);
+//        Button loginSubmit = findViewById(R.id.bt_login);
+//        loginSubmit.setOnClickListener(view -> {
+//
+//            String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
+//            String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
+//
+//            if (email.isEmpty()) {
+//                Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            if (pass.isEmpty()) {
+//                Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            mAuth.signInWithEmailAndPassword(email, pass)
+//                .addOnSuccessListener(task -> {
+//                    FirebaseUser user = task.getUser();
+//                    if (user != null) {
+//                        Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
+//                    }
+//                })
+//                .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
+//        });
+//    }
 }

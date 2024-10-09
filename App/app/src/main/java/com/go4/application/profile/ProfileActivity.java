@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Drawable;`
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +34,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.go4.application.FirebaseLoginActivity;
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
@@ -97,22 +98,13 @@ public class ProfileActivity extends AppCompatActivity {
         inflater = getLayoutInflater();
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
-        findViewById(R.id.pa_button).setOnClickListener(v -> {
+        findViewById(R.id.logout_button).setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
-            setContentView(R.layout.activity_firebase_login_ui);
-            Button loginSubmit = findViewById(R.id.bt_login);
-            loginSubmit.setOnClickListener(view -> {
-                String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
-                String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
-                        .addOnSuccessListener(task -> {
-                            FirebaseUser user = task.getUser();
-                            assert user != null;
-                            Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
-                        })
-                        .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
-            });
+
+            Intent logoutIntent = new Intent(ProfileActivity.this, FirebaseLoginActivity.class);
+            startActivity(logoutIntent);
+            finish();
+
         });
         suburbSpinner();
 
