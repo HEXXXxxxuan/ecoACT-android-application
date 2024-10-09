@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             Intent loginIntent = new Intent(MainActivity.this, ProfileActivity.class);
+            loginIntent.putExtra("displayName", user.getEmail());
             startActivity(loginIntent);
             Toast.makeText(this, "Welcome back, " + user.getEmail(), Toast.LENGTH_SHORT).show();
         }
