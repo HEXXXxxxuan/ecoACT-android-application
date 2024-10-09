@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         firebaseLogin();
         createNotificationChannel();
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("displayName", user.getEmail());
-        startActivity(intent);
+        Intent profileIntent = new Intent(this, ProfileActivity.class);
+        profileIntent.putExtra("displayName", user.getEmail());
+        startActivity(profileIntent);
     }
 
     @Override
@@ -110,18 +110,18 @@ public class MainActivity extends AppCompatActivity {
             String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
             String pass = ((EditText)findViewById(R.id.lg_password)).getText().toString();
             mAuth.signInWithEmailAndPassword(email, pass)
-                .addOnSuccessListener(task -> {
-                    FirebaseUser user = task.getUser();
-                    assert user != null;
-                    Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_LONG).show();
-                    Log.d("Debugging", "User: " + user.getEmail());
-                    Intent intent = new Intent(this, GPSService.class);
-                    bindService(intent, connection, Context.BIND_AUTO_CREATE);
-                    Intent profileIntent = new Intent(this, ProfileActivity.class);
-                    profileIntent.putExtra("displayName", user.getEmail());
-                    startActivity(profileIntent);
-                })
-                .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
+                    .addOnSuccessListener(task -> {
+                        FirebaseUser user = task.getUser();
+                        assert user != null;
+                        Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_LONG).show();
+                        Log.d("Debugging", "User: " + user.getEmail());
+                        Intent intent = new Intent(this, GPSService.class);
+                        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+                        Intent profileIntent = new Intent(this, ProfileActivity.class);
+                        profileIntent.putExtra("displayName", user.getEmail());
+                        startActivity(profileIntent);
+                    })
+                    .addOnFailureListener(task -> Toast.makeText(this, task.getMessage(), Toast.LENGTH_LONG).show());
         });
     }
 }

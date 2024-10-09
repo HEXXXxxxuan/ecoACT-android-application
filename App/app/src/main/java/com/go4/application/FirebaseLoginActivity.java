@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,11 +48,11 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(task -> {
                     FirebaseUser user = task.getUser();
                     assert user != null;
-                    Toast.makeText(this, "Successful login as " + user.getDisplayName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Successful login as " + user.getEmail(), Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK);
                     returnIntent.putExtra("User", user);
 
-                    startActivity(new Intent(this, SuburbHistoricalActivity.class));
+                    startActivity(new Intent(this, ProfileActivity.class));
 
                     finish();
                 })
