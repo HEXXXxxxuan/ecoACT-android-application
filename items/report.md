@@ -260,8 +260,6 @@ Error Handling: This design allows the parser to still function even if the inpu
 
 Production Rules:
 `<Record> ::= <Location> <Date> <Time> | <Date> <Location> <Time> | <Time> <Location> <Date> | ...`
-    
-    
 
     <Location> ::= <String>
 
@@ -269,16 +267,19 @@ Production Rules:
 
     <Year> ::= [0-9]{4}
 
-    <Month> ::= [0-1][0-9]
+    <Month> ::= "Jan" | "January" | "Feb" | "February" | ... | "Dec" | "December"
 
     <Day> ::= [0-3][0-9]
 
-    <Time> ::= HH:MM:SS
+    <Time> ::= <hour24>:<minute> | <hour12><ampm>
 
-    <Parameter> ::= "PM2.5" | "PM10" | "CO" | "O3" | "SO2" | "NO2"
+    <hour24> ::= "00" | "01" | ... | "23"
 
-    <Value> ::= [0-9]+
+    <minute> ::= "00" | "01" | ... | "59"
 
+    <hour12> ::= "1" | "2" | ... | "12"
+
+    <ampm> ::= "am" | "pm"
 
 ### <u>Tokenizers and Parsers</u>
 
