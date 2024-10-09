@@ -1,5 +1,7 @@
 package com.go4.application;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -7,31 +9,28 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.go4.utils.GPSService.LocalBinder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.content.Intent;
-import me.majiajie.pagerbottomtabstrip.PageNavigationView;
-import me.majiajie.pagerbottomtabstrip.listener.SimpleTabItemSelectedListener;
+
 
 public class MainActivity extends AppCompatActivity {
+    public static final String CHANNEL_ID = "main";
     public FirebaseUser user;
     private FirebaseAuth mAuth;
     public static GPSService gpsService;
     public static boolean bound;
+    public static NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,56 +39,38 @@ public class MainActivity extends AppCompatActivity {
         gpsService = new GPSService();
         setContentView(R.layout.activity_main);
         BottomNavigationView nav = findViewById(R.id.bottom_navigation);
+        nav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
 
-
-        nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-
-
-
-
-                if (itemId == R.id.nav_profile) {
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                    return true;
-                } else if (itemId == R.id.nav_suburb_live) {
-                    startActivity(new Intent(MainActivity.this, SuburbLiveActivity.class));
-                    return true;
-                }
-                return false;
+            if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_suburb_live) {
+                startActivity(new Intent(MainActivity.this, SuburbLiveActivity.class));
+                return true;
             }
+            return false;
         });
-
-
-
     }
 
     @Override
     protected void onStart(){
         super.onStart();
         firebaseLogin();
+        createNotificationChannel();
         Log.d("Debugging", "User: " + user.getEmail());
-
         Intent intent = new Intent(this, GPSService.class);
-        Log.d("Debugging", "Trying to bindService");
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
-        Log.d("Debugging", gpsService.getRecentLocation().toString());
-        // use gpsService.getRecentLocation() to get a location...
-
-//        startActivity(new Intent(this, SuburbLiveActivity.class));
-
         Intent profileIntent = new Intent(this, ProfileActivity.class);
         profileIntent.putExtra("displayName", user.getEmail());
         startActivity(profileIntent);
     }
 
     @Override
-    protected void onStop(){
-        super.onStop();
+    protected void onDestroy(){
         unbindService(connection);
         bound = false;
+        super.onDestroy();
     }
 
     private final ServiceConnection connection = new ServiceConnection() {
@@ -106,16 +87,21 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void createNotificationChannel() {
+        CharSequence name = getString(R.string.channel_name);
+        String description = getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+
     private void firebaseLogin(){
         user = mAuth.getCurrentUser();
         if(user!=null){
             // Already logged-in user, return to app flow
             Toast.makeText(this, "Already logged in as " + user.getEmail(), Toast.LENGTH_LONG).show();
-
-            //notify when gps is bound
-            Intent intent = new Intent("GPS_SERVICE_BOUND");
-            sendBroadcast(intent);
-
         }
         else {
             signIn();

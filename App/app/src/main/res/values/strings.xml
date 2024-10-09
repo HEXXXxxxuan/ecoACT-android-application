@@ -6,4 +6,6 @@
     <string name="click_to_select_date_txt">Click to select date</string>
     <string name="Password">Password</string>
     <string name="email">Email</string>
+    <string name="channel_name">main</string>
+    <string name="channel_description">the core channel for the app</string>
 </resources>
