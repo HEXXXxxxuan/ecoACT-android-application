@@ -257,23 +257,25 @@ Modular and Extendable: The grammar is modular, meaning that it can be easily ex
 Error Handling: This design allows the parser to still function even if the input data is provided in different sequences, minimizing the risk of errors due to improper input order.
 
 Production Rules:
-<Record> ::= <Location> <Date> <Time> | <Date> <Location> <Time> | <Time> <Location> <Date> | ...
+`<Record> ::= <Location> <Date> <Time> | <Date> <Location> <Time> | <Time> <Location> <Date> | ...`
+    
+    
 
-<Location> ::= <String>
+    <Location> ::= <String>
 
-<Date> ::= <Year> <Month> <Day>
+    <Date> ::= <Year> <Month> <Day>
 
-<Year> ::= [0-9]{4}
+    <Year> ::= [0-9]{4}
 
-<Month> ::= [0-1][0-9]
+    <Month> ::= [0-1][0-9]
 
-<Day> ::= [0-3][0-9]
+    <Day> ::= [0-3][0-9]
 
-<Time> ::= HH:MM:SS
+    <Time> ::= HH:MM:SS
 
-<Parameter> ::= "PM2.5" | "PM10" | "CO" | "O3" | "SO2" | "NO2"
+    <Parameter> ::= "PM2.5" | "PM10" | "CO" | "O3" | "SO2" | "NO2"
 
-<Value> ::= [0-9]+
+    <Value> ::= [0-9]+
 
 
 ### <u>Tokenizers and Parsers</u>
@@ -312,38 +314,50 @@ Extensibility: The design is extensible by nature—new data formats or addition
 *List all features you have completed in their separate categories with their featureId. THe features must be one of the basic/custom features, or an approved feature from Voice Four Feature.*
 
 ### Basic Features
-1. [LogIn]. Description of the feature ... (easy)
-   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of feature: ... <br>
-   * Description of your implementation: ... <br>
+1. [LogIn]. Description of the feature he app must support user login functionality. User sign-up is not required. (easy)
+Important: You must include the following two accounts for markers' access to your App:
 
-2. [DataFiles]. Description  ... ... (...)
-   * Code to the Data File [users_interaction.json](link-to-file), [search-queries.xml](link-to-file), ...
+Username: comp2100@anu.edu.au Password: comp2100
+
+Username: comp6442@anu.edu.au Password: comp6442
+   * Code:[`FirebaseLoginActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java?ref_type=heads), methods `onCreate`, `loginUser` and `LoginActivity`, methods `validateUserInput`.
+   * Description of feature: The login feature provides a secure way for users to access the app by entering their username and password. It validates user credentials through Firebase.<br>
+   * Description of your implementation:Implemented using Firebase Authentication in `FirebaseLoginActivity`. The `onCreate` method sets up listeners for UI elements, and `loginUser` handles the Firebase authentication process. UI components such as `EditText` for entering credentials and a `Button` for submitting are defined in the XML file [`activity_firebase_login_ui.xml`](133†source), enabling interaction with these methods to ensure a smooth login experience. Proper error messages are provided when login fails to guide users effectively. <br>
+
+2. [DataFiles]. Description he app must use a data set (which you may create) where each entry represents a meaningful piece of information relevant to the app. The data set must be represented and stored in a structured format as taught in the course. It must contain at least 2,500 valid instances. (easy)
+
+Important: You must include in your report the link to the data file(s) on your project's GitLab repository and/or the link to your Firebase repository. In the latter case, you must add comp21006442@gmail.com as an Editor in your Firebase repository and mention this in your report.
+   * Code to the Data File [`canberra_suburbs.json`](tFpOJ4pms32UhUzrfL4XFSK6), [`canberra_suburbs_coordinates.json`](SANICmkjDFxw6rcZdjZE65ur).
    * Link to the Firebase repo: ...
 
 3. [LoadShowData] The app must load and display data instances from the data set. Data must be retrieved from either a local file (e.g., JSON, XML) or Firebase. (easy)
    <br>
+* Description of feature:  The application loads and displays air quality data instances from the data set. Data must be retrieved from local files like JSON or via Firebase if available.
+ * Description of your implementation: Data loading is performed by the `DataFetcher.java` class, which reads from `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`. Data is displayed using a RecyclerView, managed in the `SuburbLiveActivity` activity with UI elements like `RecyclerView` and progress bars for real-time air quality data.
 4. [[DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
-   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of feature: ... <br>
-   * Description of your implementation: ... <br>
+   * Code: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), methods `onCreate`, `refreshData`, and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java?ref_type=heads), methods `fetchData`....
+   * Description of feature: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. <br>
+   * Description of your implementation:Implemented using `DataFetcher.java` to retrieve data at regular time intervals. The data is displayed in the `SuburbLiveActivity` class, with UI elements like `SwipeRefreshLayout` in [`suburb_live.xml`](132†source) to ensure the app content is automatically refreshed, simulating live updates. <br>
 5. [Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
-   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of feature: ... <br>
-   * Description of your implementation: ... <br>
+   * Code: [`Tokenizer`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Tokenizer.java?ref_type=heads), methods `tokenizeInput`, [`Parser`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Parser.java?ref_type=heads), methods `parseQuery`, and `SearchRecord`.
+   * Description of feature: Allows users to search for suburb-specific information based on their input, adhering to a pre-defined grammar.<br>
+   * Description of your implementation:The search functionality is implemented using a tokenizer (`Tokenizer.java`) to break down the user's input and a parser (`Parser.java`) to interpret it according to the grammar. The results are then displayed using a RecyclerView, making the search results interactive and easy to browse.
+ <br>
 6. [UIUX] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
- * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of feature: ... <br>
-   * Description of your implementation: ... <br>
+ * Code: XML layouts like [`activity_main.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_main.xml?ref_type=heads), [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads), [`activity_profile.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads).
+   * Description of feature: The application maintains a consistent design language, including colors, fonts, and UI styles throughout all activities and screens. It also handles orientation changes gracefully.<br>
+   * Description of your implementation:The UI is implemented using `ConstraintLayout` and `LinearLayout` for flexibility. Consistent colors and styles are used across XML files, and UI elements like `RecyclerView` and `Spinner` adapt to different screen orientations. The application supports responsive layouts that adjust automatically between portrait and landscape modes.
+
+ <br>
 7. [UIFeedback] The UI must provide clear and informative feedback for user actions, including error messages to guide users effectively. (easy)
- * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of feature: ... <br>
-   * Description of your implementation: ... <br>
+ * Code: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java?ref_type=heads), methods `onDataLoadFailure`, `onDataLoadSuccess`.
+   * Description of feature:  Provides informative feedback for user actions, including data loading progress and error messages. <br>
+   * Description of your implementation:A `ProgressBar` in [`layout_refresh_footer.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/layout_refresh_footer.xml?ref_type=heads) is used to indicate loading states, and error messages are displayed using `Toast` notifications. When a data fetch fails, users are informed with a clear error message to guide them on the next steps. The `SwipeRefreshLayout` is used for visual feedback when users refresh the page manually. <br>
 
 
 
 ### Custom Features
-Feature Category: Privacy <br>
+Feature Category: Search <br>
 1. [Search-Filter]. The app must provide functionality to sort and filter a list of items returned from searches using appropriate UI components. (easy)
    * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * Description of your implementation: ... <br>
@@ -356,6 +370,7 @@ Feature Category: Privacy <br>
    <br><br>
 
 Feature Category: Firebase Integration <br>
+Feature Category: Data <br>
 3. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
@@ -369,6 +384,7 @@ Feature Category: Firebase Integration <br>
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
 <hr>
+Feature Category:UI Design and Testing <br>
 6. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
