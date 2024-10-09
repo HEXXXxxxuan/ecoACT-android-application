@@ -205,7 +205,7 @@ public class ProfileActivity extends AppCompatActivity {
             String quality = "";
             double pm10Number = 0;
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
             String currentDateAndTime = sdf.format(new Date());
             String key = suburb + "_" + currentDateAndTime;
             AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
