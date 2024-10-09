@@ -218,7 +218,7 @@ We need to create specific parser objects depending on the data format.
 Factory Pattern allows encapsulating the logic of object creation, promoting loose coupling by delegating instantiation responsibility.
 It provides flexibility for easily extending the system to support new data formats by adding new parser classes without modifying the existing codebase.
 
-      * Data Access Object (DAO) Pattern
+2. Data Access Object (DAO) Pattern
 
 Objective: Used for abstracting and encapsulating all access to the application's data source, providing a simple API for querying and updating data.
 
@@ -229,7 +229,7 @@ We need to separate the low-level data accessing operations from the higher-leve
 DAO Pattern provides a clear interface for interacting with the data source, minimizing code duplication and ensuring all data-related operations are performed consistently.
 It improves code readability and makes it easier to change or replace the data source without affecting the rest of the application, promoting a modular architecture.
 
- Singleton Pattern
+3.Singleton Pattern
 
 Objective: Used for managing a single instance of the data access object (DAO) to ensure efficient resource management and centralized database access.
 
@@ -246,17 +246,48 @@ It provides a global point of access to the database connection, making it easie
 
 ### <u>Grammar(s)</u>
 *[How do you design the grammar? What are the advantages of your designs?]*
-*If there are several grammars, list them all under this section and what they relate to.*
+Our grammar is designed to parse various types of data input related to air quality and suburb information, ensuring flexibility and adaptability for different formats such as JSON and CSV. By allowing key components like <location>, <date>, and <time> to be interchangeable, the grammar design provides robustness to handle diverse data orders.
+
+Advantages:
+
+Flexibility: The grammar allows <location>, <date>, and <time> in any order, making it adaptable to different input styles, which improves user experience.
+
+Modular and Extendable: The grammar is modular, meaning that it can be easily extended to support new parameters or different date formats, ensuring the parser can evolve with new requirements.
+
+Error Handling: This design allows the parser to still function even if the input data is provided in different sequences, minimizing the risk of errors due to improper input order.
 
 Production Rules:
-```
-    <Non-Terminal> ::= <some output>
-    <Non-Terminal> ::= <some output>
-```
+<Record> ::= <Location> <Date> <Time> | <Date> <Location> <Time> | <Time> <Location> <Date> | ...
+<Location> ::= <String>
+<Date> ::= <Year> <Month> <Day>
+<Year> ::= [0-9]{4}
+<Month> ::= [0-1][0-9]
+<Day> ::= [0-3][0-9]
+<Time> ::= HH:MM:SS
+<Parameter> ::= "PM2.5" | "PM10" | "CO" | "O3" | "SO2" | "NO2"
+<Value> ::= [0-9]+
 
 ### <u>Tokenizers and Parsers</u>
 
 *[Where do you use tokenisers and parsers? How are they built? What are the advantages of the designs?]*
+
+The tokenizers and parsers are utilized primarily in the Parser.java and CsvParser.java classes. They are responsible for processing data from various sources, such as canberra_suburbs.json and canberra_suburbs_coordinates.json to extract meaningful information for real-time and historical air quality analysis.
+Tokenizer.java is responsible for breaking down raw input into individual tokens, such as suburb names, date elements, and pollutant data, which can then be structured by the parser
+
+How They Are Built:
+
+Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as <location>, <date>, <time>, or air quality parameters, making the input easier to process.
+Parsers: The Parser.java class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser can accommodate multiple data formats, such as JSON and CSV, and uses predefined grammar rules to validate and organize the tokens into meaningful structures.
+
+Advantages of the Designs:
+
+Modularity: The separation between tokenizing and parsing tasks makes the system modular, simplifying maintenance and allowing for easy updates.
+
+Adaptability: By using a flexible grammar and a robust tokenizer, the system can handle different input sequences and formats, improving the user experience when working with varied data sources.
+
+Efficiency: Breaking data into tokens before parsing reduces complexity, leading to more efficient data handling. This design ensures that each step of data processing is straightforward and optimized.
+
+Extensibility: The design is extensible by nature—new data formats or additional attributes can be easily supported by extending the parser and tokenizer classes. This allows the application to scale and adapt to future requirements without significant refactoring.
 
 <hr>
 
@@ -281,27 +312,58 @@ Production Rules:
    * Code to the Data File [users_interaction.json](link-to-file), [search-queries.xml](link-to-file), ...
    * Link to the Firebase repo: ...
 
-3. ...
+3. [LoadShowData] The app must load and display data instances from the data set. Data must be retrieved from either a local file (e.g., JSON, XML) or Firebase. (easy)
    <br>
+4.[DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
+   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * Description of feature: ... <br>
+   * Description of your implementation: ... <br>
+5.[Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
+   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * Description of feature: ... <br>
+   * Description of your implementation: ... <br>
+6.[UXUI] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
+ * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * Description of feature: ... <br>
+   * Description of your implementation: ... <br>
+7.[UIFeedback] The UI must provide clear and informative feedback for user actions, including error messages to guide users effectively. (easy)
+ * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * Description of feature: ... <br>
+   * Description of your implementation: ... <br>
+
+
 
 ### Custom Features
 Feature Category: Privacy <br>
-1. [Privacy-Request]. Description of the feature  (easy)
+1. [Search-Filter]. The app must provide functionality to sort and filter a list of items returned from searches using appropriate UI components. (easy)
    * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * Description of your implementation: ... <br>
      <br>
 
-2. [Privacy-Block]. Description ... ... (medium)
-   ... ...
+2. [Search-Designate]. The app must rank search results based on the status of the users. For example, a user may have multiple roles within the app, which should result in different ranked lists of results. (medium)
+* Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * Description of your implementation: ... <br>
+     <br>
    <br><br>
 
 Feature Category: Firebase Integration <br>
-3. [FB-Auth] Description of the feature (easy)
+3. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
-
+4.[Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
+   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
+   * Description of your implementation: ... <br>
+5.[Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
+   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
+   * Description of your implementation: ... <br>
 <hr>
+6.[UI-Layout] The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
+   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
+   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
+   * Description of your implementation: ... <br>
 
 ### Surprise Feature
 
