@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileActivity extends AppCompatActivity {
     private static LayoutInflater inflater;
@@ -71,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable updateRunnable;
     private String email;
+    private FirebaseUser user;
     private static Context context;
     private static FragmentManager fragmentManager;
 
@@ -88,7 +90,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Display User Name
         Intent intent = getIntent();
-        email = intent.getStringExtra("displayName");
+        user = intent.getParcelableExtra("User", FirebaseUser.class);
+        if(user==null){
+            Log.e("Login", "Profile started with no User Goofy Ahh");
+            finish();
+        }
+        email = user.getEmail();
         TextView username = findViewById(R.id.pa_username);
         username.setText(email);
 

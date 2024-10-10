@@ -15,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultCallback;
@@ -36,19 +39,9 @@ import com.go4.utils.DataFetcher;
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
-    private static final String[] permissionsStr = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.POST_NOTIFICATIONS};
 
-    ActivityResultLauncher<String[]> permissionsLauncher = registerForActivityResult(
-        new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            if(result.containsValue(false)){
-                Toast.makeText(this, "All permissions are required for function", Toast.LENGTH_SHORT).show();
-                Log.d("Debugging", result.keySet().toString());
-                checkPermissions();
-            }
-            else{
-                startNextActivity();
-            }
-        });
+    private static final int GET_BACKGROUND_AFTER = 2000;
+    private static final int START_ACTIVITY_AFTER = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +73,47 @@ public class SplashActivity extends AppCompatActivity {
      * </p>
      */
     private void checkPermissions(){
-        List<String> toRequest = new ArrayList<>();
-        for(String str : permissionsStr){
-            if(!hasPermissions(str)){
-                toRequest.add(str);
+        ArrayList<String> permissions = new ArrayList<>();
+        if(!hasPermissions(Manifest.permission.ACCESS_FINE_LOCATION)){
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if(!hasPermissions(Manifest.permission.POST_NOTIFICATIONS)){
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        if(!hasPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+            permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        }
+        Log.d("Permissions", permissions.toString());
+        if(permissions.isEmpty()){
+            startNextActivity();
+        }
+        else if(permissions.contains(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && permissions.size()>1){
+            permissions.remove(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            String[] req = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                req[i] = permissions.get(i);
             }
+            requestPermissions(req, GET_BACKGROUND_AFTER);
         }
-        String[] real = new String[toRequest.size()];
-        for (int i = 0; i < toRequest.size(); i++) {
-            real[i] = toRequest.get(i);
+        else {
+            String[] req = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                req[i] = permissions.get(i);
+            }
+            requestPermissions(req,START_ACTIVITY_AFTER);
         }
-        permissionsLauncher.launch(real);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == GET_BACKGROUND_AFTER){
+            Log.d("Permissions", "GetBackghroundAFter");
+            checkPermissions();
+        }
+        if(requestCode==START_ACTIVITY_AFTER){
+            checkPermissions();
+        }
     }
 
     private boolean hasPermissions(String perm){
