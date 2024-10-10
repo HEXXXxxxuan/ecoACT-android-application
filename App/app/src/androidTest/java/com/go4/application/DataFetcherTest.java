@@ -28,10 +28,7 @@ public class DataFetcherTest {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Handler mainHandler = new Handler(Looper.getMainLooper());
 
-
-        String realApiKey = "4f6d63b7d7512fc4b14ee2aeb89d3128";
-
-        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 1, realApiKey);
+        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 1);
 
         // Mock a ProgressBar (optional, just to prevent errors)
         ProgressBar mockProgressBar = new ProgressBar(context);
