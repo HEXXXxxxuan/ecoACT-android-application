@@ -1,11 +1,9 @@
 package com.go4.application.profile;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -16,111 +14,59 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import com.go4.application.FirebaseLoginActivity;
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.Scanner;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import org.json.simple.parser.*;
 
 public class ProfileActivity extends AppCompatActivity {
-    private static LayoutInflater inflater;
-    private static LinearLayout cardList;
-    private Spinner suburbSpinner;
-    private ImageView imageView;
     private static AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
     private static List<SuburbCard> pinnedSuburbs;
     private Handler handler;
-    private Runnable updateRunnable;
-    private String email;
     private FirebaseUser user;
-    private static Context context;
-    private static FragmentManager fragmentManager;
+    private ImageView profileImage;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+    private final ActivityResultLauncher<Void> getUser = registerForActivityResult(
+        new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
+            if(result != null){
+                user = result;
+            }
+            else{
+                Log.e("Login", "GUAH NO USER");
+            }
         });
 
-        // Display User Name
-        Intent intent = getIntent();
-        user = intent.getParcelableExtra("User", FirebaseUser.class);
-        if(user==null){
-            Log.e("Login", "Profile started with no User Goofy Ahh");
-            finish();
-        }
-        email = user.getEmail();
-        TextView username = findViewById(R.id.pa_username);
-        username.setText(email);
-
-        // Create AVL Tree
-        createAVLTree();
-
-        // Pinned Suburb Card features
-        cardList = findViewById(R.id.pa_cardList);
-        suburbSpinner = findViewById(R.id.pa_suburb_spinner);
-        inflater = getLayoutInflater();
-        Button addButton = findViewById(R.id.pa_add_button);
-        addButton.setOnClickListener(v -> addButtonOnClick());
-        findViewById(R.id.logout_button).setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-
-            Intent logoutIntent = new Intent(ProfileActivity.this, FirebaseLoginActivity.class);
-            startActivity(logoutIntent);
-            finish();
-
-        });
-        suburbSpinner();
-
-        // Upload Profile Picture
-        imageView = findViewById(R.id.pa_profile);
-        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
                     try {
@@ -136,86 +82,68 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
-        imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_profile);
+
+        createAVLTree();
+        suburbSpinner();
+
+        profileImage = findViewById(R.id.pa_profile);
+        user = getIntent().getParcelableExtra("User", FirebaseUser.class);
+        if(user==null){Log.e("Login", "Profile started with no User Goofy Ahh");finish();return;}
+        ((TextView) findViewById(R.id.pa_username)).setText(user.getEmail());
+
+        findViewById(R.id.pa_add_button).setOnClickListener(v -> addButtonOnClick());
+        findViewById(R.id.logout_button).setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            getUser.launch(null);
+        });
+        profileImage.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
                 .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                 .build()));
-
-        readProfilePicture();
-
-        LinearLayout profile = findViewById(R.id.nav_profile);
-        LinearLayout suburb_live = findViewById(R.id.nav_suburb_live);
-
-        suburb_live.setOnClickListener(
-            v -> {
-                Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
-                suburbLiveIntent.putExtra("displayName", email);
-                startActivity(suburbLiveIntent);
-            }
-        );
-
-        context = getApplicationContext();
-        fragmentManager = getSupportFragmentManager();
-
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                int itemId = item.getItemId();
-//                if (itemId == R.id.nav_profile) {
-//                    return true;
-//                } else if (itemId == R.id.nav_suburb_live) {
-//
-//                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
-
-//        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+        findViewById(R.id.nav_suburb_live).setOnClickListener(v -> {
+            Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
+            suburbLiveIntent.putExtra("displayName", user.getEmail());
+            startActivity(suburbLiveIntent);
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         readPinnedSuburbs();
-
         handler = new Handler();
 
         // Update suburb cards every 15 minutes
-        updateRunnable = new Runnable() {
-            @Override public void run() {
+        Runnable updateRunnable = new Runnable() {
+            @Override
+            public void run() {
                 updatePinnedSuburbs();
                 handler.postDelayed(this, 15 * 60 * 1000);
             }
         };
-
         handler.post(updateRunnable);
     }
 
-    private String getFilePath() {
+    private File getFile(String directory, String name){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        String filename = "profile_picture.jpg";
-        File directory = cw.getDir("images", Context.MODE_PRIVATE);
-        return String.format("%s/%s", directory, filename);
+        return new File(String.format("%s/%s", cw.getDir(directory, Context.MODE_PRIVATE), name));
     }
 
     private void readProfilePicture() {
-        String filePath = getFilePath();
-        File file = new File(filePath);
+        File file = getFile("images", "profile_picture.jpg");
         if (file.exists()) {
-            imageView.setImageDrawable(Drawable.createFromPath(file.toString()));
+            profileImage.setImageDrawable(Drawable.createFromPath(String.valueOf(file.toPath())));
         } else {
-            imageView.setImageResource(R.drawable.default_profile);
+            profileImage.setImageResource(R.drawable.default_profile);
         }
     }
 
     public void writeProfilePicture(Bitmap bitmapImage) {
-        String filePath = getFilePath();
-        File file = new File(filePath);
+        File file = getFile("Images", "profile_picture.jpg");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
@@ -227,15 +155,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static String[] searchForQualityAndPm10Number(String suburb) {
         String[] result = new String[2];
-
         String quality = "N/A";
         double pm10Number = 0;
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
         String currentDateAndTime = sdf.format(new Date());
         String key = suburb + "_" + currentDateAndTime;
         AirQualityRecord record = recordTreeLocationAndDateKey.search(key);
-
         if (record != null) {
             pm10Number = record.getPm10();
             double aqi = record.getAqi();
@@ -247,95 +172,64 @@ public class ProfileActivity extends AppCompatActivity {
                 quality = "Bad";// Red
             }
         }
-
         result[0] = quality;
         result[1] = String.valueOf(pm10Number);
         return result;
     }
 
-    private static void readPinnedSuburbs() {
-        pinnedSuburbs = new ArrayList<SuburbCard>();
-        cardList.removeAllViews();
-        ContextWrapper cw = new ContextWrapper(context);
-        String filename = "pinned_suburbs.txt";
-        File directory = cw.getDir("text", Context.MODE_PRIVATE);
-        String filePath = String.format("%s/%s", directory, filename);
-        File path = new File(filePath);
-
-        StringBuilder fileContent = new StringBuilder();
-
-        try {
-            // Read the content of the file
-            FileInputStream fileInputStream = new FileInputStream(path);
-            int a;
-            while ((a = fileInputStream.read()) != -1) {
-                fileContent.append((char) a);
-            }
-            fileInputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] lines = fileContent.toString().split("\n");
-        for (String line : lines) {
-            String[] lineParts = line.split(",");
-            if (lineParts.length == 4) {
+    /**
+     * <H1> ENSURE TXT FILE IS SAFELY FORMATTED WITH 3 COMMAS PER LINE AND A BLANK AT THE END</H1>
+     */
+    private void readPinnedSuburbs() {
+        pinnedSuburbs = new ArrayList<>();
+        ((LinearLayout) findViewById(R.id.pa_cardList)).removeAllViews();
+        try{
+            Scanner s = new Scanner(getFile("text", "pinned_suburbs.txt"));
+            while(s.hasNextLine()){
+                String[] lineParts = s.nextLine().split(",");
                 addSuburbCard(lineParts[0], lineParts[1], lineParts[2], lineParts[3]);
             }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static void writePinnedSuburbs() {
-        ContextWrapper cw = new ContextWrapper(context);
-        String filename = "pinned_suburbs.txt";
-        File directory = cw.getDir("text", Context.MODE_PRIVATE);
-        String filePath = String.format("%s/%s", directory, filename);
-        File path = new File(filePath);
+    private void writePinnedSuburbs() {
         try {
-            // Write the input text to the file
-            FileOutputStream fileOutputStream = new FileOutputStream(path);
-            StringBuilder data = new StringBuilder();
+            FileWriter wr = new FileWriter(getFile("text", "pinned_suburbs.txt"));
             for (SuburbCard card: pinnedSuburbs) {
-                String line = card.getData();
-                data.append(line);
+                wr.write(card.getData());
             }
-            fileOutputStream.write(data.toString().getBytes());
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            wr.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void updatePinnedSuburbs() {
+    private void updatePinnedSuburbs() {
         for (SuburbCard card: pinnedSuburbs) {
-            String suburb = card.getSuburb();
-            String[] result = searchForQualityAndPm10Number(suburb);
-            String quality = result[0];
-            String pm10Number = result[1];
-
-            card.setQuality(quality);
-            card.setPm10Number(pm10Number);
+            String[] result = searchForQualityAndPm10Number(card.getSuburb());
+            card.setQuality(result[0]);
+            card.setPm10Number(result[1]);
         }
         writePinnedSuburbs();
     }
 
     private void addButtonOnClick() {
-        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        String selectedSuburb = ((Spinner) findViewById(R.id.suburbSpinner)).getSelectedItem().toString();
         String[] result = searchForQualityAndPm10Number(selectedSuburb);
         String quality = result[0];
         String pm10Number = result[1];
-
         String label = "Label (e.g. Home/Work/School)";
         addSuburbCard(label, selectedSuburb, quality, pm10Number);
         writePinnedSuburbs();
     }
 
-    private static void addSuburbCard(String label, String suburb, String quality, String number) {
+    private void addSuburbCard(String label, String suburb, String quality, String number) {
         SuburbCard card = new SuburbCard(label, suburb, quality, number);
         pinnedSuburbs.add(card);
 
-        View cardView = inflater.inflate(R.layout.activity_profile_card, cardList, false);
+        View cardView = getLayoutInflater().inflate(R.layout.activity_profile_card, findViewById(R.id.pa_cardList), false);
         EditText labelTextView = cardView.findViewById(R.id.pa_card_label);
         labelTextView.setText(label);
         labelTextView.addTextChangedListener(new TextWatcher() {
@@ -349,12 +243,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
-        TextView suburbTextView = cardView.findViewById(R.id.pa_card_suburb);
-        suburbTextView.setText(suburb);
-        TextView qualityTextView = cardView.findViewById(R.id.pa_card_quality);
-        qualityTextView.setText(quality);
-        TextView numberTextView = cardView.findViewById(R.id.pa_card_number);
-        numberTextView.setText(String.valueOf((number)));
+        ((TextView) cardView.findViewById(R.id.pa_card_suburb)).setText(suburb);
+        ((TextView) cardView.findViewById(R.id.pa_card_quality)).setText(quality);
+        ((TextView) cardView.findViewById(R.id.pa_card_number)).setText(number);
 
         LinearLayout linearLayout = cardView.findViewById(R.id.pa_card);
         if (Objects.equals(quality, "Good")) {
@@ -366,29 +257,24 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (Objects.equals(quality, "Bad")) {
             linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
         }
-
-//        linearLayout.setOnLongClickListener(v -> {
-//            new DeleteDialogFragment().show(getSupportFragmentManager(), "DELETE_DIALOG");
-//            return true;
-//        });
         linearLayout.setOnLongClickListener(v -> {
             DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
-            dialog.show(fragmentManager, "DELETE_DIALOG");
+            dialog.show(getSupportFragmentManager(), "DELETE_DIALOG");
             return true;
         });
-
-        cardList.addView(cardView);
+        ((LinearLayout) findViewById(R.id.pa_cardList)).addView(cardView);
     }
 
-    public static class DeleteDialogFragment extends DialogFragment {
+    public class DeleteDialogFragment extends DialogFragment {
         private SuburbCard card;
 
-        public static DeleteDialogFragment newInstance(SuburbCard card) {
+        public DeleteDialogFragment newInstance(SuburbCard card) {
             DeleteDialogFragment fragment = new DeleteDialogFragment();
             fragment.card = card;
             return fragment;
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -409,27 +295,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void suburbSpinner() {
-        List<String> suburbList = loadSuburbsFromJson();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, loadSuburbsFromJson());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suburbSpinner.setAdapter(adapter);
+        ((Spinner) findViewById(R.id.suburbSpinner)).setAdapter(adapter);
     }
 
     private List<String> loadSuburbsFromJson(){
         List<String> suburbs = new ArrayList<>();
         try {
-            InputStream is = getAssets().open("canberra_suburbs.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
 
-            // Parse JSON array
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                suburbs.add(jsonArray.getString(i));
-            }
+
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }

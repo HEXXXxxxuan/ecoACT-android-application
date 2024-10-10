@@ -25,17 +25,17 @@ public class MainActivity extends AppCompatActivity {
     public static boolean bound;
     public static GPSService gpsService;
 
-    ActivityResultLauncher<Void> getUser = registerForActivityResult(
-            new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
-                if(result != null){
-                    Intent profile = new Intent(this, ProfileActivity.class);
-                    profile.putExtra("User", result);
-                    startActivity(profile);
-                }
-                else{
-                    Log.e("Login", "GUAH NO USER");
-                }
-            });
+    private final ActivityResultLauncher<Void> getUser = registerForActivityResult(
+        new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
+            if(result != null){
+                Intent profile = new Intent(this, ProfileActivity.class);
+                profile.putExtra("User", result);
+                startActivity(profile);
+            }
+            else{
+                Log.e("Login", "GUAH NO USER");
+            }
+        });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

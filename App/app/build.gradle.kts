@@ -51,7 +51,8 @@ dependencies {
     androidTestImplementation(libs.rules)
     androidTestImplementation(libs.junit.v113)
     implementation(libs.semicirclearcprogressbar.v111)
-    implementation ("me.majiajie:pager-bottom-tab-strip:2.4.0")
+    implementation (libs.pager.bottom.tab.strip)
+    implementation (libs.json.simple)
 
 
 
