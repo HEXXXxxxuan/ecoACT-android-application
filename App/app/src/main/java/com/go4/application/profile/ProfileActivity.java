@@ -1,7 +1,11 @@
 package com.go4.application.profile;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -13,7 +17,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,23 +25,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.go4.application.FirebaseLoginActivity;
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
-import com.go4.application.profile.SuburbCard;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
 
@@ -52,24 +55,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileActivity extends AppCompatActivity {
-    private LayoutInflater inflater;
-    private LinearLayout cardList;
+    private static LayoutInflater inflater;
+    private static LinearLayout cardList;
     private Spinner suburbSpinner;
     private ImageView imageView;
-    private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
-    private List<SuburbCard> pinnedSuburbs;
+    private static AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
+    private static List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
     private String email;
+    private static Context context;
+    private static FragmentManager fragmentManager;
 
 
     @Override
@@ -111,20 +114,20 @@ public class ProfileActivity extends AppCompatActivity {
         // Upload Profile Picture
         imageView = findViewById(R.id.pa_profile);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                    if (uri != null) {
-                        try {
-                            // Load the bitmap from the URI
-                            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                            writeProfilePicture(bitmapImage);
-                            readProfilePicture();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.d("PhotoPicker", "No media selected");
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    try {
+                        // Load the bitmap from the URI
+                        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                        writeProfilePicture(bitmapImage);
+                        readProfilePicture();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
+                } else {
+                    Log.d("PhotoPicker", "No media selected");
+                }
+            });
 
         imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
                 .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
@@ -143,6 +146,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         );
 
+        context = getApplicationContext();
+        fragmentManager = getSupportFragmentManager();
 
 //        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 //
@@ -169,7 +174,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        pinnedSuburbs = new ArrayList<SuburbCard>();
         readPinnedSuburbs();
 
         handler = new Handler();
@@ -177,7 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Update suburb cards every 15 minutes
         updateRunnable = new Runnable() {
             @Override public void run() {
-                updateSuburbCards();
+                updatePinnedSuburbs();
                 handler.postDelayed(this, 15 * 60 * 1000);
             }
         };
@@ -214,7 +218,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private String[] searchForQualityAndPm10Number(String suburb) {
+    private static String[] searchForQualityAndPm10Number(String suburb) {
         String[] result = new String[2];
 
         String quality = "N/A";
@@ -242,32 +246,10 @@ public class ProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private void updateSuburbCards() {
-        for (SuburbCard card: pinnedSuburbs) {
-            String suburb = card.getSuburb();
-            String[] result = searchForQualityAndPm10Number(suburb);
-            String quality = result[0];
-            String pm10Number = result[1];
-
-            card.setQuality(quality);
-            card.setPm10Number(pm10Number);
-        }
-        writePinnedSuburbs();
-    }
-
-    private void addButtonOnClick() {
-        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
-        String[] result = searchForQualityAndPm10Number(selectedSuburb);
-        String quality = result[0];
-        String pm10Number = result[1];
-
-        String label = "Label (e.g. Home/Work/School)";
-        addSuburbCard(label, selectedSuburb, quality, pm10Number);
-        writePinnedSuburbs();
-    }
-
-    private void readPinnedSuburbs() {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+    private static void readPinnedSuburbs() {
+        pinnedSuburbs = new ArrayList<SuburbCard>();
+        cardList.removeAllViews();
+        ContextWrapper cw = new ContextWrapper(context);
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
         String filePath = String.format("%s/%s", directory, filename);
@@ -296,8 +278,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void writePinnedSuburbs() {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+    private static void writePinnedSuburbs() {
+        ContextWrapper cw = new ContextWrapper(context);
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
         String filePath = String.format("%s/%s", directory, filename);
@@ -318,7 +300,31 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void addSuburbCard(String label, String suburb, String quality, String number) {
+    private static void updatePinnedSuburbs() {
+        for (SuburbCard card: pinnedSuburbs) {
+            String suburb = card.getSuburb();
+            String[] result = searchForQualityAndPm10Number(suburb);
+            String quality = result[0];
+            String pm10Number = result[1];
+
+            card.setQuality(quality);
+            card.setPm10Number(pm10Number);
+        }
+        writePinnedSuburbs();
+    }
+
+    private void addButtonOnClick() {
+        String selectedSuburb = suburbSpinner.getSelectedItem().toString();
+        String[] result = searchForQualityAndPm10Number(selectedSuburb);
+        String quality = result[0];
+        String pm10Number = result[1];
+
+        String label = "Label (e.g. Home/Work/School)";
+        addSuburbCard(label, selectedSuburb, quality, pm10Number);
+        writePinnedSuburbs();
+    }
+
+    private static void addSuburbCard(String label, String suburb, String quality, String number) {
         SuburbCard card = new SuburbCard(label, suburb, quality, number);
         pinnedSuburbs.add(card);
 
@@ -354,7 +360,40 @@ public class ProfileActivity extends AppCompatActivity {
             linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
         }
 
+//        linearLayout.setOnLongClickListener(v -> {
+//            new DeleteDialogFragment().show(getSupportFragmentManager(), "DELETE_DIALOG");
+//            return true;
+//        });
+        linearLayout.setOnLongClickListener(v -> {
+            DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
+            dialog.show(fragmentManager, "DELETE_DIALOG");
+            return true;
+        });
+
         cardList.addView(cardView);
+    }
+
+    public static class DeleteDialogFragment extends DialogFragment {
+        private SuburbCard card;
+
+        public static DeleteDialogFragment newInstance(SuburbCard card) {
+            DeleteDialogFragment fragment = new DeleteDialogFragment();
+            fragment.card = card;
+            return fragment;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setMessage("Delete suburb card?")
+                .setPositiveButton("Delete", (dialog, id) -> {
+                    pinnedSuburbs.remove(card);
+                    writePinnedSuburbs();
+                    readPinnedSuburbs();
+                })
+                .setNegativeButton("Cancel", (dialog, id) -> {});
+            return builder.create();
+        }
     }
 
     private void createAVLTree() {
