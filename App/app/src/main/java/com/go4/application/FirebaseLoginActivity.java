@@ -7,11 +7,10 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -19,6 +18,13 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Intent returnIntent;
 
+    /**
+     * Using {@link ActivityResultContract} API for safety.
+     * <p>
+     *     Typical usage requires a {@link androidx.activity.result.ActivityResultLauncher} to store
+     *     the resulting contract
+     * </p>
+     */
     public static class FirebaseLoginActivityResultContract extends ActivityResultContract <Void, FirebaseUser> {
         @NonNull
         @Override
@@ -39,8 +45,9 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         mAuth = FirebaseAuth.getInstance();
-        setContentView(R.layout.activity_firebase_login_ui);  // Show login UI
+        setContentView(R.layout.activity_firebase_login_ui);
         returnIntent = new Intent();
         signIn();
     }
@@ -74,7 +81,6 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // Firebase login
             mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();

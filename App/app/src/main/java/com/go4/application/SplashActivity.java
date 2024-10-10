@@ -69,7 +69,7 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Calls {@link #startNextActivity()} upon finishing
      * <p>
-     *     Uses an {@link ActivityResultLauncher} to request permissions and does logic in its callback
+     *     Uses {@link #onRequestPermissionsResult(int, String[], int[])} for callback logic
      * </p>
      */
     private void checkPermissions(){
