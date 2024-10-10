@@ -7,26 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts.GetContent;
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import androidx.core.content.ContextCompat;
-
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.utils.GPSService.LocalBinder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseUser;
-
 
 public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "main";
