@@ -88,6 +88,6 @@ public class SplashActivity extends AppCompatActivity {
                 Toast.makeText(this, "Location permission is required to proceed.", Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }//1
 
 }
