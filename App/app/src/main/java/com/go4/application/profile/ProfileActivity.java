@@ -304,11 +304,9 @@ public class ProfileActivity extends AppCompatActivity {
         List<String> suburbs = new ArrayList<>();
         try {
 
-
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return suburbs;
 
     }
