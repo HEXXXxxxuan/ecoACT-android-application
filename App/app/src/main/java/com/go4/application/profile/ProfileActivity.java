@@ -34,10 +34,14 @@ import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +51,8 @@ import java.util.Objects;
 import java.util.Scanner;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -303,8 +309,12 @@ public class ProfileActivity extends AppCompatActivity {
     private List<String> loadSuburbsFromJson(){
         List<String> suburbs = new ArrayList<>();
         try {
-
-        } catch (IOException e) {
+            FileDescriptor fd = getAssets().openFd("canberra_suburbs.json").getFileDescriptor();
+            JSONArray jsArr = new JSONArray(new JSONParser().parse(new FileReader(fd)));
+            for(int i=0; i<jsArr.length(); i++){
+                suburbs.add(jsArr.getString(i));
+            }
+        } catch (IOException | ParseException | JSONException e) {
             throw new RuntimeException(e);
         }
         return suburbs;
