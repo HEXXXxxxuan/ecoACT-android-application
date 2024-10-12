@@ -1,5 +1,6 @@
 package com.go4.application.live_data;
 
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -24,6 +29,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -35,6 +43,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
 import com.go4.application.live_data.MockDataStream.MockJSONResponse;
+import com.go4.application.live_data.adapter.LoadMoreSearchResultAdapter;
+import com.go4.application.live_data.listener.SearchResultEndlessRecyclerOnScrollListener;
 import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
@@ -57,10 +67,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
@@ -93,6 +108,14 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable fetchTask;
 
+    private LoadMoreSearchResultAdapter loadMoreSearchResultAdapter;
+    private List<Map<String, String>> dataList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private List<Map<String, String>> resultDataset = new ArrayList<>();
+
+    Location currentLocation = null;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -101,7 +124,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             isBound = true;
 
             // Get the recent location and update the UI
-            Location currentLocation = gpsService.getRecentLocation();
+            currentLocation = gpsService.getRecentLocation();
             updateLocationUsingGPS(currentLocation);
         }
 
@@ -110,7 +133,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
             isBound = false;
         }
     };
-
 
 
     @Override
@@ -181,10 +203,88 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
 
 //        bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
+
+        recyclerView = findViewById(R.id.recycler_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+
+        ViewGroup.LayoutParams layoutParams = swipeRefreshLayout.getLayoutParams();
+        layoutParams.height = 1;
+        swipeRefreshLayout.setLayoutParams(layoutParams);
+
+        // Create custom list adapter
+        loadMoreSearchResultAdapter = new LoadMoreSearchResultAdapter(dataList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(loadMoreSearchResultAdapter);
+
+        // Set dropdown refresh
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // refresh data
+                dataList.clear();
+                getData(resultDataset);
+                loadMoreSearchResultAdapter.notifyDataSetChanged();
+
+                // Delay for 1 second to close dropdown refresh
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        });
+
+        // Set to load more listeners
+        recyclerView.addOnScrollListener(new SearchResultEndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                loadMoreSearchResultAdapter.setLoadState(loadMoreSearchResultAdapter.LOADING);
+
+                int size = resultDataset.size();
+                if (dataList.size() < size) {
+                    // Simulate obtaining network data with a delay of 1 second
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getData(resultDataset);
+                                    loadMoreSearchResultAdapter.setLoadState(loadMoreSearchResultAdapter.LOADING_COMPLETE);
+                                }
+                            });
+                        }
+                    }, 1000);
+                } else {
+                    // Display a prompt to load to the end
+                    loadMoreSearchResultAdapter.setLoadState(loadMoreSearchResultAdapter.LOADING_END);
+                }
+            }
+        });
+
+        loadMoreSearchResultAdapter.setOnItemClickListener(new LoadMoreSearchResultAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> data) {
+                //Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                //intent.putExtra("data", (Serializable)data);
+                //startActivity(intent);
+                selectedSuburb = data.get("title");
+                //fetchAndDisplayData();
+                // Fetch data in a background thread
+                executor.execute(() -> {
+                    fetchAndDisplayData();
+                });
+                setTitle("Suburb: " + data.get("title"));
+            }
+        });
     }
 
     private void initializeView() {
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
+        suburbSpinnerLive.setSingleLine();
         comparingSpinner = findViewById(R.id.compareSuburb);
         intervalSpinner = findViewById(R.id.intervalSpinner);
         intervalSpinner.setVisibility(View.GONE);
@@ -223,7 +323,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
         int position = adapter.getPosition(selectedSuburb);
         if (position >= 0) {
-            suburbSpinnerLive.setText(selectedSuburb, false);
+            //suburbSpinnerLive.setText(selectedSuburb, false);
+            setTitle("Suburb: " + selectedSuburb);
         }
         // Fetch and display data based on the nearest suburb
         executor.execute(this::showDataAndRefresh);
@@ -297,8 +398,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
     private void fetchAndDisplayData() {
-
-            double[] coordinates = suburbMap.get(selectedSuburb);
+        double[] coordinates = suburbMap.get(selectedSuburb);
 
             String urlString = String.format(
                     "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
@@ -534,7 +634,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         recordsInSelectedSuburb = filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
 
-        Log.d("Comparing debug: ", "filtering in nearest suburb filtered by "+ startDate + endDate + recordsInSelectedSuburb);
+        Log.d("Comparing debug: ", "filtering in nearest suburb filtered by " + startDate + endDate + recordsInSelectedSuburb);
 
         return recordsInSelectedSuburb;
     }
@@ -564,6 +664,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
             if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
 
+                search(selectedSuburb);
                 executor.execute(() -> {
                     showDataAndRefresh();
                     primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
@@ -583,6 +684,27 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
             } else {
                 resultTextViewLive.setText("No suburb selected.");
+            }
+        });
+
+        suburbSpinnerLive.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        (event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
+                                (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER))) {
+
+                    String query = suburbSpinnerLive.getText().toString();
+                    search(query);
+                    // 如果按下的是回车键，并且你想要关闭输入法键盘，可以调用如下代码：
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -965,5 +1087,52 @@ public class SuburbLiveActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         stopShowDataRefresh();
+    }
+
+    // Get 20 latest data each time
+    private void getData(List<Map<String, String>> data) {
+        int size = data.size();
+        for (int i = 0; i < 20; i++) {
+            int n = dataList.size();
+            if (n >= size) {
+                break;
+            }
+            dataList.add(data.get(n));
+        }
+    }
+
+    private void search(String query) {
+        HashMap<String, double[]> newMap = new HashMap<>();
+        for (Map.Entry<String, double[]> entry : suburbMap.entrySet()) {
+            if (entry.getKey().toLowerCase().startsWith(query.toLowerCase())) {
+                newMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
+        resultDataset = nearestSuburbStrategy.getNearestSuburbList(currentLocation.getLatitude(), currentLocation.getLongitude(), newMap);
+
+        // Sort
+        Collections.sort(resultDataset, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2) {
+                return Double.compare(Double.parseDouble(o1.get("distance")), Double.parseDouble(o2.get("distance")));
+            }
+        });
+
+        dataList.clear();
+        getData(resultDataset);
+        loadMoreSearchResultAdapter.notifyDataSetChanged();
+
+        suburbSpinnerLive.dismissDropDown();
+
+        ViewGroup.LayoutParams layoutParams = swipeRefreshLayout.getLayoutParams();
+        if (resultDataset.isEmpty()) {
+            Toast.makeText(SuburbLiveActivity.this, "No matching data was found in the search!", Toast.LENGTH_SHORT).show();
+            layoutParams.height = 1;
+        } else {
+            layoutParams.height = (int) (300 * getApplication().getResources().getDisplayMetrics().density);
+        }
+        swipeRefreshLayout.setLayoutParams(layoutParams);
     }
 }
