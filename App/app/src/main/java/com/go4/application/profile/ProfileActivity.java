@@ -263,36 +263,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (Objects.equals(quality, "Bad")) {
             linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
         }
-        linearLayout.setOnLongClickListener(v -> {
-            DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
-            dialog.show(getSupportFragmentManager(), "DELETE_DIALOG");
-            return true;
-        });
         ((LinearLayout) findViewById(R.id.pa_cardList)).addView(cardView);
-    }
-
-    public class DeleteDialogFragment extends DialogFragment {
-        private SuburbCard card;
-
-        public DeleteDialogFragment newInstance(SuburbCard card) {
-            DeleteDialogFragment fragment = new DeleteDialogFragment();
-            fragment.card = card;
-            return fragment;
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder.setMessage("Delete suburb card?")
-                .setPositiveButton("Delete", (dialog, id) -> {
-                    pinnedSuburbs.remove(card);
-                    writePinnedSuburbs();
-                    readPinnedSuburbs();
-                })
-                .setNegativeButton("Cancel", (dialog, id) -> {});
-            return builder.create();
-        }
     }
 
     private void createAVLTree() {
