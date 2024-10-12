@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.go4.utils.design_pattern.LocationStrategy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class NearestSuburbStrategy implements LocationStrategy {
     }
 
     public List<Map<String, String>> getNearestSuburbList(double userLatitude, double userLongitude, HashMap<String, double[]> suburbMap) {
-        List<Map<String, String>> result_list = new ArrayList<>();
+        List<Map<String, String>> result_list = new ArrayList<>(); //
 
         for (Map.Entry<String, double[]> entry : suburbMap.entrySet()){
             String suburb = entry.getKey();
