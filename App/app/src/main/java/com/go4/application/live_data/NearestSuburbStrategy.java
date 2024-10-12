@@ -4,7 +4,6 @@ import android.location.Location;
 
 import com.go4.utils.design_pattern.LocationStrategy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
