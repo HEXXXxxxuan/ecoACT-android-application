@@ -35,9 +35,7 @@
         <activity
             android:name=".FirebaseLoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".historical.MovieDemo.DetailsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".historical.SuburbHistoricalActivity"
             android:exported="false" />
