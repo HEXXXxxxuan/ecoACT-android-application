@@ -23,17 +23,17 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
     private OnItemClickListener onItemClickListener;
     private List<Map<String, String>> dataList;
 
-    // 普通布局
+
     private final int TYPE_ITEM = 1;
-    // 脚布局
+
     private final int TYPE_FOOTER = 2;
-    // 当前加载状态，默认为加载完成
+
     private int loadState = 2;
-    // 正在加载
+
     public final int LOADING = 1;
-    // 加载完成
+
     public final int LOADING_COMPLETE = 2;
-    // 加载到底
+
     public final int LOADING_END = 3;
 
     public LoadMoreSearchResultAdapter(List<Map<String, String>> dataList) {
@@ -85,19 +85,19 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {
-                case LOADING: // 正在加载
+                case LOADING:
                     footViewHolder.pbLoading.setVisibility(View.VISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.VISIBLE);
                     footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
-                case LOADING_COMPLETE: // 加载完成
+                case LOADING_COMPLETE:
                     footViewHolder.pbLoading.setVisibility(View.INVISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.INVISIBLE);
                     footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
-                case LOADING_END: // 加载到底
+                case LOADING_END:
                     footViewHolder.pbLoading.setVisibility(View.GONE);
                     footViewHolder.tvLoading.setVisibility(View.GONE);
                     footViewHolder.llEnd.setVisibility(View.VISIBLE);
@@ -123,7 +123,7 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
             gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    // 如果当前是footer的位置，那么该item占据2个单元格，正常情况下占据1个单元格
+
                     return getItemViewType(position) == TYPE_FOOTER ? gridManager.getSpanCount() : 1;
                 }
             });
@@ -169,9 +169,9 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     /**
-     * 设置上拉加载状态
      *
-     * @param loadState 0.正在加载 1.加载完成 2.加载到底
+     *
+     * @param loadState 0.loading 1.loaded 2.load to end
      */
     public void setLoadState(int loadState) {
         this.loadState = loadState;
