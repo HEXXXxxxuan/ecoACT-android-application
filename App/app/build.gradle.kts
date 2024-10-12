@@ -52,7 +52,7 @@ dependencies {
     androidTestImplementation(libs.junit.v113)
     implementation(libs.semicirclearcprogressbar.v111)
     implementation ("me.majiajie:pager-bottom-tab-strip:2.4.0")
-
+    implementation("com.google.code.gson:gson:2.8.8")
 
 
 }

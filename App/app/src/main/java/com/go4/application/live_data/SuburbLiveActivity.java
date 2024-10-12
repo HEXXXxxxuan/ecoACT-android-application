@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +34,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import com.go4.application.historical.SuburbHistoricalActivity;
+import com.go4.application.live_data.MockDataStream.MockJSONResponse;
 import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.application.R;
@@ -87,6 +90,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private List<AirQualityRecord> primarySuburbs;
     private List<AirQualityRecord> comparedSuburbs;
     private String email;
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable fetchTask;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -221,7 +226,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             suburbSpinnerLive.setText(selectedSuburb, false);
         }
         // Fetch and display data based on the nearest suburb
-        executor.execute(this::fetchAndDisplayData);
+        executor.execute(this::showDataAndRefresh);
 
     }
 
@@ -323,9 +328,33 @@ public class SuburbLiveActivity extends AppCompatActivity {
             }
     }
 
-    private void textViewClickListener() {
+    private void fetchAndDisplayMockData() {
+        MockJSONResponse mockJSONResponse = new MockJSONResponse();
+        String response = mockJSONResponse.getMockResponse();
+        displayAirQualityData(response);
+    }
 
-        //plotData(recordsInSelectedSuburb, AirQualityMetric.AQI);
+
+    private void showDataAndRefresh() {
+        fetchTask = new Runnable() {
+            @Override
+            public void run() {
+                //fetchAndDisplayData(); //run using live API
+                fetchAndDisplayMockData(); //run using mock data
+                handler.postDelayed(this, 120000); // loop interval of two minutes
+            }
+        };
+        handler.post(fetchTask);
+    }
+
+    private void stopShowDataRefresh() {
+        if (handler != null && fetchTask != null) {
+            handler.removeCallbacks(fetchTask);
+        }
+    }
+
+
+    private void textViewClickListener() {
 
         resultTextViewLive.setOnClickListener(v -> {
             lineChart.setVisibility(View.VISIBLE);
@@ -536,7 +565,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
 
                 executor.execute(() -> {
-                    fetchAndDisplayData();
+                    showDataAndRefresh();
                     primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
 
                     // Update UI on the main thread after data is fetched
@@ -639,35 +668,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
         return recordsInSelectedSuburb;
     }
 
-//    private void fetchAirQualityData(double latitude, double longitude) {
-//        String urlString = String.format(
-//                "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
-//                latitude, longitude, API_KEY);
-//        try {
-//            URL url = new URL(urlString);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//
-//            int responseCode = conn.getResponseCode();
-//            if (responseCode == HttpURLConnection.HTTP_OK) {
-//                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//                StringBuilder response = new StringBuilder();
-//                String inputLine;
-//
-//                while ((inputLine = in.readLine()) != null) {
-//                    response.append(inputLine);
-//                }
-//                in.close();
-//
-//                displayAirQualityData(response.toString());
-//            } else {
-//                resultTextViewLive.setText("Failed to fetch air quality data.");
-//            }
-//        } catch (Exception e) {
-//            resultTextViewLive.setText("Error fetching data: " + e.getMessage());
-//        }
-//    }
-
     private HashMap<String, double[]> loadSuburbsFromJson() {
         HashMap<String, double[]> suburbMap = new HashMap<>();
         try {
@@ -742,80 +742,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
             resultTextViewLive.setText("Error parsing JSON response.");
         }
     }
-
-//    private void plotData(List<AirQualityRecord> data, AirQualityMetric metric) {
-//        ArrayList<Entry> entries = new ArrayList<>();
-//        ArrayList<String> hourIndex = new ArrayList<>();
-//
-//        // data points to the entries list
-//        for (int i = 0; i < data.size(); i++) {
-//            String formattedTime = data.get(i).getTimestamp().substring(11, 16);
-//
-//            float value = 0f;
-//            switch (metric) {
-//                case AQI:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getAqi()));
-//                    break;
-//                case CO:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getCo()));
-//                    break;
-//                case NO2:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getNo2()));
-//                    break;
-//                case PM2_5:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getPm2_5()));
-//                    break;
-//                case O3:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getO3()));
-//                    break;
-//                case SO2:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getSo2()));
-//                    break;
-//                case PM10:
-//                    value = Float.parseFloat(String.valueOf(data.get(i).getPm10()));
-//            }
-//
-//            entries.add(new Entry(i, value));
-//            hourIndex.add(formattedTime);
-//        }
-//
-//
-//        LineDataSet dataSet = new LineDataSet(entries, "AQI over Time");
-//        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//
-//        //customize the appearance
-//        dataSet.setMode(LineDataSet.Mode.LINEAR); //smooth line
-//        dataSet.setLineWidth(4f);
-//        dataSet.setCircleRadius(0f); // Remove circles at data points
-//        dataSet.setDrawValues(false); // Hide values at the data points
-//        dataSet.setColor(Color.GREEN); // Line color
-//
-//        lineChart.getDescription().setEnabled(false);
-//
-//        // Fill the area under the chart
-//        dataSet.setDrawFilled(true);
-//        dataSet.setFillColor(Color.GREEN);
-//        dataSet.setFillAlpha(40);
-//
-//        // Create a LineData object with the dataset and set it to the chart
-//        LineData lineData = new LineData(dataSet);
-//        lineChart.setData(lineData);
-//
-//        // Remove grid lines
-//        lineChart.getXAxis().setDrawGridLines(false);
-//        lineChart.getAxisLeft().setDrawGridLines(false);
-//        lineChart.getAxisRight().setDrawGridLines(false);
-//
-//        // Customize X and Y axis
-//        XAxis xAxis = lineChart.getXAxis();
-//        xAxis.setValueFormatter(new IndexAxisValueFormatter(hourIndex));
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        YAxis yAxisLeft = lineChart.getAxisLeft();
-//        YAxis yAxisRight = lineChart.getAxisRight();
-//        yAxisRight.setEnabled(false); // Disable right Y axis
-//
-//        lineChart.invalidate();
-//    }
 
     private void plotPrimaryData(List<AirQualityRecord> data, AirQualityMetric metric) {
         if (data == null || data.isEmpty()) {
@@ -1034,5 +960,10 @@ public class SuburbLiveActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+    }
+
+    protected void onPause() {
+        super.onPause();
+        stopShowDataRefresh();
     }
 }
