@@ -92,10 +92,9 @@ public class ProfileActivity extends AppCompatActivity {
         // Create AVL Tree
         createAVLTree();
 
-        // Pinned Suburb Card features
+        // Set up suburb spinner
         suburbSpinner = findViewById(R.id.pa_suburb_spinner);
-        Button addButton = findViewById(R.id.pa_add_button);
-        addButton.setOnClickListener(v -> addButtonOnClick());
+        suburbSpinner();
 
         // Logout button
         findViewById(R.id.logout_button).setOnClickListener(v -> {
@@ -104,19 +103,19 @@ public class ProfileActivity extends AppCompatActivity {
             Intent logoutIntent = new Intent(ProfileActivity.this, FirebaseLoginActivity.class);
             startActivity(logoutIntent);
             finish();
-
         });
 
         // Load and Save Profile Picture
         imageView = findViewById(R.id.pa_profile);
         editableProfilePicture();
 
-        // Set up suburb spinner
-        suburbSpinner();
-
         // Display Pinned Suburb Cards
         suburbCardList = findViewById(R.id.pa_cardList);
         displayPinnedSuburbCards();
+
+        // Set up ADD pinned suburb button
+        Button addButton = findViewById(R.id.pa_add_button);
+        addButton.setOnClickListener(v -> addButtonOnClick());
     }
 
     @Override
@@ -215,13 +214,10 @@ public class ProfileActivity extends AppCompatActivity {
                 recyclerViewAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 writePinnedSuburbs();
 
-                Snackbar.make(suburbCardList, deletedSuburbCard.getLabel(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        recyclerDataArrayList.add(position, deletedSuburbCard);
-                        recyclerViewAdapter.notifyItemInserted(position);
-                        writePinnedSuburbs();
-                    }
+                Snackbar.make(suburbCardList, deletedSuburbCard.getLabel(), Snackbar.LENGTH_LONG).setAction("Undo", v -> {
+                    recyclerDataArrayList.add(position, deletedSuburbCard);
+                    recyclerViewAdapter.notifyItemInserted(position);
+                    writePinnedSuburbs();
                 }).show();
             }
         }).attachToRecyclerView(suburbCardList);
