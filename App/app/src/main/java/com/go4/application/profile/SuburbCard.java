@@ -1,3 +1,7 @@
+/**
+ * @author u8003980 Chan Cheng Leong
+ */
+
 package com.go4.application.profile;
 
 public class SuburbCard {

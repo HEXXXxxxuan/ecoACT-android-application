@@ -1,7 +1,9 @@
+/**
+ * @author u8003980 Chan Cheng Leong
+ */
+
 package com.go4.application.profile;
 
-import android.content.Context;
-import android.media.Image;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,10 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.core.internal.deps.guava.base.Objects;
 
 import com.go4.application.R;
-import com.go4.application.profile.SuburbCard;
 
 import java.util.ArrayList;
 
@@ -24,12 +24,10 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
 
     // creating a variable for our array list and context.
     private ArrayList<SuburbCard> suburbDataArrayList;
-    private Context mcontext;
 
     // creating a constructor class.
-    public SuburbCardViewAdapter(ArrayList<SuburbCard> recyclerDataArrayList, Context mcontext) {
+    public SuburbCardViewAdapter(ArrayList<SuburbCard> recyclerDataArrayList) {
         this.suburbDataArrayList = recyclerDataArrayList;
-        this.mcontext = mcontext;
     }
 
     @NonNull

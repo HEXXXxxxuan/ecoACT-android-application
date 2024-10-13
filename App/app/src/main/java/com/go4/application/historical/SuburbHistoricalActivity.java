@@ -187,6 +187,9 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * @author u8003980 Chan Cheng Leong
+     */
     private void parseSearchBarInput() {
         Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString(), suburbList);
         Parser parser = new Parser(tokenizer, getApplicationContext());
