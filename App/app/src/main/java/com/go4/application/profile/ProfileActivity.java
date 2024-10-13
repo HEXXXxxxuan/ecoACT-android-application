@@ -106,10 +106,12 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
 
         });
-        suburbSpinner();
 
         // Load and Save Profile Picture
         editableProfilePicture();
+
+        // Set up suburb spinner
+        suburbSpinner();
 
         // Display Pinned Suburb Cards
         displayPinnedSuburbCards();
