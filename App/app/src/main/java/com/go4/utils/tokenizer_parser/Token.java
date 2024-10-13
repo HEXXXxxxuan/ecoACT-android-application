@@ -1,19 +1,14 @@
-/**
- * @author u8003980 Chan Cheng Leong
- */
-
 package com.go4.utils.tokenizer_parser;
 
 import java.util.Objects;
 
+/**
+ * @author u8003980 Chan Cheng Leong
+ */
 public class Token {
     // The following enum defines different types of tokens. Example of accessing these: Token.Type.INT
     public enum Type {LOCATION, YEAR, MONTH, DATE, TIME, SEPARATOR, INVALID};
 
-    /**
-     * The following exception should be thrown if a tokenizer attempts to tokenize something that is not of one
-     * of the types of tokens.
-     */
     public static class IllegalTokenException extends IllegalArgumentException {
         public IllegalTokenException(String errorMessage) {
             super(errorMessage);

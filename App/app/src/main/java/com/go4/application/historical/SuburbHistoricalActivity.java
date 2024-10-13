@@ -188,6 +188,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     }
 
     /**
+     * The parseSearchBarInput() function is used to parse the user's search bar input.
      * @author u8003980 Chan Cheng Leong
      */
     private void parseSearchBarInput() {

@@ -1,9 +1,9 @@
-/**
- * @author u8003980 Chan Cheng Leong
- */
-
 package com.go4.application.profile;
 
+/**
+ * This class is used to store suburb card data.
+ * @author u8003980 Chan Cheng Leong
+ */
 public class SuburbCard {
     private String label;
     private String suburb;

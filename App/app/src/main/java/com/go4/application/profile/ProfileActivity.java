@@ -1,7 +1,3 @@
-/**
- * @author u8003980 Chan Cheng Leong
- */
-
 package com.go4.application.profile;
 
 import android.content.Context;
@@ -57,6 +53,12 @@ import java.util.List;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+/**
+ * This activity launches the profile page after successful login.
+ * <p>It displays user email, allows users to change profile picture, and add, rename and delete suburb cards</p>
+ * @author u8003980 Chan Cheng Leong
+ */
 public class ProfileActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
     private ImageView imageView;

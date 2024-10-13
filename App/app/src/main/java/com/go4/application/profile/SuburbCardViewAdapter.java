@@ -1,7 +1,3 @@
-/**
- * @author u8003980 Chan Cheng Leong
- */
-
 package com.go4.application.profile;
 
 import android.text.Editable;
@@ -19,6 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.go4.application.R;
 
 import java.util.ArrayList;
+
+/**
+ * This class is used to transform each SuburbCard Object into a view on screen.
+ * @author u8003980 Chan Cheng Leong
+ */
 
 public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAdapter.RecyclerViewHolder> {
 
