@@ -1,3 +1,4 @@
+
 package com.go4.utils.tokenizer_parser;
 
 import android.content.Context;
@@ -5,6 +6,9 @@ import android.widget.Toast;
 
 import com.go4.application.historical.SearchRecord;
 
+/**
+ * @author u8003980 Chan Cheng Leong
+ */
 public class Parser {
     public static class IllegalProductionException extends IllegalArgumentException {
         public IllegalProductionException(String errorMessage) {
