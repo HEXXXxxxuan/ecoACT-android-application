@@ -108,12 +108,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         // Load and Save Profile Picture
+        imageView = findViewById(R.id.pa_profile);
         editableProfilePicture();
 
         // Set up suburb spinner
         suburbSpinner();
 
         // Display Pinned Suburb Cards
+        suburbCardList = findViewById(R.id.pa_cardList);
         displayPinnedSuburbCards();
     }
 
@@ -151,7 +153,6 @@ public class ProfileActivity extends AppCompatActivity {
      * <p>With reference to <a href="https://developer.android.com/training/data-storage/shared/photopicker">this website</a></p>
      */
     private void editableProfilePicture() {
-        imageView = findViewById(R.id.pa_profile);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
@@ -192,10 +193,10 @@ public class ProfileActivity extends AppCompatActivity {
      * With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p>
      */
     private void displayPinnedSuburbCards() {
-        suburbCardList = findViewById(R.id.pa_cardList);
         recyclerDataArrayList = new ArrayList<>();
         readPinnedSuburbs();
         recyclerViewAdapter = new SuburbCardViewAdapter(recyclerDataArrayList);
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         suburbCardList.setLayoutManager(manager);
         suburbCardList.setAdapter(recyclerViewAdapter);
