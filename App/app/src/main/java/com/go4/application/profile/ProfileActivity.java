@@ -63,17 +63,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
-    private LayoutInflater inflater;
-    private LinearLayout cardList;
     private Spinner suburbSpinner;
     private ImageView imageView;
     private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
-    private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
     private String email;
     private Context context;
-    private FragmentManager fragmentManager;
 
     private RecyclerView suburbCardList;
     private ArrayList<SuburbCard> recyclerDataArrayList;
@@ -103,7 +99,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Pinned Suburb Card features
 //        cardList = findViewById(R.id.pa_cardList);
         suburbSpinner = findViewById(R.id.pa_suburb_spinner);
-        inflater = getLayoutInflater();
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
         findViewById(R.id.logout_button).setOnClickListener(v -> {
@@ -152,7 +147,6 @@ public class ProfileActivity extends AppCompatActivity {
         );
 
         context = getApplicationContext();
-        fragmentManager = getSupportFragmentManager();
 
 //        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 //
@@ -179,6 +173,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // creating new array list.
         recyclerDataArrayList = new ArrayList<>();
+
+        readPinnedSuburbs();
 
         // initializing our adapter class with our array list and context.
         recyclerViewAdapter = new SuburbCardViewAdapter(recyclerDataArrayList, this);
@@ -248,11 +244,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        readPinnedSuburbs();
-
         handler = new Handler();
 
-        // Update suburb cards every 15 minutes
+        // Update cards every 15 minutes
         updateRunnable = new Runnable() {
             @Override public void run() {
                 updatePinnedSuburbs();
@@ -261,6 +255,18 @@ public class ProfileActivity extends AppCompatActivity {
         };
 
         handler.post(updateRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        writePinnedSuburbs();
+    }
+
+    @Override
+    protected void onStop() {
+        writePinnedSuburbs();
+        super.onStop();
     }
 
     private String getFilePath() {
@@ -321,9 +327,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void readPinnedSuburbs() {
-        pinnedSuburbs = new ArrayList<SuburbCard>();
+        recyclerDataArrayList = new ArrayList<SuburbCard>();
 //        cardList.removeAllViews();
-        ContextWrapper cw = new ContextWrapper(context);
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
         String filePath = String.format("%s/%s", directory, filename);
@@ -375,7 +381,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updatePinnedSuburbs() {
-        for (SuburbCard card: pinnedSuburbs) {
+        for (SuburbCard card: recyclerDataArrayList) {
             String suburb = card.getSuburb();
             String[] result = searchForQualityAndPm10Number(suburb);
             String quality = result[0];
@@ -400,7 +406,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void addSuburbCard(String label, String suburb, String quality, String number) {
         SuburbCard card = new SuburbCard(label, suburb, quality, number);
-        pinnedSuburbs.add(card);
+//        pinnedSuburbs.add(card);
 
 //        linearLayout.setOnLongClickListener(v -> {
 //            new DeleteDialogFragment().show(getSupportFragmentManager(), "DELETE_DIALOG");

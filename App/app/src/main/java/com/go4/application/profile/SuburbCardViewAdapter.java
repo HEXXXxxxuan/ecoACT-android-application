@@ -1,13 +1,19 @@
 package com.go4.application.profile;
 
 import android.content.Context;
+import android.media.Image;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.core.internal.deps.guava.base.Objects;
 
 import com.go4.application.R;
 import com.go4.application.profile.SuburbCard;
@@ -42,6 +48,28 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
         holder.suburb.setText(recyclerData.getSuburb());
         holder.quality.setText(recyclerData.getQuality());
         holder.pm10Number.setText(recyclerData.getPm10Number());
+
+        holder.label.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                recyclerData.setLabel(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        if (recyclerData.getQuality() == "Good") {
+            holder.background.setBackgroundResource(R.drawable.rounded_bg_good);
+            holder.imageView.setImageResource(R.drawable.quality_good);
+        } else if (recyclerData.getQuality() == "Moderate") {
+            holder.background.setBackgroundResource(R.drawable.rounded_bg_moderate);
+        } else if (recyclerData.getQuality() == "Bad") {
+            holder.background.setBackgroundResource(R.drawable.rounded_bg_bad);
+        }
     }
 
     @Override
@@ -59,6 +87,8 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
         private TextView suburb;
         private TextView quality;
         private TextView pm10Number;
+        private ImageView imageView;
+        private LinearLayout background;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +97,8 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
             suburb = itemView.findViewById(R.id.pa_card_suburb);
             quality = itemView.findViewById(R.id.pa_card_quality);
             pm10Number = itemView.findViewById(R.id.pa_card_number);
+            imageView = itemView.findViewById(R.id.pa_card_image);
+            background = itemView.findViewById(R.id.pa_card);
 
         }
     }
