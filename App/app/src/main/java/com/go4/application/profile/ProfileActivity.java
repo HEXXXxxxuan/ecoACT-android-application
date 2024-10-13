@@ -72,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
     private SuburbCardViewAdapter recyclerViewAdapter;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
