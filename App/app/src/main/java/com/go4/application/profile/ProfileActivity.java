@@ -66,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable updateRunnable;
     private String email;
-    private Context context;
 
     private RecyclerView suburbCardList;
     private ArrayList<SuburbCard> recyclerDataArrayList;
@@ -177,10 +176,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Display Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
+     * <p>Swipe right on suburb card to delete it, and press undo button to undo.
+     * With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p>
      */
     private void displayPinnedSuburbCards() {
-        // Display suburb cards on screen, and handle swipe delete
-        // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
         suburbCardList = findViewById(R.id.pa_cardList);
         recyclerDataArrayList = new ArrayList<>();
         readPinnedSuburbs();

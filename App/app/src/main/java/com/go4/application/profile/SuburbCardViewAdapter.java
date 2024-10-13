@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 /**
  * This class is used to transform each SuburbCard Object into a view on screen.
+ * <p>With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p></p>
  * @author u8003980 Chan Cheng Leong
  */
 
