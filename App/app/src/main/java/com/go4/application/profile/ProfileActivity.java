@@ -96,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
         suburbSpinner = findViewById(R.id.pa_suburb_spinner);
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
+
+        // Logout button
         findViewById(R.id.logout_button).setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
 
