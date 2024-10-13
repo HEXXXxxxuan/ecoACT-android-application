@@ -148,26 +148,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                int itemId = item.getItemId();
-//                if (itemId == R.id.nav_profile) {
-//                    return true;
-//                } else if (itemId == R.id.nav_suburb_live) {
-//
-//                    startActivity(new Intent(ProfileActivity.this, SuburbLiveActivity.class));
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
-
-//        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
-
         // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
         suburbCardList = findViewById(R.id.idRVCourse);
 
@@ -406,45 +386,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void addSuburbCard(String label, String suburb, String quality, String number) {
         SuburbCard card = new SuburbCard(label, suburb, quality, number);
-//        pinnedSuburbs.add(card);
-
-//        linearLayout.setOnLongClickListener(v -> {
-//            new DeleteDialogFragment().show(getSupportFragmentManager(), "DELETE_DIALOG");
-//            return true;
-//        });
-//        linearLayout.setOnLongClickListener(v -> {
-//            DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
-//            dialog.show(fragmentManager, "DELETE_DIALOG");
-//            return true;
-//        });
-
-//        cardList.addView(cardView);
         recyclerDataArrayList.add(card);
-
         suburbCardList.setAdapter(recyclerViewAdapter);
-    }
-
-    public static class DeleteDialogFragment extends DialogFragment {
-        private SuburbCard card;
-
-        public static DeleteDialogFragment newInstance(SuburbCard card) {
-            DeleteDialogFragment fragment = new DeleteDialogFragment();
-            fragment.card = card;
-            return fragment;
-        }
-
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-//            builder.setMessage("Delete suburb card?")
-//                .setPositiveButton("Delete", (dialog, id) -> {
-//                    pinnedSuburbs.remove(card);
-//                    writePinnedSuburbs();
-//                    readPinnedSuburbs();
-//                })
-//                .setNegativeButton("Cancel", (dialog, id) -> {});
-//            return builder.create();
-//        }
     }
 
     private void createAVLTree() {
