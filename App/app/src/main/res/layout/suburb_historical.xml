@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -5,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/gray_background"
     tools:context="com.go4.application.historical.SuburbHistoricalActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/gray_background">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_background">
 
-        <!-- container -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/date_location_container"
             android:layout_width="0dp"
@@ -32,7 +34,7 @@
                 android:padding="16dp"
                 android:dividerPadding="12dp">
 
-                <!-- search bar -->
+
                 <EditText
                     android:id="@+id/sh_search"
                     android:layout_width="match_parent"
@@ -41,7 +43,7 @@
                     android:padding="16dp"
                     android:layout_marginBottom="12dp" />
 
-                <!-- location -->
+
                 <TextView
                     android:id="@+id/locationLabel"
                     android:layout_width="wrap_content"
@@ -52,20 +54,20 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp" />
 
+
                 <Spinner
                     android:id="@+id/suburbSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown" />
 
-                <!-- Date and Time in horizontal layout -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="12dp">
 
-                    <!-- date -->
                     <TextView
                         android:id="@+id/dateLabel"
                         android:layout_width="0dp"
@@ -85,7 +87,6 @@
                         android:clickable="true"
                         android:focusable="false" />
 
-                    <!-- time -->
                     <TextView
                         android:id="@+id/hourLabel"
                         android:layout_width="0dp"
@@ -95,6 +96,7 @@
                         android:textSize="18sp"
                         android:textColor="@color/black" />
 
+
                     <Spinner
                         android:id="@+id/hourSpinner"
                         android:layout_width="0dp"
@@ -103,19 +105,43 @@
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
 
-                <!-- Search Button -->
-                <Button
-                    android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Search"
-                    android:layout_marginTop="16dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/round_button" />
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp">
+
+
+                    <Button
+                        android:id="@+id/livePageButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="BACK TO LIVE"
+                        android:textColor="@color/primary_ColorW"
+                        android:background="@drawable/round_button" />
+
+                    <!-- Spacer to add separation between buttons -->
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
+
+
+                    <Button
+                        android:id="@+id/searchButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="SEARCH"
+                        android:textColor="@color/primary_ColorW"
+                        android:background="@drawable/round_button" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- bar container -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/progress_container"
             android:layout_width="0dp"
@@ -135,7 +161,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- semi bar -->
+
                 <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
                     android:id="@+id/semiCircleArcProgressBar"
                     android:layout_width="200dp"
@@ -145,7 +171,7 @@
                     app:progressPlaceHolderColor="@color/accendColorB"
                     app:progressPlaceHolderWidth="10" />
 
-                <!-- AQI text -->
+
                 <TextView
                     android:id="@+id/aqiStatusTextView"
                     android:layout_width="wrap_content"
@@ -155,7 +181,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <!-- Separated Line -->
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -163,7 +189,7 @@
                     android:layout_marginBottom="16dp"
                     android:background="@color/dividerColor" />
 
-                <!-- vertical bar (2 rows, 3 columns) -->
+
                 <GridLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -178,12 +204,26 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+                        <!-- Label -->
                         <TextView
+                            android:id="@+id/pm25Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PM2.5"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
+
+                        <!-- Value TextView -->
+                        <TextView
+                            android:id="@+id/pm25TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+
                         <ProgressBar
                             android:id="@+id/pm25ProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
@@ -192,21 +232,35 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
 
-                    <!-- PM10 -->
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+                        <!-- Label -->
                         <TextView
+                            android:id="@+id/pm10Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PM10"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
-                        <ProgressBar
+                        <!-- Value TextView -->
+                        <TextView
+                            android:id="@+id/pm10TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+                           <ProgressBar
                             android:id="@+id/pm10ProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="wrap_content"
@@ -214,6 +268,8 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
 
                     <!-- O3 -->
@@ -222,12 +278,25 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+
                         <TextView
+                            android:id="@+id/o3Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="O3"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/o3TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+                        <!-- ProgressBar -->
                         <ProgressBar
                             android:id="@+id/o3ProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
@@ -236,6 +305,8 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
 
                     <!-- SO2 -->
@@ -244,12 +315,26 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+                        <!-- Label -->
                         <TextView
+                            android:id="@+id/so2Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="SO2"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
+
+                        <!-- Value TextView -->
+                        <TextView
+                            android:id="@+id/so2TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+                        <!-- ProgressBar -->
                         <ProgressBar
                             android:id="@+id/so2ProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
@@ -258,6 +343,8 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
 
                     <!-- CO -->
@@ -266,12 +353,25 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+                        <!-- Label -->
                         <TextView
+                            android:id="@+id/coLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="CO"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
+                        <!-- Value TextView -->
+                        <TextView
+                            android:id="@+id/coTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+                        <!-- ProgressBar -->
                         <ProgressBar
                             android:id="@+id/coProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
@@ -280,6 +380,8 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
 
                     <!-- NO2 -->
@@ -288,12 +390,25 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
+
+                        <!-- Label -->
                         <TextView
+                            android:id="@+id/no2Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="NO2"
                             android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
+                        <!-- Value TextView -->
+                        <TextView
+                            android:id="@+id/no2TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:layout_marginTop="8dp" />
+
+                        <!-- ProgressBar -->
                         <ProgressBar
                             android:id="@+id/no2ProgressBar"
                             style="?android:attr/progressBarStyleHorizontal"
@@ -302,25 +417,20 @@
                             android:layout_margin="8dp"
                             android:max="100"
                             android:rotation="270" />
+
+
                     </LinearLayout>
                 </GridLayout>
 
-                <!-- Separated Line -->
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@color/dividerColor"
-                    />
+                    android:background="@color/dividerColor" />
 
-                <!-- Live Data Button -->
-                <Button
-                    android:id="@+id/livePageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LIVE DATA"
-                    android:background="@drawable/round_button" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

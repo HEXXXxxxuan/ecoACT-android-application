@@ -299,8 +299,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
         no2ProgressBar = findViewById(R.id.no2ProgressBar);
         coProgressBar.setMax(1000);
         o3ProgressBar.setMax(200);
-        pm10ProgressBar.setMax(20);
-        pm25ProgressBar.setMax(20);
+        pm10ProgressBar.setMax(50);
+        pm25ProgressBar.setMax(50);
         no2ProgressBar.setMax(5);
         so2ProgressBar.setMax(10);
         historicalButton = findViewById(R.id.historicalPageButton);

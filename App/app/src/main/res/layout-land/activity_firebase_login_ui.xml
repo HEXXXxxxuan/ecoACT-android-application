@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/logo_image"
-        android:layout_width="320dp"
-        android:layout_height="235dp"
+        android:layout_width="244dp"
+        android:layout_height="161dp"
         android:layout_marginTop="16dp"
         android:contentDescription="App Logo"
         android:scaleType="fitCenter"
@@ -53,7 +53,8 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/secondaryColorLG"
+        android:background="@drawable/round_button"
+        android:textColor="@color/primary_ColorW"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
