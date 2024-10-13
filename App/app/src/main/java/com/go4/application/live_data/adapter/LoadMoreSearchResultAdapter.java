@@ -137,8 +137,7 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
         RecyclerViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
-            tvPosition = (TextView) itemView.findViewById(R.id.tv_position);
-            tvDistance = (TextView) itemView.findViewById(R.id.tv_distance);
+            tvPosition = (TextView) itemView.findViewById(R.id.tv_position);tvDistance = (TextView) itemView.findViewById(R.id.tv_distance);
             tvOther = (TextView) itemView.findViewById(R.id.tv_other);
 
             itemView.setOnClickListener(new View.OnClickListener() {
