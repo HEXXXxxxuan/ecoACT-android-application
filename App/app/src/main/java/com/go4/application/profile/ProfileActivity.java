@@ -106,7 +106,47 @@ public class ProfileActivity extends AppCompatActivity {
         });
         suburbSpinner();
 
-        // Upload Profile Picture
+        // Load and Save Profile Picture
+        editableProfilePicture();
+
+        // Display Pinned Suburb Cards
+        displayPinnedSuburbCards();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        handler = new Handler();
+
+        // Update cards every 15 minutes
+        updateRunnable = new Runnable() {
+            @Override public void run() {
+                updatePinnedSuburbs();
+                handler.postDelayed(this, 15 * 60 * 1000);
+            }
+        };
+
+        handler.post(updateRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        writePinnedSuburbs();
+    }
+
+    @Override
+    protected void onStop() {
+        writePinnedSuburbs();
+        super.onStop();
+    }
+
+    /**
+     * Load and Save Profile Picture from internal storage
+     * <p>With reference to <a href="https://developer.android.com/training/data-storage/shared/photopicker">this website</a></p>
+     */
+    private void editableProfilePicture() {
         imageView = findViewById(R.id.pa_profile);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -140,38 +180,6 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(suburbLiveIntent);
             }
         );
-
-        // Display Pinned Suburb Cards
-        displayPinnedSuburbCards();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        handler = new Handler();
-
-        // Update cards every 15 minutes
-        updateRunnable = new Runnable() {
-            @Override public void run() {
-                updatePinnedSuburbs();
-                handler.postDelayed(this, 15 * 60 * 1000);
-            }
-        };
-
-        handler.post(updateRunnable);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        writePinnedSuburbs();
-    }
-
-    @Override
-    protected void onStop() {
-        writePinnedSuburbs();
-        super.onStop();
     }
 
     /**
