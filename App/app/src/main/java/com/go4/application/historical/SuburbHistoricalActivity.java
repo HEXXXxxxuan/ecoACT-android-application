@@ -17,7 +17,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.go4.application.MainActivity;
 import com.go4.application.R;
+import com.go4.application.SplashActivity;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.tree.AVLTree;
@@ -188,7 +190,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     }
 
     /**
-     * The parseSearchBarInput() function is used to parse the user's search bar input.
+     * Called to parse the user's search bar input using {@link Tokenizer} and {{@link Parser}}
      * @author u8003980 Chan Cheng Leong
      */
     private void parseSearchBarInput() {

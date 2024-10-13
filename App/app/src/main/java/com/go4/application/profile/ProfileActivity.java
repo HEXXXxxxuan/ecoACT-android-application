@@ -94,7 +94,6 @@ public class ProfileActivity extends AppCompatActivity {
         createAVLTree();
 
         // Pinned Suburb Card features
-//        cardList = findViewById(R.id.pa_cardList);
         suburbSpinner = findViewById(R.id.pa_suburb_spinner);
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
@@ -143,78 +142,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         );
 
-        context = getApplicationContext();
-
-        // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
-        suburbCardList = findViewById(R.id.pa_cardList);
-
-        // creating new array list.
-        recyclerDataArrayList = new ArrayList<>();
-
-        readPinnedSuburbs();
-
-        // initializing our adapter class with our array list and context.
-        recyclerViewAdapter = new SuburbCardViewAdapter(recyclerDataArrayList);
-
-        // below line is to set layout manager for our recycler view.
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-
-        // setting layout manager for our recycler view.
-        suburbCardList.setLayoutManager(manager);
-
-        // below line is to set adapter
-        // to our recycler view.
-        suburbCardList.setAdapter(recyclerViewAdapter);
-
-        // on below line we are creating a method to create item touch helper
-        // method for adding swipe to delete functionality.
-        // in this we are specifying drag direction and position to right
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                // this method is called
-                // when the item is moved.
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // this method is called when we swipe our item to right direction.
-                // on below line we are getting the item at a particular position.
-                SuburbCard deletedSuburbCard = recyclerDataArrayList.get(viewHolder.getAdapterPosition());
-
-                // below line is to get the position
-                // of the item at that position.
-                int position = viewHolder.getAdapterPosition();
-
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
-                recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
-
-                // below line is to notify our item is removed from adapter.
-                recyclerViewAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
-                writePinnedSuburbs();
-
-                // below line is to display our snackbar with action.
-                Snackbar.make(suburbCardList, deletedSuburbCard.getLabel(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // adding on click listener to our action of snack bar.
-                        // below line is to add our item to array list with a position.
-                        recyclerDataArrayList.add(position, deletedSuburbCard);
-
-                        // below line is to notify item is
-                        // added to our adapter class.
-                        recyclerViewAdapter.notifyItemInserted(position);
-
-                        writePinnedSuburbs();
-                    }
-                }).show();
-            }
-            // at last we are adding this
-            // to our recycler view.
-        }).attachToRecyclerView(suburbCardList);
+        // Display Pinned Suburb Cards
+        displayPinnedSuburbCards();
     }
 
     @Override
@@ -244,6 +173,46 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStop() {
         writePinnedSuburbs();
         super.onStop();
+    }
+
+    /**
+     * Display Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
+     */
+    private void displayPinnedSuburbCards() {
+        // Display suburb cards on screen, and handle swipe delete
+        // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
+        suburbCardList = findViewById(R.id.pa_cardList);
+        recyclerDataArrayList = new ArrayList<>();
+        readPinnedSuburbs();
+        recyclerViewAdapter = new SuburbCardViewAdapter(recyclerDataArrayList);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        suburbCardList.setLayoutManager(manager);
+        suburbCardList.setAdapter(recyclerViewAdapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                SuburbCard deletedSuburbCard = recyclerDataArrayList.get(viewHolder.getAdapterPosition());
+                int position = viewHolder.getAdapterPosition();
+                recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
+                recyclerViewAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                writePinnedSuburbs();
+
+                Snackbar.make(suburbCardList, deletedSuburbCard.getLabel(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        recyclerDataArrayList.add(position, deletedSuburbCard);
+                        recyclerViewAdapter.notifyItemInserted(position);
+                        writePinnedSuburbs();
+                    }
+                }).show();
+            }
+        }).attachToRecyclerView(suburbCardList);
     }
 
     private String getFilePath() {
@@ -305,7 +274,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void readPinnedSuburbs() {
         recyclerDataArrayList = new ArrayList<SuburbCard>();
-//        cardList.removeAllViews();
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
@@ -336,7 +304,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void writePinnedSuburbs() {
-        ContextWrapper cw = new ContextWrapper(context);
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
         String filePath = String.format("%s/%s", directory, filename);
