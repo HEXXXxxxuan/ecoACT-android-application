@@ -149,7 +149,7 @@ public class ProfileActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
-        suburbCardList = findViewById(R.id.idRVCourse);
+        suburbCardList = findViewById(R.id.pa_cardList);
 
         // creating new array list.
         recyclerDataArrayList = new ArrayList<>();

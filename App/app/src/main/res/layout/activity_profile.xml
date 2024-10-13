@@ -93,16 +93,8 @@
         app:layout_constraintTop_toBottomOf="@+id/pa_add_button"
         app:layout_constraintVertical_bias="0.428">
 
-        <!--        <androidx.recyclerview.widget.RecyclerView-->
-        <!--            android:id="@+id/idRVCourse"-->
-        <!--            android:layout_width="409dp"-->
-        <!--            android:layout_height="388dp"-->
-        <!--            android:layout_marginTop="8dp"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/pa_add_button" />-->
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/idRVCourse"
+            android:id="@+id/pa_cardList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
@@ -114,18 +106,6 @@
             android:paddingVertical="8dp"
             android:showDividers="middle" />
 
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/pa_cardList"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="1dp"-->
-        <!--            android:layout_marginEnd="1dp"-->
-        <!--            android:layout_marginBottom="1dp"-->
-        <!--            android:divider="@drawable/divider"-->
-        <!--            android:orientation="vertical"-->
-        <!--            android:paddingHorizontal="8dp"-->
-        <!--            android:paddingVertical="8dp"-->
-        <!--            android:showDividers="middle" />-->
     </ScrollView>
 
     <LinearLayout
