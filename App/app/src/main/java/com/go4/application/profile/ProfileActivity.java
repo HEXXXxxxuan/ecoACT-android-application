@@ -28,12 +28,16 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.go4.application.FirebaseLoginActivity;
 import com.go4.application.R;
@@ -55,20 +59,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
-    private static LayoutInflater inflater;
-    private static LinearLayout cardList;
+    private LayoutInflater inflater;
+    private LinearLayout cardList;
     private Spinner suburbSpinner;
     private ImageView imageView;
-    private static AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
-    private static List<SuburbCard> pinnedSuburbs;
+    private AVLTree<String, AirQualityRecord> recordTreeLocationAndDateKey;
+    private List<SuburbCard> pinnedSuburbs;
     private Handler handler;
     private Runnable updateRunnable;
     private String email;
-    private static Context context;
-    private static FragmentManager fragmentManager;
+    private Context context;
+    private FragmentManager fragmentManager;
+
+    private RecyclerView suburbCardList;
+    private ArrayList<SuburbCard> recyclerDataArrayList;
+    private SuburbCardViewAdapter recyclerViewAdapter;
 
 
     @Override
@@ -92,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
         createAVLTree();
 
         // Pinned Suburb Card features
-        cardList = findViewById(R.id.pa_cardList);
+//        cardList = findViewById(R.id.pa_cardList);
         suburbSpinner = findViewById(R.id.pa_suburb_spinner);
         inflater = getLayoutInflater();
         Button addButton = findViewById(R.id.pa_add_button);
@@ -164,6 +173,75 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 //        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+
+        // https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/
+        suburbCardList = findViewById(R.id.idRVCourse);
+
+        // creating new array list.
+        recyclerDataArrayList = new ArrayList<>();
+
+        // initializing our adapter class with our array list and context.
+        recyclerViewAdapter = new SuburbCardViewAdapter(recyclerDataArrayList, this);
+
+        // below line is to set layout manager for our recycler view.
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+
+        // setting layout manager for our recycler view.
+        suburbCardList.setLayoutManager(manager);
+
+        // below line is to set adapter
+        // to our recycler view.
+        suburbCardList.setAdapter(recyclerViewAdapter);
+
+        // on below line we are creating a method to create item touch helper
+        // method for adding swipe to delete functionality.
+        // in this we are specifying drag direction and position to right
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                // this method is called
+                // when the item is moved.
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // this method is called when we swipe our item to right direction.
+                // on below line we are getting the item at a particular position.
+                SuburbCard deletedSuburbCard = recyclerDataArrayList.get(viewHolder.getAdapterPosition());
+
+                // below line is to get the position
+                // of the item at that position.
+                int position = viewHolder.getAdapterPosition();
+
+                // this method is called when item is swiped.
+                // below line is to remove item from our array list.
+                recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
+
+                // below line is to notify our item is removed from adapter.
+                recyclerViewAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                writePinnedSuburbs();
+
+                // below line is to display our snackbar with action.
+                Snackbar.make(suburbCardList, deletedSuburbCard.getLabel(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // adding on click listener to our action of snack bar.
+                        // below line is to add our item to array list with a position.
+                        recyclerDataArrayList.add(position, deletedSuburbCard);
+
+                        // below line is to notify item is
+                        // added to our adapter class.
+                        recyclerViewAdapter.notifyItemInserted(position);
+
+                        writePinnedSuburbs();
+                    }
+                }).show();
+            }
+            // at last we are adding this
+            // to our recycler view.
+        }).attachToRecyclerView(suburbCardList);
     }
 
     @Override
@@ -214,7 +292,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private static String[] searchForQualityAndPm10Number(String suburb) {
+    private String[] searchForQualityAndPm10Number(String suburb) {
         String[] result = new String[2];
 
         String quality = "N/A";
@@ -242,9 +320,9 @@ public class ProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private static void readPinnedSuburbs() {
+    private void readPinnedSuburbs() {
         pinnedSuburbs = new ArrayList<SuburbCard>();
-        cardList.removeAllViews();
+//        cardList.removeAllViews();
         ContextWrapper cw = new ContextWrapper(context);
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
@@ -274,7 +352,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private static void writePinnedSuburbs() {
+    private void writePinnedSuburbs() {
         ContextWrapper cw = new ContextWrapper(context);
         String filename = "pinned_suburbs.txt";
         File directory = cw.getDir("text", Context.MODE_PRIVATE);
@@ -284,7 +362,7 @@ public class ProfileActivity extends AppCompatActivity {
             // Write the input text to the file
             FileOutputStream fileOutputStream = new FileOutputStream(path);
             StringBuilder data = new StringBuilder();
-            for (SuburbCard card: pinnedSuburbs) {
+            for (SuburbCard card: recyclerDataArrayList) {
                 String line = card.getData();
                 data.append(line);
             }
@@ -296,7 +374,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private static void updatePinnedSuburbs() {
+    private void updatePinnedSuburbs() {
         for (SuburbCard card: pinnedSuburbs) {
             String suburb = card.getSuburb();
             String[] result = searchForQualityAndPm10Number(suburb);
@@ -320,53 +398,24 @@ public class ProfileActivity extends AppCompatActivity {
         writePinnedSuburbs();
     }
 
-    private static void addSuburbCard(String label, String suburb, String quality, String number) {
+    private void addSuburbCard(String label, String suburb, String quality, String number) {
         SuburbCard card = new SuburbCard(label, suburb, quality, number);
         pinnedSuburbs.add(card);
-
-        View cardView = inflater.inflate(R.layout.activity_profile_card, cardList, false);
-        EditText labelTextView = cardView.findViewById(R.id.pa_card_label);
-        labelTextView.setText(label);
-        labelTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                card.setLabel(labelTextView.getText().toString());
-                writePinnedSuburbs();
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        TextView suburbTextView = cardView.findViewById(R.id.pa_card_suburb);
-        suburbTextView.setText(suburb);
-        TextView qualityTextView = cardView.findViewById(R.id.pa_card_quality);
-        qualityTextView.setText(quality);
-        TextView numberTextView = cardView.findViewById(R.id.pa_card_number);
-        numberTextView.setText(String.valueOf((number)));
-
-        LinearLayout linearLayout = cardView.findViewById(R.id.pa_card);
-        if (Objects.equals(quality, "Good")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_good);
-            ImageView image = cardView.findViewById(R.id.pa_card_image);
-            image.setImageResource(R.drawable.quality_good);
-        } else if (Objects.equals(quality, "Moderate")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_moderate);
-        } else if (Objects.equals(quality, "Bad")) {
-            linearLayout.setBackgroundResource(R.drawable.rounded_bg_bad);
-        }
 
 //        linearLayout.setOnLongClickListener(v -> {
 //            new DeleteDialogFragment().show(getSupportFragmentManager(), "DELETE_DIALOG");
 //            return true;
 //        });
-        linearLayout.setOnLongClickListener(v -> {
-            DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
-            dialog.show(fragmentManager, "DELETE_DIALOG");
-            return true;
-        });
+//        linearLayout.setOnLongClickListener(v -> {
+//            DeleteDialogFragment dialog = DeleteDialogFragment.newInstance(card);
+//            dialog.show(fragmentManager, "DELETE_DIALOG");
+//            return true;
+//        });
 
-        cardList.addView(cardView);
+//        cardList.addView(cardView);
+        recyclerDataArrayList.add(card);
+
+        suburbCardList.setAdapter(recyclerViewAdapter);
     }
 
     public static class DeleteDialogFragment extends DialogFragment {
@@ -378,18 +427,18 @@ public class ProfileActivity extends AppCompatActivity {
             return fragment;
         }
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder.setMessage("Delete suburb card?")
-                .setPositiveButton("Delete", (dialog, id) -> {
-                    pinnedSuburbs.remove(card);
-                    writePinnedSuburbs();
-                    readPinnedSuburbs();
-                })
-                .setNegativeButton("Cancel", (dialog, id) -> {});
-            return builder.create();
-        }
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+//            builder.setMessage("Delete suburb card?")
+//                .setPositiveButton("Delete", (dialog, id) -> {
+//                    pinnedSuburbs.remove(card);
+//                    writePinnedSuburbs();
+//                    readPinnedSuburbs();
+//                })
+//                .setNegativeButton("Cancel", (dialog, id) -> {});
+//            return builder.create();
+//        }
     }
 
     private void createAVLTree() {
