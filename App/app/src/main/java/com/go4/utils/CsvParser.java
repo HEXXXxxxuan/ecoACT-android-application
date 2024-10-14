@@ -24,6 +24,19 @@ import java.util.List;
 public class CsvParser implements DataAccessObject {
     AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
 
+    /**
+     * Parses a CSV file containing air quality data and returns a list of {@link AirQualityRecord} objects.
+     * <p>
+     * The method expects the CSV file to have 10 columns with specific values representing location,
+     * timestamp, and various air quality metrics (AQI, CO, NO2, etc.). It skips rows with an invalid number of columns
+     * or rows containing non-numeric data where numeric values are expected.
+     * </p>
+     *
+     * @param context  the application context used to access the file
+     * @param fileName the name of the CSV file to parse
+     * @return a list of parsed {@link AirQualityRecord} objects
+     * @author u7902000 Gea Linggar
+     */
     public List<AirQualityRecord> parseData(Context context, String fileName){
 
         //File localFile = new File(context.getFilesDir(), fileName); //localfile
@@ -86,6 +99,20 @@ public class CsvParser implements DataAccessObject {
 
     }
 
+    /**
+     * Creates an AVL tree from the air quality records parsed from a CSV file.
+     * <p>
+     * The method allows the caller to choose whether to use only the location as the key or to
+     * use a combination of location and timestamp as the key. It inserts the parsed records into
+     * the AVL tree and returns the populated tree.
+     * </p>
+     *
+     * @param context        the application context used to access the file
+     * @param useLocationOnly if {@code true}, only the location is used as the key for the AVL tree;
+     *                        otherwise, both location and timestamp are used as the key
+     * @return the populated AVL tree containing the parsed air quality records
+     * @author u7902000 Gea Linggar
+     */
     public AVLTree<String, AirQualityRecord> createAVLTree(Context context, boolean useLocationOnly){
         List<AirQualityRecord> recordList = parseData(context, "historical_data.csv");
         for (AirQualityRecord record : recordList) {
