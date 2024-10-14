@@ -50,6 +50,7 @@ import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
+import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 import com.go4.utils.tree.AVLTree;
 
 import org.json.JSONArray;
@@ -77,7 +78,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 public class SuburbLiveActivity extends AppCompatActivity {
@@ -89,6 +90,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
     private Button historicalButton;
     private SemiCircleArcProgressBar semiCircleArcProgressBar;
+    private LinearLayout profile;
 
 
     private HashMap<String, double[]> suburbMap;
@@ -99,7 +101,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private AirQualityMetric metricOption;
     private String selectedSuburb;
     private String comparedSuburb;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = ExecutorServiceSingleton.getInstance();
     private GPSService gpsService;
     private boolean isBound = false;
     private List<AirQualityRecord> primarySuburbs;
@@ -164,48 +166,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
         Intent gpsIntent = new Intent(this, GPSService.class);
         bindService(gpsIntent, connection, Context.BIND_AUTO_CREATE);
 
-        historicalButton.setOnClickListener(v -> {
-            Intent suburbHistoricalIntent = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
-            startActivity(suburbHistoricalIntent);
-        });
-
-        suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
-        comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
-        textViewClickListener();
+        clickListener();
 
 
-        suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
-
-        LinearLayout profile = findViewById(R.id.nav_profile);
-        profile.setOnClickListener(v -> {
-            Intent profileIntent = new Intent(SuburbLiveActivity.this, ProfileActivity.class);
-            profileIntent.putExtra("displayName", email);
-            startActivity(profileIntent);
-            ;
-        });
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                int itemId = item.getItemId();
-//                if (itemId == R.id.nav_profile) {
-//
-//                    startActivity(new Intent(SuburbLiveActivity.this, ProfileActivity.class));
-//                    return true;
-//                } else if (itemId == R.id.nav_suburb_live) {
-//
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
-
-//        bottomNavigationView.setSelectedItemId(R.id.nav_suburb_live);
-
-        recyclerView = findViewById(R.id.recycler_view);
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         ViewGroup.LayoutParams layoutParams = swipeRefreshLayout.getLayoutParams();
         layoutParams.height = 1;
@@ -275,7 +238,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
                 //fetchAndDisplayData();
                 // Fetch data in a background thread
                 executor.execute(() -> {
-                    fetchAndDisplayData();
+                    showDataAndRefresh();
                 });
                 setTitle("Suburb: " + data.get("title"));
             }
@@ -312,6 +275,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
         semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
         lineChart = findViewById(R.id.lineChart);
         lineChart.setVisibility(View.GONE);
+        recyclerView = findViewById(R.id.recycler_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        profile = findViewById(R.id.nav_profile);
     }
 
     public void updateLocationUsingGPS(Location location) {
@@ -454,7 +420,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
 
-    private void textViewClickListener() {
+    private void clickListener() {
 
         resultTextViewLive.setOnClickListener(v -> {
             lineChart.setVisibility(View.VISIBLE);
@@ -582,6 +548,22 @@ public class SuburbLiveActivity extends AppCompatActivity {
             }
 
 
+        });
+
+
+        suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
+        comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
+
+        historicalButton.setOnClickListener(v -> {
+            Intent suburbHistoricalIntent = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
+            startActivity(suburbHistoricalIntent);
+        });
+
+        profile.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(SuburbLiveActivity.this, ProfileActivity.class);
+            profileIntent.putExtra("displayName", email);
+            startActivity(profileIntent);
+            ;
         });
     }
 
@@ -1087,6 +1069,12 @@ public class SuburbLiveActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         stopShowDataRefresh();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ExecutorServiceSingleton.shutdown();
     }
 
     // Get 20 latest data each time

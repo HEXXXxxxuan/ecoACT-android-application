@@ -118,7 +118,14 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         createAVLTree();
     }
 
-    // Parse data and create AVL tree
+    /**
+     * Initializes the {@code recordTreeLocationAndDateKey} by parsing a CSV file
+     * and creating an AVL tree from the parsed data.
+     * <p>
+     * This method uses a {@link CsvParser} to read data from a CSV file and build
+     * an AVL tree.
+     * </p>
+     */
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
@@ -163,7 +170,16 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         return suburbs;
     }
 
-    // Date picker dialog
+    /**
+     * Called to displays a date picker dialog that allows the user to select a date.
+     * <p>This method makes use of Android's {@link DatePickerDialog} to provide a
+     * user-friendly way of selecting dates.</p>
+     *
+     * <p><strong>Note:</strong> The date in {@code editTextDate} should be in the format "dd/MM/yyyy"
+     * for correct pre-population.</p>
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
 
@@ -229,6 +245,17 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Searches for an air quality record in the AVL tree based on the selected suburb, date, and hour.
+     * <p>
+     * This method retrieves the user-selected date, suburb, and hour from the UI, formats the date and time,
+     * and searches for a corresponding record in the {@code recordTreeLocationAndDateKey} AVL tree.
+     * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars
+     * for PM2.5, PM10, O3, SO2, CO, and NO2. It also updates the AQI status and displays appropriate
+     * feedback (Low, Moderate, High) in both text and color.
+     * </p>
+     * @author u7902000 Gea Linggar
+     */
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
