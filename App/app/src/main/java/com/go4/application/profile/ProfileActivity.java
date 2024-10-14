@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -326,14 +327,22 @@ public class ProfileActivity extends AppCompatActivity {
     private List<String> loadSuburbsFromJson(){
         List<String> suburbs = new ArrayList<>();
         try {
-            FileDescriptor fd = getAssets().openFd("canberra_suburbs.json").getFileDescriptor();
-            JSONArray jsArr = new JSONArray(new JSONParser().parse(new FileReader(fd)));
-            for(int i=0; i<jsArr.length(); i++){
-                suburbs.add(jsArr.getString(i));
+            InputStream is = getAssets().open("canberra_suburbs.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+
+            // Parse JSON array
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                suburbs.add(jsonArray.getString(i));
             }
-        } catch (IOException | ParseException | JSONException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
+
         return suburbs;
     }
 }
