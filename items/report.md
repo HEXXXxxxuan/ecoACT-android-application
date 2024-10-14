@@ -448,11 +448,11 @@ Feature Category:UI Design and Testing <br>
 * Your meetings should also have a reasonable date spanning across Week 6 to 11.*
 
 
-- *[Team Meeting 1](link_to_md_file.md)*
-- ...
-- ...
-- [Team Meeting 4](link_to_md_file.md)
-- ... (Add any descriptions if needed) ...
+- [Team Meeting 1](meeting-1.md)
+- [Team Meeting 2](meeting-2.md)
+- [Team Meeting 3](meeting-3.md)
+- [Team Meeting 4](meeting-4.md)
+
 
 <hr>
 
