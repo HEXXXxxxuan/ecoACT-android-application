@@ -7,87 +7,129 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.Manifest;
-
-
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.go4.utils.DataFetcher;
 
+/**
+ * This activity launches the splashScreen on app launch.
+ * <p>It also implements logic required during startup. Presently loading all historical data.</p>
+ * @author Shawn ?
+ * @author Gea
+ */
 @SuppressLint("CustomSplashScreen")
-
-
 public class SplashActivity extends AppCompatActivity {
 
-    static ExecutorService executorService = Executors.newFixedThreadPool(6);
-    static Handler mainHandler = new Handler(Looper.getMainLooper());
-    ProgressBar fetchingBar;
-    DataFetcher dataFetcher;
-    private String apiKey;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-
-
+    private static final int GET_BACKGROUND_AFTER = 2000;
+    private static final int START_ACTIVITY_AFTER = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-
-        fetchingBar = findViewById(R.id.fetchingProgressBar);
-        fetchingBar.setMax(113); //there are 113 suburbs!!!
-
-        apiKey = "4f6d63b7d7512fc4b14ee2aeb89d3128";
-
-        //Fetching historical data and parse it to CSV and AVLTree
-        //DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
-        //dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
-
-        // Check for location permissions before proceeding
-        checkLocationPermission();
-
+        ProgressBar fetchingBar = findViewById(R.id.fetchingProgressBar);
+        fetchingBar.setMax(113); // only 113 suburbs
+        fetchData();
     }
 
-
-    private void goToNextActivity(){;
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+    /**
+     * <h1><strong>DOES NOT CHECK REQUIRED PERMISSIONS ARE GRANTED</strong></h1>
+     * Called to close {@link SplashActivity} and resume to next class
+     * <p>
+     *     Changing throughout development but should be {@link MainActivity} next
+     * </p>
+     */
+    private void startNextActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            fetchData();
+    /**
+     * Calls {@link #startNextActivity()} upon finishing
+     * <p>
+     *     Uses {@link #onRequestPermissionsResult(int, String[], int[])} for callback logic
+     * </p>
+     */
+    private void checkPermissions(){
+        ArrayList<String> permissions = new ArrayList<>();
+        if(!hasPermissions(Manifest.permission.ACCESS_FINE_LOCATION)){
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-    }
-
-    private void fetchData() {
-        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7, apiKey);
-        dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::goToNextActivity);
+        if(!hasPermissions(Manifest.permission.POST_NOTIFICATIONS)){
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        if(!hasPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+            permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        }
+        Log.d("Permissions", permissions.toString());
+        if(permissions.isEmpty()){
+            startNextActivity();
+        }
+        else if(permissions.contains(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && permissions.size()>1){
+            permissions.remove(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            String[] req = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                req[i] = permissions.get(i);
+            }
+            requestPermissions(req, GET_BACKGROUND_AFTER);
+        }
+        else {
+            String[] req = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                req[i] = permissions.get(i);
+            }
+            requestPermissions(req,START_ACTIVITY_AFTER);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with data fetching
-                fetchData();
-            } else {
-                // Permission denied, show a message
-                Toast.makeText(this, "Location permission is required to proceed.", Toast.LENGTH_SHORT).show();
-            }
+        if(requestCode == GET_BACKGROUND_AFTER){
+            Log.d("Permissions", "GetBackghroundAFter");
+            checkPermissions();
+        }
+        if(requestCode==START_ACTIVITY_AFTER){
+            checkPermissions();
         }
     }
 
+    private boolean hasPermissions(String perm){
+        return ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * <h1><strong>CALLS {@link #startNextActivity()} ONCE FINISHED</strong></h1>
+     * <p>Fetches historical data records using {@link DataFetcher}</p>
+     * @author Gea
+     */
+    private void fetchData() {
+        ExecutorService executorService = Executors.newFixedThreadPool(6);
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
+        // dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::checkPermissions);
+        checkPermissions();
+    }
 }
