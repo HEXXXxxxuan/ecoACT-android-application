@@ -2,6 +2,7 @@ package com.go4.utils;
 
 import static com.go4.application.MainActivity.CHANNEL_ID;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -19,11 +20,14 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.go4.application.MainActivity;
 import com.go4.application.R;
+import com.google.android.gms.location.CurrentLocationRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.CancellationTokenSource;
 
 import java.util.Comparator;
 
@@ -33,6 +37,7 @@ public class GPSService extends Service {
     private LocationRequest request;
     private LocationCallback locationCallback;
     private Location latestLocation;
+    private Location previousLocation = null;
     private NotificationManager notificationManager;
 
     public class LocalBinder extends Binder {
@@ -50,7 +55,7 @@ public class GPSService extends Service {
     public void onCreate(){
         super.onCreate();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
-        request = new LocationRequest.Builder(20000).build();
+        request = new LocationRequest.Builder(15000).build();
         notificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         locationCallback = new LocationCallback() {
             @Override
@@ -64,12 +69,21 @@ public class GPSService extends Service {
                             .setAutoCancel(true)
                             .build();
                     notificationManager.notify(0, notification);
-                    return;
                 }
-                locationResult.getLocations().stream()
-                        .min(Comparator.comparingInt(x -> (int) x.getTime()))
-                        .ifPresent(x -> latestLocation = x);
-                locationNotification(latestLocation, "YOU ARE LITERALLY HERE: " + latestLocation.getLatitude() + ", " + latestLocation.getLongitude());
+                else {
+                    locationResult.getLocations().stream()
+                            .min(Comparator.comparingInt(x -> (int) x.getTime()))
+                            .ifPresent(x -> latestLocation = x);
+                    if(latestLocation == previousLocation){
+                        CurrentLocationRequest req = new CurrentLocationRequest.Builder().build();
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            Log.d("GPS", "no perms for currentLocationRequest");
+                            return;
+                        }
+                        latestLocation = locationClient.getCurrentLocation(req, new CancellationTokenSource().getToken()).getResult();
+                    }
+                    locationNotification(latestLocation, "YOU ARE LITERALLY HERE: " + latestLocation.getLatitude() + ", " + latestLocation.getLongitude());
+                }
             }
         };
         startLocationUpdates();
@@ -106,6 +120,7 @@ public class GPSService extends Service {
             location.setLatitude(-35.27944d);
             location.setLongitude(149.11944d);
             Log.d("Debugging", "Location: " + location);
+            previousLocation = location;
             return location;
         }
         return latestLocation;
