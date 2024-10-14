@@ -9,23 +9,11 @@ import android.os.Looper;
 import android.Manifest;
 import android.util.Log;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -39,17 +27,14 @@ import com.go4.utils.DataFetcher;
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
-
     private static final int GET_BACKGROUND_AFTER = 2000;
     private static final int START_ACTIVITY_AFTER = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-        ProgressBar fetchingBar = findViewById(R.id.fetchingProgressBar);
-        fetchingBar.setMax(113); // only 113 suburbs
+        ((ProgressBar) findViewById(R.id.fetchingProgressBar)).setMax(113);
         fetchData();
     }
 
@@ -76,6 +61,7 @@ public class SplashActivity extends AppCompatActivity {
         ArrayList<String> permissions = new ArrayList<>();
         if(!hasPermissions(Manifest.permission.ACCESS_FINE_LOCATION)){
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
         if(!hasPermissions(Manifest.permission.POST_NOTIFICATIONS)){
             permissions.add(Manifest.permission.POST_NOTIFICATIONS);
@@ -83,24 +69,21 @@ public class SplashActivity extends AppCompatActivity {
         if(!hasPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
             permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         }
-        Log.d("Permissions", permissions.toString());
         if(permissions.isEmpty()){
             startNextActivity();
         }
         else if(permissions.contains(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && permissions.size()>1){
             permissions.remove(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
             String[] req = new String[permissions.size()];
-            for (int i = 0; i < permissions.size(); i++) {
-                req[i] = permissions.get(i);
-            }
-            requestPermissions(req, GET_BACKGROUND_AFTER);
+            permissions.toArray(req);
+            Log.d("Debug", "Requesting: " + Arrays.toString(req));
+            ActivityCompat.requestPermissions(this, req, GET_BACKGROUND_AFTER);
         }
         else {
             String[] req = new String[permissions.size()];
-            for (int i = 0; i < permissions.size(); i++) {
-                req[i] = permissions.get(i);
-            }
-            requestPermissions(req,START_ACTIVITY_AFTER);
+            permissions.toArray(req);
+            Log.d("Debug", "Requesting: " + Arrays.toString(req));
+            ActivityCompat.requestPermissions(this, req, START_ACTIVITY_AFTER);
         }
     }
 
@@ -108,10 +91,10 @@ public class SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == GET_BACKGROUND_AFTER){
-            Log.d("Permissions", "GetBackghroundAFter");
+            Log.d("Permissions", "GetBackgroundAfter");
             checkPermissions();
         }
-        if(requestCode==START_ACTIVITY_AFTER){
+        if(requestCode == START_ACTIVITY_AFTER){
             checkPermissions();
         }
     }
