@@ -117,6 +117,18 @@ public class ProfileActivity extends AppCompatActivity {
         // Set up ADD pinned suburb button
         Button addButton = findViewById(R.id.pa_add_button);
         addButton.setOnClickListener(v -> addButtonOnClick());
+
+        // Nav Bar
+        LinearLayout profile = findViewById(R.id.nav_profile);
+        LinearLayout suburb_live = findViewById(R.id.nav_suburb_live);
+
+        suburb_live.setOnClickListener(
+                v -> {
+                    Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
+                    suburbLiveIntent.putExtra("displayName", email);
+                    startActivity(suburbLiveIntent);
+                }
+        );
     }
 
     @Override
@@ -174,17 +186,6 @@ public class ProfileActivity extends AppCompatActivity {
                 .build()));
 
         readProfilePicture();
-
-        LinearLayout profile = findViewById(R.id.nav_profile);
-        LinearLayout suburb_live = findViewById(R.id.nav_suburb_live);
-
-        suburb_live.setOnClickListener(
-            v -> {
-                Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
-                suburbLiveIntent.putExtra("displayName", email);
-                startActivity(suburbLiveIntent);
-            }
-        );
     }
 
     /**
