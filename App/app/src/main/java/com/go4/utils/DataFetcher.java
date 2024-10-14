@@ -27,14 +27,12 @@ import java.util.concurrent.ExecutorService;
  * The class is for fetching and processing historical air quality data from the OpenWeather API for multiple suburbs
  * The data is stored in a CSV file in the cache directory
  *
- * @author u7902000 Gea Linggar
+ * @author u7902000 Gea Linggar, Ryan
  */
 public class DataFetcher {
     private ExecutorService executorService;
     private Handler mainHandler;
-    private String apiKey;
-
-
+    protected static String apiKey = "4f6d63b7d7512fc4b14ee2aeb89d3128";
     long currentTime = System.currentTimeMillis() / 1000L;
     long startingTime;
 
@@ -44,12 +42,10 @@ public class DataFetcher {
      * @param executorService the {@code ExecutorService} used to run tasks asynchronously
      * @param mainHandler     the {@code Handler} used to post updates to the main UI thread
      * @param number_OfDays   the number of days in the past to retrieve data for
-     * @param apiKey          the API key for authenticating requests to the OpenWeather API
      */
-    public DataFetcher(ExecutorService executorService, Handler mainHandler, int number_OfDays, String apiKey) {
+    public DataFetcher(ExecutorService executorService, Handler mainHandler, int number_OfDays) {
         this.executorService = executorService;
         this.mainHandler = mainHandler;
-        this.apiKey = apiKey;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
