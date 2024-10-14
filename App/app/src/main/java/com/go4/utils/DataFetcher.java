@@ -24,12 +24,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 /**
- * The class is responsible for fetching and processing historical air quality data
- * from the OpenWeather API for multiple locations (suburbs). The data is stored in a CSV file in the cache directory
- * of the Android application. This class handles API requests, file I/O operations, and progress updates in the UI.
- * <p>
- * It is designed to run tasks asynchronously using an {@link ExecutorService}, and update UI elements like
- * {@link ProgressBar} using a {@link Handler} to ensure that the UI remains responsive during long-running tasks.
+ * The class is for fetching and processing historical air quality data from the OpenWeather API for multiple suburbs
+ * The data is stored in a CSV file in the cache directory
+ *
  * @author u7902000 Gea Linggar
  */
 public class DataFetcher {
@@ -63,7 +60,7 @@ public class DataFetcher {
 
     /**
      * Automatically adds air quality records by fetching data for multiple suburbs from the API and
-     * storing them in a CSV file. It uses data from the "canberra_suburbs_coordinates.json" file in
+     * storing them in a CSV file. Uses data from the "canberra_suburbs_coordinates.json" file in
      * the assets folder to determine the latitude and longitude of each suburb.
      *
      * @param context     the Android {@code Context} used to access assets and file directories

@@ -5,13 +5,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * This class is responsible for generating and managing
- * a list of mock JSON responses representing air quality data. This class can be
- * used to simulate streaming of air quality data from an external source
- * for testing purposes.
- *
- * <p>The class generates 30 mock records, each containing air quality data for a location.
- * method.</p>
+ * This class is responsible for generating a list of mock JSON responses representing air quality data.
+ * used to simulate streaming of air quality data from an external source for testing purposes.
+ * The class generates 30 mock records, each containing air quality data for a location.
+ * method.
  * @author u7902000 Gea Linggar
  */
 public class MockJSONResponse {

@@ -9,13 +9,10 @@ import java.util.Map;
 
 
 /**
- * The {@code NearestSuburbStrategy} class implements the {@link LocationStrategy} interface
- * to provide functionality for finding the nearest suburb based on the user's geographical location.
- * <p>
+ * The  class provide functionality for finding the nearest suburb based on the user's geographical location.
  * This class calculates the distance between the user's coordinates and the coordinates
- * of various suburbs to determine the nearest suburb. Additionally, it can provide a list of
- * suburbs along with their positions and distances from the user's location.
- * </p>
+ * of various suburbs to determine the nearest suburb.
+ *
  * @author u7902000 Gea Linggar, Sezhuan
  */
 public class NearestSuburbStrategy implements LocationStrategy {

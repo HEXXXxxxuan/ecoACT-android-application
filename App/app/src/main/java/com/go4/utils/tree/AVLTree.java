@@ -1,9 +1,8 @@
 package com.go4.utils.tree;
 
 /**
- * The {@code AVLTree} class implements a self-balancing binary search tree. If the
- * balance factor of any node becomes greater than 1 or less than -1, rotations are
- * applied to balance the tree. The tree supports insertions, searches, and in-order traversal.
+ * The {@code AVLTree} class implements a self-balancing binary search tree.
+ * The tree supports insertions, searches, and in-order traversal.
  *
  * @param <K> the type of the keys, which must implement {@code Comparable}
  * @param <T> the type of the values associated with the keys
@@ -34,7 +33,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      * Inserts a new key-value pair into the AVL tree.
      * @param key   the key to insert
      * @param value the value associated with the key
-     * @author u7902000 Gea Linggar
      */
     public void insert(K key, T value) {
         root = insertRec(root, key, value);
@@ -77,12 +75,9 @@ public class AVLTree<K extends Comparable<K>, T>{
     }
     /**
      * Applies rotations to maintain the AVL tree balance after insertion.
-     * This method checks the balance factor of the node and performs right or left
-     * rotations as needed.
      *
      * @param node the node to check for balance and apply rotations
      * @return the new root of the subtree after rotations
-     * @author u7902000 Gea Linggar
      */
     private Node applyRotation(Node node) {
         int balanceFactor = getBalanceFactor(node);
@@ -112,7 +107,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      *
      * @param node the root of the subtree to rotate
      * @return the new root after the rotation
-     * @author u7902000 Gea Linggar
      */
     private Node rotateRight(Node node) {
         Node leftNode = node.left;
@@ -132,7 +126,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      *
      * @param node the root of the subtree to rotate
      * @return the new root after the rotation\
-     * @author u7902000 Gea Linggar
      */
     private Node rotateLeft(Node node) {
         Node rightnode = node.right;
@@ -159,7 +152,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      *
      * @param key the key to search for
      * @return the value associated with the key, or {@code null} if the key is not found
-     * @author u7902000 Gea Linggar
      */
     public T search(K key) {
         Node result = searchRec(root, key);
@@ -172,7 +164,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      * @param node the root of the current subtree
      * @param key  the key to search for
      * @return the node with the specified key, or {@code null} if not found
-     * @author u7902000 Gea Linggar
      */
     private Node searchRec(Node node, K key) {
         if (node == null || node.key.equals(key)) {
@@ -191,7 +182,6 @@ public class AVLTree<K extends Comparable<K>, T>{
      *
      * @param node   the root of the subtree to traverse
      * @param action the action to apply to each key-value pair
-     * @author u7902000 Gea Linggar
      */
     public void inOrderTraversal(Node node, java.util.function.BiConsumer<K, T> action) {
         if (node != null) {

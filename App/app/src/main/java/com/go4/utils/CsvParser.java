@@ -16,8 +16,7 @@ import java.util.List;
 
 /**
  * This class provides methods to parse CSV files containing air quality data
- * and store the parsed data into an AVL tree structure. The class implements the {@link DataAccessObject}
- * interface, providing data access functionality for reading air quality records from a CSV file.
+ * and store the parsed data into an AVL tree structure.
  *
  * @author u7902000 Gea Linggar
  */
@@ -32,7 +31,7 @@ public class CsvParser implements DataAccessObject {
      * or rows containing non-numeric data where numeric values are expected.
      * </p>
      *
-     * @param context  the application context used to access the file
+     * @param context  used to access the file
      * @param fileName the name of the CSV file to parse
      * @return a list of parsed {@link AirQualityRecord} objects
      * @author u7902000 Gea Linggar
@@ -101,13 +100,10 @@ public class CsvParser implements DataAccessObject {
 
     /**
      * Creates an AVL tree from the air quality records parsed from a CSV file.
-     * <p>
-     * The method allows the caller to choose whether to use only the location as the key or to
-     * use a combination of location and timestamp as the key. It inserts the parsed records into
-     * the AVL tree and returns the populated tree.
-     * </p>
+     * Allows the caller to choose whether to use only the location as the key or to
+     * use a combination of location and timestamp as the key.
      *
-     * @param context        the application context used to access the file
+     * @param context         used to access the file
      * @param useLocationOnly if {@code true}, only the location is used as the key for the AVL tree;
      *                        otherwise, both location and timestamp are used as the key
      * @return the populated AVL tree containing the parsed air quality records
