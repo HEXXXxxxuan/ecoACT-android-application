@@ -112,7 +112,7 @@ public class SplashActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
-        // dataFetcher.automaticAddRecords(this, "historical_data.csv", fetchingBar, this::checkPermissions);
+        dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
         checkPermissions();
     }
 }
