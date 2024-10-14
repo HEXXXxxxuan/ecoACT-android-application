@@ -81,6 +81,30 @@ import java.util.concurrent.ExecutorService;
 
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
+/**
+ * This class is responsible for displaying live air quality data for various suburbs. It also provides
+ * a refresh mechanism for real-time data updates at regular intervals.
+ *
+ * <p>This class includes several key features:</p>
+ * <ul>
+ *     <li>Integration with GPS services to automatically detect the nearest suburb</li>
+ *     <li>Suburb selection via auto complete spinner</li>
+ *     <li>Streaming and displaying air quality metrics such as CO, NO2, PM2.5, PM10, O3, and SO2 via text views and progress bars</li>
+ *     <li>Display air quality data using the OpenWeatherMap API or mock data for testing</li>
+ *     <li>Graph plotting functionality for visualizing air quality metrics over time </li>
+ *     <li>Support for interval selection (Today, Yesterday, Last Week) </li>
+ *     <li>Comparison of air quality metrics trends between two selected suburbs</li>
+ * </ul>
+ *
+ *
+ * @see com.go4.application.historical.SuburbHistoricalActivity
+ * @see com.github.mikephil.charting.charts.LineChart
+ * @see com.go4.utils.GPSService
+ * @see com.go4.utils.design_pattern.ExecutorServiceSingleton
+ * @see com.go4.application.live_data.adapter.LoadMoreSearchResultAdapter
+ *
+ * @author u7902000 Gea Linggar, ,
+ */
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
     private AutoCompleteTextView comparingSpinner;
@@ -159,8 +183,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
-        //Location testLocation = MainActivity.gpsService.getRecentLocation();
-        //Log.d("Debugging", testLocation.toString());
 
         // Bind the GPS service
         Intent gpsIntent = new Intent(this, GPSService.class);

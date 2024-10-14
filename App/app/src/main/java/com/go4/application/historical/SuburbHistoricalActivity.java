@@ -38,6 +38,29 @@ import java.util.List;
 
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
+/**
+ * This activity class allows users to view historical air quality data for selected suburbs.
+ * It provides the ability to select a suburb, a date, and an hour to search for air quality records
+ * stored in an users cache file.
+ * <p>
+ * The air quality metrics are displayed via progress bars and other visual indicators, such as
+ * a semi-circular progress bar for the Air Quality Index (AQI).Users can input air quality data
+ * by selecting suburbs and specific dates using a spinner or by typing in the search bar,
+ * which has a built-in grammar function.
+ * </p>
+ * <p>
+ * The activity features:
+ * <ul>
+ *   <li>Spinners for selecting suburbs and hours</li>
+ *   <li>A date picker dialog for selecting dates</li>
+ *   <li>Search functionality that parses user input and updates the spinners</li>
+ *   <li>Displaying air quality metrics through progress bars</li>
+ * </ul>
+ * </p>
+ *
+ *
+ * @author u7902000 Gea Linggar, u8003980 Chan Cheng Leong, Shawn
+ */
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
     private Spinner hourSpinner;
@@ -121,16 +144,17 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     /**
      * Initializes the {@code recordTreeLocationAndDateKey} by parsing a CSV file
      * and creating an AVL tree from the parsed data.
-     * <p>
-     * This method uses a {@link CsvParser} to read data from a CSV file and build
-     * an AVL tree.
-     * </p>
+     * @author u7902000 Gea Linggar
      */
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
     }
 
+    /**
+     * Initializes the hour spinner with a list of hours in the format "HH:00" (e.g., 00:00, 01:00, etc.).
+     * @author u7902000 Gea linggar
+     */
     private void hourSpinner() {
         List<String> hours = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
@@ -141,6 +165,12 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         hourSpinner.setAdapter(hourAdapter);
     }
 
+
+    /**
+     * Initializes the suburb spinner by loading the list of suburbs from a {@code loadSuburbsFromJson()} and populating
+     * the spinner with this list.
+     * @author u7902000 Gea Linggar Galih
+     */
     private void suburbSpinner() {
         List<String> suburbList = loadSuburbsFromJson();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
@@ -148,7 +178,16 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         suburbSpinner.setAdapter(adapter);
     }
 
-    // Populate the suburb list from JSON file
+    /**
+     * Loads a list of suburbs from a JSON file located in the application's assets folder.
+     * <p>
+     * Each suburb name is extracted from the JSON array and added to the list.
+     * If an error occurs during file reading or JSON parsing, a {@link RuntimeException} is thrown.
+     * </p>
+     *
+     * @return a list of suburb names parsed from the JSON file "canberra_suburbs.json"
+     * @author u7902000 Gea Linggar
+     */
     private List<String> loadSuburbsFromJson() {
         List<String> suburbs = new ArrayList<>();
         try {
@@ -174,9 +213,6 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      * Called to displays a date picker dialog that allows the user to select a date.
      * <p>This method makes use of Android's {@link DatePickerDialog} to provide a
      * user-friendly way of selecting dates.</p>
-     *
-     * <p><strong>Note:</strong> The date in {@code editTextDate} should be in the format "dd/MM/yyyy"
-     * for correct pre-population.</p>
      *
      * @author u7902000 Gea Linggar
      */
@@ -250,11 +286,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      * <p>
      * This method retrieves the user-selected date, suburb, and hour from the UI, formats the date and time,
      * and searches for a corresponding record in the {@code recordTreeLocationAndDateKey} AVL tree.
-     * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars
-     * for PM2.5, PM10, O3, SO2, CO, and NO2. It also updates the AQI status and displays appropriate
-     * feedback (Low, Moderate, High) in both text and color.
-     * </p>
-     * @author u7902000 Gea Linggar
+     * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars </p>
+     * @author u7902000 Gea Linggar, shawn
      */
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();

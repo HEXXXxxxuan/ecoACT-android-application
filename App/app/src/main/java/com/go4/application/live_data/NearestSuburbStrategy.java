@@ -16,6 +16,7 @@ import java.util.Map;
  * of various suburbs to determine the nearest suburb. Additionally, it can provide a list of
  * suburbs along with their positions and distances from the user's location.
  * </p>
+ * @author u7902000 Gea Linggar, Sezhuan
  */
 public class NearestSuburbStrategy implements LocationStrategy {
 

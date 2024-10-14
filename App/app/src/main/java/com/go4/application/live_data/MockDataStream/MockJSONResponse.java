@@ -12,6 +12,7 @@ import java.util.List;
  *
  * <p>The class generates 30 mock records, each containing air quality data for a location.
  * method.</p>
+ * @author u7902000 Gea Linggar
  */
 public class MockJSONResponse {
     private List<String> mockResponse;
@@ -28,6 +29,7 @@ public class MockJSONResponse {
     /**
      * Populates the list of mock JSON responses with 30 records of air quality data.
      * Each record is serialized into JSON format using the {@code Gson} library.
+     * @author Gea Linggar
      */
     private void populateMockData() {
         for(int i = 0; i < 30; i++){
@@ -46,6 +48,7 @@ public class MockJSONResponse {
      * the list of mock responses and resets to the first item after the last one is retrieved.
      *
      * @return the next mock JSON response as a {@code String}
+     * @author Gea Linggar
      */
     public String getMockResponse(){
         String response = mockResponse.get(index);
