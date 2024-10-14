@@ -183,8 +183,8 @@ public class ProfileActivity extends AppCompatActivity {
     private void displayPinnedSuburbCards() {
         pinnedSuburbs = new ArrayList<>();
         readPinnedSuburbs();
-        recyclerViewAdapter = new SuburbCardViewAdapter(pinnedSuburbs);
         LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerViewAdapter = new SuburbCardViewAdapter(pinnedSuburbs);
         suburbCardList.setLayoutManager(manager);
         suburbCardList.setAdapter(recyclerViewAdapter);
 
