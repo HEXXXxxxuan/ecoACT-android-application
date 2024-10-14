@@ -14,6 +14,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides methods to parse CSV files containing air quality data
+ * and store the parsed data into an AVL tree structure. The class implements the {@link DataAccessObject}
+ * interface, providing data access functionality for reading air quality records from a CSV file.
+ *
+ * @author u7902000 Gea Linggar
+ */
 public class CsvParser implements DataAccessObject {
     AVLTree<String, AirQualityRecord> avlTree = new AVLTree<>();
 

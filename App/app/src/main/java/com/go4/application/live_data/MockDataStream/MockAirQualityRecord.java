@@ -2,7 +2,19 @@ package com.go4.application.live_data.MockDataStream;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This class represents a mock air quality record containing
+ * coordinates and a list of air quality data. It is used to simulate air quality data in
+ * a structured format for testing purposes.
+ *
+ * <p>The class includes nested static classes for organizing coordinates, main air quality
+ * information, and pollutant components. Each of these structures is based on real-world
+ * air quality data commonly provided by OpenWeather API.</p>
+ *
+ * <p>Instances of this class can be used for generating mock air quality records that
+ * are later serialized into JSON.</p>
+ * @author u7902000 Gea Linggar
+ */
 public class MockAirQualityRecord {
     private Coord coord;
     private List<AirQualityData> list;

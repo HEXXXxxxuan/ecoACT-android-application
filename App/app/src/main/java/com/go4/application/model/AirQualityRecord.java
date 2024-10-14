@@ -2,6 +2,17 @@ package com.go4.application.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class represents an air quality report for a specific location.
+ * It holds information about various air quality components such as AQI (Air Quality Index),
+ * CO (Carbon Monoxide), NO2 (Nitrogen Dioxide), O3 (Ozone), SO2 (Sulfur Dioxide), PM2.5 (Particulate Matter 2.5),
+ * PM10 (Particulate Matter 10), and NH3 (Ammonia), along with a timestamp and the name of the location.
+ * <p>
+ * The timestamp is formatted in human-readable form, and the class provides getter methods for each
+ * air quality component as well as the location and timestamp.
+ * </p>
+ * @author u7902000 Gea Linggar
+ */
 public class AirQualityRecord {
     private String location;  // Suburb name
     private double aqi;  // Air Quality Index
