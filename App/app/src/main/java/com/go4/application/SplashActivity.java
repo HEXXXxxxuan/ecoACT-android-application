@@ -113,6 +113,5 @@ public class SplashActivity extends AppCompatActivity {
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
         dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
-        checkPermissions();
     }
 }
