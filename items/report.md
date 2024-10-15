@@ -50,15 +50,16 @@ The key area(s) of responsibilities for each member
     - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
 
 2. **u8003980, Chan Cheng Leong** I have 20% contribution, as follows: <br>
-    - **Profile Page**
-        - Feature "Change Profile Picture" - class ProfileActivity: [profileActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
-        - Feature “Display Pinned Suburbs” – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java)
-
-    - **Search Bar in Historical Data Page**
-        - Feature “Parse Search Bar input” – function parseSearchBarInput(): [SuburbHistoricalActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java)
-        - Feature "Parser" - class Parser: [Parser.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)
-        - Feature "Tokenizer" - class Tokenizer: [Tokenizer.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)
-        - Feature “Token” – class Token: [Token.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/Token.java)
+- **Code Contribution in the final App**
+    - Feature Change Profile Picture in Profile Page - class ProfileActivity: [profileActivity.java](../App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
+    - Feature Display Pinned Suburbs in Profile Page – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
+    class SuburbCard: [SuburbCard.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
+    - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
+    class Parser: [Parser.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
+    class Tokenizer: [Tokenizer.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
+    class Token: [Token.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/Token.java)
+    - UI Profile Page - [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml)
+    - UI Pinned Suburb Card - [activity_profile_card.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile_card.xml)
 
 - **Code and App Design**
     - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma
@@ -330,16 +331,16 @@ Important: You must include in your report the link to the data file(s) on your 
 * Description of feature:  The application loads and displays air quality data instances from the data set. Data must be retrieved from local files like JSON or via Firebase if available.
  * Description of your implementation: Data loading is performed by the `DataFetcher.java` class, which reads from `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`. Data is displayed using a RecyclerView, managed in the `SuburbLiveActivity` activity with UI elements like `RecyclerView` and progress bars for real-time air quality data.
 4. [[DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
-   * Code: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), methods `onCreate`, `refreshData`, and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java?ref_type=heads), methods `fetchData`....
+   * Code: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), methods `onCreate`, `refreshData`, and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java), methods `fetchData`....
    * Description of feature: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. <br>
    * Description of your implementation:Implemented using `DataFetcher.java` to retrieve data at regular time intervals. The data is displayed in the `SuburbLiveActivity` class, with UI elements like `SwipeRefreshLayout` in [`suburb_live.xml`](132†source) to ensure the app content is automatically refreshed, simulating live updates. <br>
 5. [Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
-   * Code: [`Tokenizer`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Tokenizer.java?ref_type=heads), methods `tokenizeInput`, [`Parser`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Parser.java?ref_type=heads), methods `parseQuery`, and `SearchRecord`.
+   * Code: [`Tokenizer`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Tokenizer.java?ref_type=heads), methods `tokenizeInput`, [`Parser`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/Parser.java), methods `parseQuery`, and `SearchRecord`.
    * Description of feature: Allows users to search for suburb-specific information based on their input, adhering to a pre-defined grammar.<br>
    * Description of your implementation:The search functionality is implemented using a tokenizer (`Tokenizer.java`) to break down the user's input and a parser (`Parser.java`) to interpret it according to the grammar. The results are then displayed using a RecyclerView, making the search results interactive and easy to browse.
  <br>
 6. [UIUX] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
- * Code: XML layouts like [`activity_main.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_main.xml?ref_type=heads), [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads), [`activity_profile.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads).
+ * Code: XML layouts like [`activity_main.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_main.xml?ref_type=heads), [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml), [`activity_profile.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml).
    * Description of feature: The application maintains a consistent design language, including colors, fonts, and UI styles throughout all activities and screens. It also handles orientation changes gracefully.<br>
    * Description of your implementation:The UI is implemented using `ConstraintLayout` and `LinearLayout` for flexibility. Consistent colors and styles are used across XML files, and UI elements like `RecyclerView` and `Spinner` adapt to different screen orientations. The application supports responsive layouts that adjust automatically between portrait and landscape modes.
 
@@ -394,7 +395,7 @@ Feature Cateory: User Interactivity
    * Code: [Class ProfileActivity, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
    [Class SuburbCardViewAdapter, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
    [Class SuburbCard, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
-   [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_login.xml) 
+   [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml) 
    and [activity_profile_card.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile_card.xml)
    * [Class ProfileActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
