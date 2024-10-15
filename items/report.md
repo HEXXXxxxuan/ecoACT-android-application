@@ -1,6 +1,4 @@
-# [G0 - Team Name] Report
-
-*We give instructions enclosed in square brackets [...] and examples for each sections to demonstrate what are expected for your project report. Note that they only provide part of the skeleton and your description should be more content-rich. Quick references about markdown by [CommonMark](https://commonmark.org/help/)*
+# [G04 - Dogs] Report
 
 ## Table of Contents
 
@@ -17,48 +15,31 @@
 
 ## Administrative
 
-*Instruction: please place the CORRECT link to your firebase repository here (with comp21006442@gmail.com added as an Editor)*
-
-- Firebase Repository Link: <"https://console.firebase.google.com/u/1/project/go4gp-s2/overview"> // TODO
-   - Confirm: [ ] I have already added comp21006442@gmail.com as a Editor to the Firebase project prior to due date.
-- Two user accounts for markers' access are usable on the app's APK (do not change the username and password unless there are exceptional circumstances. Note that they are not real e-mail addresses in use):
-   - Username: comp2100@anu.edu.au	Password: comp2100 [X] // TODO: check if done
-   - Username: comp6442@anu.edu.au	Password: comp6442 [ ] // TODO: check if done
+- Firebase Repository Link: <"https://console.firebase.google.com/u/1/project/go4gp-s2/overview">
+   - Confirm: [x] I have already added comp21006442@gmail.com as a Editor to the Firebase project prior to due date.
+- Two user accounts for markers' access are usable on the app's APK:
+   - Username: comp2100@anu.edu.au	Password: comp2100 [X] 
+   - Username: comp6442@anu.edu.au	Password: comp6442 [x]
 
 ## Team Members and Roles
 The key area(s) of responsibilities for each member
 
 | UID   |  Name  |   Role |
 |:------|:------:|-------:|
-| [u7327620] | [Ryan Foote] | [Worked on the login and using Firebase,GPS function and code review] |
-| [u7902000] | [Gea Linggar Galih]| [Worked on the back-end for data-related funtion and code review] |
-| [u8003980] | [Cheng Leong Chan] | [worked on the UI figma design and search-fliter function]] |
-| [u8006862] | [Hexuan Wang] | [worked on the UI design/layout and Implementing the UI interface(UI Graphical) and Lego design] |
-| [u7635535] | [Zechuan Liu] | [worked on the basic function and search designate] |
+| [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Code Refactors/Reviews] |
+| [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
+| [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search-Filter] |
+| [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo] |
+| [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
 
 
 ## Summary of Individual Contributions
 
-Specific details of individual contribution of each member to the project.
-
-Each team member is responsible for writing **their own subsection**.
-
-A generic summary will not be acceptable and may result in a significant lose of marks.
-
-*[Summarise the contributions made by each member to the project, e.g. code implementation, code design, UI design, report writing, etc.]*
-
-*[Code Implementation. Which features did you implement? Which classes or methods was each member involved in? Provide an approximate proportion in pecentage of the contribution of each member to the whole code implementation, e.g. 30%.]*
-
-*you should ALSO provide links to the specified classes and/or functions*
-Note that the core criteria of contribution is based on `code contribution` (the technical developing of the App).
-
-*Here is an example: (Note that you should remove the entire section (e.g. "others") if it is not applicable)*
-
-1. **UID1, Name1**  I have 30% contribution, as follows: <br>
-  - **Code Contribution in the final App**
-    - Feature A1, A2, A3 - class Dummy: [Dummy.java](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java)
-    - XYZ Design Pattern -  class AnotherClass: [functionOne()](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43), [function2()](the-URL)
-    - ... (any other contribution in the code, including UI and data files) ... [Student class](../src/path/to/class/Student.java), ..., etc.*, [LanguageTranslator class](../src/path/to/class/LanguageTranslator.java): function1(), function2(), ... <br><br>
+### Template for Team Members
+1. **UID, NAME** I have contributed 20%: <br>
+   - **Outcome Impact (i.e. Location Services, Search-Designate)**
+      - Feature "Request Permissions" - class x: [gps.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+      - Design pattern - class y: [design](https://google.com)<br><br>
 
   - **Code and App Design** 
     - [What design patterns, data structures, did the involved member propose?]*
@@ -67,10 +48,8 @@ Note that the core criteria of contribution is based on `code contribution` (the
   - **Others**: (only if significant and significantly different from an "average contribution") 
     - [Report Writing?] [Slides preparation?]*
     - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
-
-2. **UID2, Name2**  I have xx% contribution, as follows: <br>
-  - ...
-
+   
+## Actual Section for Report:
 
 
 ## Application Description
