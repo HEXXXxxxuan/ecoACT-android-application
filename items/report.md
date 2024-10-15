@@ -24,13 +24,13 @@
 ## Team Members and Roles
 The key area(s) of responsibilities for each member
 
-| UID   |  Name  |   Role |
-|:------|:------:|-------:|
-| [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Code Refactors/Reviews] |
+| UID   |  Name  |                                                    Role |
+|:------|:------:|--------------------------------------------------------:|
+| [u7327620] | [Ryan Foote] |          [Firebase, Login, GPS, Code Refactors/Reviews] |
 | [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
-| [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search-Filter] |
-| [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo] |
-| [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
+| [u8003980] | [Cheng Leong Chan] |              [UI design in Figma, Search, Profile Page] |
+| [u8006862] | [Hexuan Wang] |   [UI design/layout, UI interface (UI Graphical), Logo] |
+| [u7635535] | [Zechuan Liu] |               [Overall Functionality, Search Designate] |
 
 
 ## Summary of Individual Contributions
@@ -48,8 +48,26 @@ The key area(s) of responsibilities for each member
   - **Others**: (only if significant and significantly different from an "average contribution") 
     - [Report Writing?] [Slides preparation?]*
     - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
-   
-## Actual Section for Report:
+
+2. **u8003980, Chan Cheng Leong** I have 20% contribution, as follows: <br>
+    - **Profile Page**
+        - Feature "Change Profile Picture" - class ProfileActivity: [profileActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
+        - Feature “Display Pinned Suburbs” – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java)
+
+    - **Search Bar in Historical Data Page**
+        - Feature “Parse Search Bar input” – function parseSearchBarInput(): [SuburbHistoricalActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java)
+        - Feature "Parser" - class Parser: [Parser.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)
+        - Feature "Tokenizer" - class Tokenizer: [Tokenizer.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)
+        - Feature “Token” – class Token: [Token.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/Token.java)
+
+- **Code and App Design**
+    - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma
+
+- **Others**: (only if significant and significantly different from an "average contribution")
+    - [Report Writing?] [Slides preparation?]*
+    - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
+
+
 
 
 ## Application Description
@@ -227,20 +245,19 @@ It provides a global point of access to the database connection, making it easie
 
 ### <u>Grammar(s)</u>
 *[How do you design the grammar? What are the advantages of your designs?]*
-Our grammar is designed to parse various types of data input related to air quality and suburb information, ensuring flexibility and adaptability for different formats such as JSON and CSV. By allowing key components like <location>, <date>, and <time> to be interchangeable, the grammar design provides robustness to handle diverse data orders.
+Our grammar is designed to parse various types of data input related to air quality and suburb information, ensuring flexibility and adaptability for different formats such as JSON and CSV. By allowing key components like &lt;Location&gt;, &lt;Date&gt;, and &lt;Time&gt; to be interchangeable, the grammar design provides robustness to handle diverse data orders.
 
 Advantages:
 
-Flexibility: The grammar allows <location>, <date>, and <time> in any order, making it adaptable to different input styles, which improves user experience.
+Flexibility: The grammar allows the tokens &lt;Location&gt;, &lt;Date&gt;, and &lt;Time&gt; to be in any order, making it adaptable to different input styles, which improves user experience.
 
-Modular and Extendable: The grammar is modular, meaning that it can be easily extended to support new parameters or different date formats, ensuring the parser can evolve with new requirements.
-
-Error Handling: This design allows the parser to still function even if the input data is provided in different sequences, minimizing the risk of errors due to improper input order.
+Error Handling: This design allows the parser to still function even if the input data is provided in different sequences or contains invalid tokens, as long as the necessary tokens are provided.
 
 Production Rules:
-`<Record> ::= <Location> <Date> <Time> | <Date> <Location> <Time> | <Time> <Location> <Date> | ...`
 
-    <Location> ::= <String>
+    <Input> ::= <Location> <Date> <Time> | <Location> <Time> <Date> | <Date> <Location> <Time> | ...
+
+    <Location> ::= “Acton” | “Ainslie” | … | "Yarralumla"
 
     <Date> ::= <Year> <Month> <Day>
 
@@ -250,43 +267,39 @@ Production Rules:
 
     <Day> ::= [0-3][0-9]
 
-    <Time> ::= <hour24>:<minute> | <hour12><ampm>
+    <Time> ::= <Hour24>:<Minute> | <Hour12><Ampm>
 
-    <hour24> ::= "00" | "01" | ... | "23"
+    <Hour24> ::= "00" | "01" | ... | "23"
 
-    <minute> ::= "00" | "01" | ... | "59"
+    <Minute> ::= "00" | "01" | ... | "59"
 
-    <hour12> ::= "1" | "2" | ... | "12"
+    <Hour12> ::= "1" | "2" | ... | "12"
 
-    <ampm> ::= "am" | "pm"
+    <Ampm> ::= "am" | "pm"
 
 ### <u>Tokenizers and Parsers</u>
 
 *[Where do you use tokenisers and parsers? How are they built? What are the advantages of the designs?]*
 
-The tokenizers and parsers are utilized primarily in the Parser.java and CsvParser.java classes. They are responsible for processing data from various sources, such as canberra_suburbs.json and canberra_suburbs_coordinates.json to extract meaningful information for real-time and historical air quality analysis.
-Tokenizer.java is responsible for breaking down raw input into individual tokens, such as suburb names, date elements, and pollutant data, which can then be structured by the parser
-
-How They Are Built:
-
-Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as <location>, <date>, <time>, or air quality parameters, making the input easier to process.
-Parsers: The Parser.java class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser can accommodate multiple data formats, such as JSON and CSV, and uses predefined grammar rules to validate and organize the tokens into meaningful structures.
+The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the class  SuburbHistoricalActivity in [SuburbHistoricalActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) lines 192-230.
+They are built by taking inspiration from Lab 06, and three classes are used, including  Parser ([Parser.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/Token.java)).
+Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as &lt;Location&gt;, &lt;Date&gt;, &lt;Time&gt;, making the input easier to process.
+Parsers: The Parser class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser uses predefined grammar rules to validate and organize the tokens into meaningful structures.
 
 Advantages of the Designs:
 
 Modularity: The separation between tokenizing and parsing tasks makes the system modular, simplifying maintenance and allowing for easy updates.
 
-Adaptability: By using a flexible grammar and a robust tokenizer, the system can handle different input sequences and formats, improving the user experience when working with varied data sources.
+Adaptability: By using a flexible, the system can handle different input sequences and formats, improving the user experience when working with varied data sources.
 
 Efficiency: Breaking data into tokens before parsing reduces complexity, leading to more efficient data handling. This design ensures that each step of data processing is straightforward and optimized.
-
-Extensibility: The design is extensible by nature—new data formats or additional attributes can be easily supported by extending the parser and tokenizer classes. This allows the application to scale and adapt to future requirements without significant refactoring.
 
 <hr>
 
 ### Others
 
 *[What other design decisions have you made which you feel are relevant? Feel free to separate these into their own subheadings.]*
+
 
 <br>
 <hr>
@@ -349,9 +362,7 @@ Feature Category: Search <br>
 * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * Description of your implementation: ... <br>
      <br>
-   <br><br>
 
-Feature Category: Firebase Integration <br>
 Feature Category: Data <br>
 3. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
@@ -365,12 +376,37 @@ Feature Category: Data <br>
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
-<hr>
-Feature Category:UI Design and Testing <br>
-6. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
+6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
+   * Code: [Class ProfileActivity, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_login.xml)
+   * [Class ProfileActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
+   * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
+     The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
+     The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
+     The page also contains a LOGOUT button.
+
+Feature Category: UI Design and Testing <br>
+7. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
-   * Description of your implementation: ... <br>
+
+Feature Cateory: User Interactivity
+8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
+   * Code: [Class ProfileActivity, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
+   [Class SuburbCardViewAdapter, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
+   [Class SuburbCard, entire file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
+   [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_login.xml) 
+   and [activity_profile_card.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile_card.xml)
+   * [Class ProfileActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
+   methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
+   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 224-365
+   * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
+   It also indicates whether the air quality in that suburb is "Good", "Moderate" or "Bad", based on the air quality index. 
+   If it is "Good", the card will have a green background colour, and the image next to the text "Good" is a smiley face.
+   If it is "Moderate", the card will have a yellow background colour, and the image next to the text "Moderate" is a meh face.
+   If it is "Bad", the card will have an orange background colour, and the image next to the text "Bad" is a meh face.
+   Whenever a suburb is added with the ADD button or deleted by swiping right, or when an label is updated, the method writePinnedSuburbs is called to store the details of the pinned suburbs in internal storage, in a file titled "pinned_suburbs.txt".
+   The pinned suburbs are displayed using the class SuburbCardViewAdapter and RecyclerView, and the class SuburbCard is used to store and return the data of each card.
+   The data of the pinned suburbs are updated every 15 minutes using the updatePinnedSuburbs function.
 
 ### Surprise Feature
 
