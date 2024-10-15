@@ -24,13 +24,13 @@
 ## Team Members and Roles
 The key area(s) of responsibilities for each member
 
-| UID   |  Name  |   Role |
-|:------|:------:|-------:|
-| [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Code Refactors/Reviews] |
+| UID   |  Name  |                                                    Role |
+|:------|:------:|--------------------------------------------------------:|
+| [u7327620] | [Ryan Foote] |          [Firebase, Login, GPS, Code Refactors/Reviews] |
 | [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
-| [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search-Filter] |
-| [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo] |
-| [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
+| [u8003980] | [Cheng Leong Chan] |              [UI design in Figma, Search, Profile Page] |
+| [u8006862] | [Hexuan Wang] |   [UI design/layout, UI interface (UI Graphical), Logo] |
+| [u7635535] | [Zechuan Liu] |               [Overall Functionality, Search Designate] |
 
 
 ## Summary of Individual Contributions
@@ -258,6 +258,7 @@ Production Rules:
     <Input> ::= <Location> <Date> <Time> | <Location> <Time> <Date> | <Date> <Location> <Time> | ...
 
     <Location> ::= “Acton” | “Ainslie” | … | "Yarralumla"
+
     <Date> ::= <Year> <Month> <Day>
 
     <Year> ::= [0-9]{4}
