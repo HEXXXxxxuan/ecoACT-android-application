@@ -33,7 +33,7 @@ The key area(s) of responsibilities for each member
 | [u7327620] | [Ryan Foote] | [Worked on the login and using Firebase,GPS function and code review] |
 | [u7902000] | [Gea Linggar Galih]| [Worked on the back-end for data-related funtion and code review] |
 | [u8003980] | [Cheng Leong Chan] | [worked on the UI figma design and search-fliter function]] |
-| [u8006862] | [Hexuan Wang] | [worked on the UI design and Implementing the UI interface and Lego design] |
+| [u8006862] | [Hexuan Wang] | [worked on the UI design/layout and Implementing the UI interface(UI Graphical) and Lego design] |
 | [u7635535] | [Zechuan Liu] | [worked on the basic function and search designate] |
 
 
@@ -448,11 +448,11 @@ Feature Category:UI Design and Testing <br>
 * Your meetings should also have a reasonable date spanning across Week 6 to 11.*
 
 
-- *[Team Meeting 1](link_to_md_file.md)*
-- ...
-- ...
-- [Team Meeting 4](link_to_md_file.md)
-- ... (Add any descriptions if needed) ...
+- [Team Meeting 1](meeting-1.md)
+- [Team Meeting 2](meeting-2.md)
+- [Team Meeting 3](meeting-3.md)
+- [Team Meeting 4](meeting-4.md)
+
 
 <hr>
 

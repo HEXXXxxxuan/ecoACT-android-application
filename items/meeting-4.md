@@ -36,6 +36,6 @@
 | [Delete Suburb Card Feature]           | [Leo]       | [13/10] |
 | [Improve Data Stream]                  | [Gea]       | [13/10] |
 | [Surprise Feature]                     | [Ryan]      | [13/10] |
-| [Improve Report]                       | [Zechaun]   | [13/10] |
+| [Improve Report]                       | [Zechuan]   | [13/10] |
 | [Submit Code]                          | []          | [17/10] |
 | [Submit Report, Video, Slids, Reflection]| []        | [18/10] |
