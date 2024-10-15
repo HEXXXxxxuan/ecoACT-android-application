@@ -2,6 +2,13 @@ package com.go4.application.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class represents an air quality report for a specific location.
+ * It holds information about various air quality components.
+ * The timestamp is formatted in human-readable form
+ *
+ * @author u7902000 Gea Linggar
+ */
 public class AirQualityRecord {
     private String location;  // Suburb name
     private double aqi;  // Air Quality Index

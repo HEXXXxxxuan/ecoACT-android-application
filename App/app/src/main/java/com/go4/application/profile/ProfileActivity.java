@@ -165,20 +165,20 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private void editableProfilePicture() {
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                if (uri != null) {
-                    try {
-                        // Load the bitmap from the URI
-                        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                        writeProfilePicture(bitmapImage);
-                        readProfilePicture();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        try {
+                            // Load the bitmap from the URI
+                            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            writeProfilePicture(bitmapImage);
+                            readProfilePicture();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
                     }
-                } else {
-                    Log.d("PhotoPicker", "No media selected");
-                }
-            });
+                });
 
         imageView.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
                 .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)

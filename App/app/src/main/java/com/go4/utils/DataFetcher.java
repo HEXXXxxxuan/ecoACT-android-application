@@ -23,20 +23,29 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * Processes Air Quality data from OpenWeather API
+ * <p>The data is stored in a CSV file in the cache directory</p>
+ *
+ * @author u7902000 Gea Linggar, Ryan
+ */
 public class DataFetcher {
-    private ExecutorService executorService;
-    private Handler mainHandler;
-    private String apiKey;
-
-
+    private final ExecutorService executorService;
+    private final Handler mainHandler;
+    protected static String apiKey = "4f6d63b7d7512fc4b14ee2aeb89d3128";
     long currentTime = System.currentTimeMillis() / 1000L;
     long startingTime;
 
-    public DataFetcher(ExecutorService executorService, Handler mainHandler, int number_OfDays, String apiKey) {
+    /**
+     * Constructs a new {@link DataFetcher} instance
+     *
+     * @param executorService {@link ExecutorService} used to run tasks asynchronously
+     * @param mainHandler     {@link Handler} used to post updates to main UI thread
+     * @param number_OfDays   Days backward to retrieve
+     */
+    public DataFetcher(ExecutorService executorService, Handler mainHandler, int number_OfDays) {
         this.executorService = executorService;
         this.mainHandler = mainHandler;
-        this.apiKey = apiKey;
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.DAY_OF_YEAR, -number_OfDays);
@@ -44,7 +53,17 @@ public class DataFetcher {
     }
 
 
-
+    /**
+     * Automatically adds air quality records by fetching data for multiple suburbs from the API and
+     * storing them in a CSV file. Uses data from the "canberra_suburbs_coordinates.json" file in
+     * the assets folder to determine the latitude and longitude of each suburb.
+     *
+     * @param context     the Android {@code Context} used to access assets and file directories
+     * @param fileName    the name of the CSV file where the data will be stored
+     * @param fetchingBar the {@code ProgressBar} to update as the data fetching progresses
+     * @param onComplete  the {@code Runnable} to be executed once all locations have been processed
+     * @author u7902000 Gea Linggar
+     */
     public void automaticAddRecords(Context context, String fileName, ProgressBar fetchingBar, Runnable onComplete) {
         String startDate = String.valueOf(startingTime);
         String endDate = String.valueOf(currentTime);
@@ -58,16 +77,12 @@ public class DataFetcher {
             while ((line = reader.readLine()) != null) {
                 jsonString.append(line);
             }
-
             JSONObject locationsObject = new JSONObject(jsonString.toString());
+
             //extracting each suburb as a key
             Iterator<String> keys = locationsObject.keys();
-
-            //track the number of completed suburb
             int totalLocations = locationsObject.length();
             final int[] completedLocations = {0};
-
-            //iterating through each suburbs
             while (keys.hasNext()) {
                 String location = keys.next();
 
@@ -85,13 +100,11 @@ public class DataFetcher {
                         mainHandler.post(() -> fetchingBar.setProgress(completedLocations[0]));
 
                         if (completedLocations[0] == totalLocations) {
-
                             // runnable if ALL suburb has completely processed
                             onComplete.run();
                         }
                     }
                 });
-
                 Log.i("LocationProcessing", "Processed location: " + location);
             }
         } catch (Exception e) {
@@ -99,6 +112,21 @@ public class DataFetcher {
         }
     }
 
+    /**
+     * Fetches historical air quality data for a specific location (suburb) from the OpenWeather API and
+     * stores the data in a CSV file.
+     *
+     * @param context    the Android {@link Context} used to access the cache directory
+     * @param location   the name of the suburb
+     * @param latitude   the latitude of the suburb
+     * @param longitude  the longitude of the suburb
+     * @param start      the start timestamp for fetching historical data
+     * @param end        the end timestamp for fetching historical data
+     * @param apiKey     the API key for authenticating requests to the OpenWeather API
+     * @param fileName   the name of the CSV file where the data will be stored
+     * @param onComplete the {@link Runnable} to be executed once the data for the suburb has been processed
+     * @author u7902000 Gea Linggar
+     */
     public void fetchHistoricalDataTOCSV(Context context, String location, String latitude, String longitude, String start, String end, String apiKey, String fileName, Runnable onComplete) {
         executorService.submit(() -> {
             // API call for each suburb
@@ -195,7 +223,6 @@ public class DataFetcher {
                             Log.e("AirQualityAPI", "Error writing to CSV: ", e);
                         }
                     }  // End of synchronized block
-
                 } else {
                     Log.e("AirQualityAPI", "GET request failed: " + responseCode);
                 }
@@ -204,5 +231,4 @@ public class DataFetcher {
             }
         });
     }
-
 }

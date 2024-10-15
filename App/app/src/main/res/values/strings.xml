@@ -8,4 +8,5 @@
     <string name="email">Email</string>
     <string name="channel_name">main</string>
     <string name="channel_description">the core channel for the app</string>
+    <string name="no_suburb_selected">No suburb selected.</string>
 </resources>
