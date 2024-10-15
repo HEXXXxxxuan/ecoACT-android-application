@@ -20,10 +20,11 @@ import androidx.core.content.ContextCompat;
 import com.go4.utils.DataFetcher;
 
 /**
- * This activity launches the splashScreen on app launch.
- * <p>It also implements logic required during startup. Presently loading all historical data.</p>
- * @author Shawn ?
+ * Models the Splash Screen on app-startup.
+ * <p>Fetches data using {@link DataFetcher}</p>
+ * @author Shawn
  * @author Gea
+ * @author Ryan
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -44,6 +45,7 @@ public class SplashActivity extends AppCompatActivity {
      * <p>
      *     Changing throughout development but should be {@link MainActivity} next
      * </p>
+     * @author Ryan Foote ?
      */
     private void startNextActivity(){
         Intent intent = new Intent(this, MainActivity.class);
@@ -53,9 +55,10 @@ public class SplashActivity extends AppCompatActivity {
 
     /**
      * Calls {@link #startNextActivity()} upon finishing
-     * <p>
-     *     Uses {@link #onRequestPermissionsResult(int, String[], int[])} for callback logic
-     * </p>
+     * <p>Callback Logic implemented by {@link #onRequestPermissionsResult(int, String[], int[])}.</p>
+     * <p>Background access is requested in a separate request to Locations as inscribed in
+     * the Android Spec</p>
+     * @author Ryan Foote
      */
     private void checkPermissions(){
         ArrayList<String> permissions = new ArrayList<>();
@@ -87,6 +90,17 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Override to handle {@link #GET_BACKGROUND_AFTER} and {@link #START_ACTIVITY_AFTER}
+     * requestCodes.
+     * @param requestCode The request code passed in {@link ActivityCompat#requestPermissions(
+     * android.app.Activity, String[], int)}
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     * @author Ryan Foote
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -99,6 +113,12 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Helper to check available permissions.
+     * @param perm permissions to check
+     * @return true if available, false if not
+     * @author Ryan Foote
+     */
     private boolean hasPermissions(String perm){
         return ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED;
     }
