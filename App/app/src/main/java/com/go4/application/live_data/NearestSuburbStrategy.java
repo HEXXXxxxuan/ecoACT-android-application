@@ -40,8 +40,8 @@ public class NearestSuburbStrategy implements LocationStrategy {
             String suburb = entry.getKey();
             double[] coordinates = entry.getValue();
 
-            double distance = calculateDistance(userLatitude, userLongitude, coordinates[0], coordinates[1] );
-            Log.d("LocationDebug", "nearest suburb distance: " + distance);
+            
+            
             // Using the Haversine formula to calculate distance
             double distance = calculateDistanceKM(userLatitude, userLongitude, coordinates[0], coordinates[1]);
 
