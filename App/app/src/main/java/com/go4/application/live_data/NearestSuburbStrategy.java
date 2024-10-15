@@ -1,5 +1,7 @@
 package com.go4.application.live_data;
 
+import android.util.Log;
+
 import com.go4.utils.design_pattern.LocationStrategy;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class NearestSuburbStrategy implements LocationStrategy {
             double[] coordinates = entry.getValue();
 
             double distance = calculateDistance(userLatitude, userLongitude, coordinates[0], coordinates[1] );
+            Log.d("LocationDebug", "nearest suburb distance: " + distance);
 
             if (distance < shortestDistance) {
                 shortestDistance = distance;

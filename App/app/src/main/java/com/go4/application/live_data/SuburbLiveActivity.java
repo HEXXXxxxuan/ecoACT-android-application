@@ -20,11 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -43,9 +45,11 @@ import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 import com.go4.utils.tree.AVLTree;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -63,6 +67,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
+
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 /**
@@ -80,14 +85,12 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  *     <li>Comparison of air quality metrics trends between two selected suburbs</li>
  * </ul>
  *
- *
+ * @author u7902000 Gea Linggar
  * @see com.go4.application.historical.SuburbHistoricalActivity
  * @see com.github.mikephil.charting.charts.LineChart
  * @see com.go4.utils.GPSService
  * @see com.go4.utils.design_pattern.ExecutorServiceSingleton
  * @see com.go4.application.live_data.adapter.LoadMoreSearchResultAdapter
- *
- * @author u7902000 Gea Linggar
  */
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
@@ -196,6 +199,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
             executor.execute(this::showDataAndRefresh);
             setTitle("Suburb: " + data.get("title"));
         });
+
+        updateLocationUsingGPS();
     }
 
     private void initializeView() {
@@ -233,9 +238,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
     public void updateLocationUsingGPS() {
         NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
-        Location location  = MainActivity.gpsService.getRecentLocation();
+        Location location = MainActivity.gpsService.getRecentLocation();
         selectedSuburb = nearestSuburbStrategy.getNearestSuburb(location.getLatitude(), location.getLongitude(), suburbMap);
-        Log.d("LocationDebug: ", "Nearest suburb = " + selectedSuburb);
+        Log.d("LocationDebug: ", "Nearest suburb = " + selectedSuburb + "Lat: " + location.getLatitude() + " Long: " + location.getLongitude());
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
         int position = adapter.getPosition(selectedSuburb);
         if (position >= 0) {
@@ -331,7 +336,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
-    private void comparisonOnClick(){
+    private void comparisonOnClick() {
         lineChart.setVisibility(View.VISIBLE);
         intervalSpinner.setVisibility(View.VISIBLE);
         comparingSpinner.setVisibility(View.VISIBLE);
@@ -347,13 +352,34 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
     private void clickListener() {
-        resultTextViewLive.setOnClickListener(v -> {metricOption = AirQualityMetric.AQI;comparisonOnClick();});
-        coTextView.setOnClickListener(v -> {metricOption = AirQualityMetric.CO;comparisonOnClick();});
-        no2TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.NO2;comparisonOnClick();});
-        pm25TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.PM2_5;comparisonOnClick();});
-        pm10TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.PM10;comparisonOnClick();});
-        o3TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.O3;comparisonOnClick();});
-        so2TexView.setOnClickListener(v -> {metricOption = AirQualityMetric.SO2;comparisonOnClick();});
+        resultTextViewLive.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.AQI;
+            comparisonOnClick();
+        });
+        coTextView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.CO;
+            comparisonOnClick();
+        });
+        no2TextView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.NO2;
+            comparisonOnClick();
+        });
+        pm25TextView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.PM2_5;
+            comparisonOnClick();
+        });
+        pm10TextView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.PM10;
+            comparisonOnClick();
+        });
+        o3TextView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.O3;
+            comparisonOnClick();
+        });
+        so2TexView.setOnClickListener(v -> {
+            metricOption = AirQualityMetric.SO2;
+            comparisonOnClick();
+        });
 
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
         comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
@@ -458,9 +484,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         suburbSpinnerLive.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                actionId == EditorInfo.IME_ACTION_DONE ||
-                (event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
-                (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER))) {
+                    actionId == EditorInfo.IME_ACTION_DONE ||
+                    (event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
+                            (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER))) {
 
                 String query = suburbSpinnerLive.getText().toString();
                 search(query);
@@ -477,7 +503,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         });
     }
 
-    private void selectComparingSpinner(){
+    private void selectComparingSpinner() {
         // Create a list of suburbs and add the default entry as the first item
         List<String> suburbsList = new ArrayList<>(); // Why global variables?!?!
         suburbsList.addAll(suburbMap.keySet());
@@ -501,7 +527,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
-                                    String selectedSuburb, String startTimestamp, String endTimestamp) {
+                                                                    String selectedSuburb, String startTimestamp, String endTimestamp) {
         List<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
