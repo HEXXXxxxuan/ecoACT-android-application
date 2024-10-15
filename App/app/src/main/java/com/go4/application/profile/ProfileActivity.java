@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -123,11 +122,11 @@ public class ProfileActivity extends AppCompatActivity {
         LinearLayout suburb_live = findViewById(R.id.nav_suburb_live);
 
         suburb_live.setOnClickListener(
-                v -> {
-                    Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
-                    suburbLiveIntent.putExtra("displayName", email);
-                    startActivity(suburbLiveIntent);
-                }
+            v -> {
+                Intent suburbLiveIntent = new Intent(ProfileActivity.this, SuburbLiveActivity.class);
+                suburbLiveIntent.putExtra("displayName", email);
+                startActivity(suburbLiveIntent);
+            }
         );
     }
 
@@ -188,6 +187,35 @@ public class ProfileActivity extends AppCompatActivity {
         readProfilePicture();
     }
 
+    private String getFilePath() {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        String filename = "profile_picture.jpg";
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        return String.format("%s/%s", directory, filename);
+    }
+
+    private void readProfilePicture() {
+        String filePath = getFilePath();
+        File file = new File(filePath);
+        if (file.exists()) {
+            imageView.setImageDrawable(Drawable.createFromPath(file.toString()));
+        } else {
+            imageView.setImageResource(R.drawable.default_profile);
+        }
+    }
+
+    public void writeProfilePicture(Bitmap bitmapImage) {
+        String filePath = getFilePath();
+        File file = new File(filePath);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Display Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
      * <p>Swipe right on suburb card to delete it, and press undo button to undo.
@@ -223,35 +251,6 @@ public class ProfileActivity extends AppCompatActivity {
                 }).show();
             }
         }).attachToRecyclerView(suburbCardList);
-    }
-
-    private String getFilePath() {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        String filename = "profile_picture.jpg";
-        File directory = cw.getDir("images", Context.MODE_PRIVATE);
-        return String.format("%s/%s", directory, filename);
-    }
-
-    private void readProfilePicture() {
-        String filePath = getFilePath();
-        File file = new File(filePath);
-        if (file.exists()) {
-            imageView.setImageDrawable(Drawable.createFromPath(file.toString()));
-        } else {
-            imageView.setImageResource(R.drawable.default_profile);
-        }
-    }
-
-    public void writeProfilePicture(Bitmap bitmapImage) {
-        String filePath = getFilePath();
-        File file = new File(filePath);
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private String[] searchForQualityAndPm10Number(String suburb) {
