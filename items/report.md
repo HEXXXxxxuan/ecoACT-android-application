@@ -390,7 +390,7 @@ Feature Category: UI Design and Testing <br>
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
 
-Feature Cateory: User Interactivity
+Feature Cateory: User Interactivity <br>
 8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
