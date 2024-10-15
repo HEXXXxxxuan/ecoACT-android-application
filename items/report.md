@@ -51,15 +51,15 @@ The key area(s) of responsibilities for each member
 
 2. **u8003980, Chan Cheng Leong** I have 20% contribution, as follows: <br>
 - **Code Contribution in the final App**
-    - Feature Change Profile Picture in Profile Page - class ProfileActivity: [profileActivity.java](../App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
-    - Feature Display Pinned Suburbs in Profile Page – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](../App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
-    class SuburbCard: [SuburbCard.java](../App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
-    - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
-    class Parser: [Parser.java](../App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
-    class Tokenizer: [Tokenizer.java](../App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
-    class Token: [Token.java](../App/app/src/main/java/com/go4/application/profile/Token.java)
-    - UI Profile Page - [activity_profile.xml](../App/app/src/main/res/layout/activity_profile.xml)
-    - UI Pinned Suburb Card - [activity_profile_card.xml](../App/app/src/main/res/layout/activity_profile_card.xml)
+    - Feature Change Profile Picture in Profile Page - class ProfileActivity: [profileActivity.java](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
+    - Feature Display Pinned Suburbs in Profile Page – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
+    class SuburbCard: [SuburbCard.java](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
+    - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
+    class Parser: [Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
+    class Tokenizer: [Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
+    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)
+    - UI Profile Page - [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml)
+    - UI Pinned Suburb Card - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
 
 - **Code and App Design**
     - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma
@@ -282,8 +282,8 @@ Production Rules:
 
 *[Where do you use tokenisers and parsers? How are they built? What are the advantages of the designs?]*
 
-The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the class  SuburbHistoricalActivity in [SuburbHistoricalActivity.java](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) lines 192-230.
-They are built by taking inspiration from Lab 06, and three classes are used, including  Parser ([Parser.java](../App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](../App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](../App/app/src/main/java/com/go4/application/profile/Token.java)).
+The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the class  SuburbHistoricalActivity in [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) lines 192-230.
+They are built by taking inspiration from Lab 06, and three classes are used, including  Parser ([Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)).
 Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as &lt;Location&gt;, &lt;Date&gt;, &lt;Time&gt;, making the input easier to process.
 Parsers: The Parser class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser uses predefined grammar rules to validate and organize the tokens into meaningful structures.
 
@@ -316,7 +316,7 @@ Important: You must include the following two accounts for markers' access to yo
 Username: comp2100@anu.edu.au Password: comp2100
 
 Username: comp6442@anu.edu.au Password: comp6442
-   * Code:[`FirebaseLoginActivity`](../App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java?ref_type=heads), methods `onCreate`, `loginUser` and `LoginActivity`, methods `validateUserInput`.
+   * Code:[`FirebaseLoginActivity`](/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java?ref_type=heads), methods `onCreate`, `loginUser` and `LoginActivity`, methods `validateUserInput`.
    * Description of feature: The login feature provides a secure way for users to access the app by entering their username and password. It validates user credentials through Firebase.<br>
    * Description of your implementation:Implemented using Firebase Authentication in `FirebaseLoginActivity`. The `onCreate` method sets up listeners for UI elements, and `loginUser` handles the Firebase authentication process. UI components such as `EditText` for entering credentials and a `Button` for submitting are defined in the XML file [`activity_firebase_login_ui.xml`](133†source), enabling interaction with these methods to ensure a smooth login experience. Proper error messages are provided when login fails to guide users effectively. <br>
 
@@ -331,24 +331,24 @@ Important: You must include in your report the link to the data file(s) on your 
 * Description of feature:  The application loads and displays air quality data instances from the data set. Data must be retrieved from local files like JSON or via Firebase if available.
  * Description of your implementation: Data loading is performed by the `DataFetcher.java` class, which reads from `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`. Data is displayed using a RecyclerView, managed in the `SuburbLiveActivity` activity with UI elements like `RecyclerView` and progress bars for real-time air quality data.
 4. [[DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
-   * Code: [`SuburbLiveActivity`](../App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), methods `onCreate`, `refreshData`, and [`DataFetcher`](../App/app/src/main/java/com/go4/application/DataFetcher.java), methods `fetchData`....
+   * Code: [`SuburbLiveActivity`](/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), methods `onCreate`, `refreshData`, and [`DataFetcher`](/App/app/src/main/java/com/go4/application/DataFetcher.java), methods `fetchData`....
    * Description of feature: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. <br>
    * Description of your implementation:Implemented using `DataFetcher.java` to retrieve data at regular time intervals. The data is displayed in the `SuburbLiveActivity` class, with UI elements like `SwipeRefreshLayout` in [`suburb_live.xml`](132†source) to ensure the app content is automatically refreshed, simulating live updates. <br>
 5. [Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
-   * Code: [`Tokenizer`](../App/app/src/main/java/com/go4/application/Tokenizer.java?ref_type=heads), methods `tokenizeInput`, [`Parser`](../App/app/src/main/java/com/go4/application/Parser.java), methods `parseQuery`, and `SearchRecord`.
+   * Code: [`Tokenizer`](/App/app/src/main/java/com/go4/application/Tokenizer.java?ref_type=heads), methods `tokenizeInput`, [`Parser`](/App/app/src/main/java/com/go4/application/Parser.java), methods `parseQuery`, and `SearchRecord`.
    * Description of feature: Allows users to search for suburb-specific information based on their input, adhering to a pre-defined grammar.<br>
    * Description of your implementation:The search functionality is implemented using a tokenizer (`Tokenizer.java`) to break down the user's input and a parser (`Parser.java`) to interpret it according to the grammar. The results are then displayed using a RecyclerView, making the search results interactive and easy to browse.
  <br>
 6. [UIUX] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
- * Code: XML layouts like [`activity_main.xml`](../App/app/src/main/res/layout/activity_main.xml?ref_type=heads), [`suburb_live.xml`](../App/app/src/main/res/layout/suburb_live.xml), [`activity_profile.xml`](../App/app/src/main/res/layout/activity_profile.xml).
+ * Code: XML layouts like [`activity_main.xml`](/App/app/src/main/res/layout/activity_main.xml?ref_type=heads), [`suburb_live.xml`](/App/app/src/main/res/layout/suburb_live.xml), [`activity_profile.xml`](/App/app/src/main/res/layout/activity_profile.xml).
    * Description of feature: The application maintains a consistent design language, including colors, fonts, and UI styles throughout all activities and screens. It also handles orientation changes gracefully.<br>
    * Description of your implementation:The UI is implemented using `ConstraintLayout` and `LinearLayout` for flexibility. Consistent colors and styles are used across XML files, and UI elements like `RecyclerView` and `Spinner` adapt to different screen orientations. The application supports responsive layouts that adjust automatically between portrait and landscape modes.
 
  <br>
 7. [UIFeedback] The UI must provide clear and informative feedback for user actions, including error messages to guide users effectively. (easy)
- * Code: [`SuburbLiveActivity`](../App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), [`DataFetcher`](../App/app/src/main/java/com/go4/application/DataFetcher.java?ref_type=heads), methods `onDataLoadFailure`, `onDataLoadSuccess`.
+ * Code: [`SuburbLiveActivity`](/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java?ref_type=heads), [`DataFetcher`](/App/app/src/main/java/com/go4/application/DataFetcher.java?ref_type=heads), methods `onDataLoadFailure`, `onDataLoadSuccess`.
    * Description of feature:  Provides informative feedback for user actions, including data loading progress and error messages. <br>
-   * Description of your implementation:A `ProgressBar` in [`layout_refresh_footer.xml`](../App/app/src/main/res/layout/layout_refresh_footer.xml?ref_type=heads) is used to indicate loading states, and error messages are displayed using `Toast` notifications. When a data fetch fails, users are informed with a clear error message to guide them on the next steps. The `SwipeRefreshLayout` is used for visual feedback when users refresh the page manually. <br>
+   * Description of your implementation:A `ProgressBar` in [`layout_refresh_footer.xml`](/App/app/src/main/res/layout/layout_refresh_footer.xml?ref_type=heads) is used to indicate loading states, and error messages are displayed using `Toast` notifications. When a data fetch fails, users are informed with a clear error message to guide them on the next steps. The `SwipeRefreshLayout` is used for visual feedback when users refresh the page manually. <br>
 
 
 
@@ -378,8 +378,8 @@ Feature Category: Data <br>
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
-   * Code: [Class ProfileActivity, entire file](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](../App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
    * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
      The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
      The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
@@ -392,12 +392,12 @@ Feature Category: UI Design and Testing <br>
 
 Feature Cateory: User Interactivity
 8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
-   * Code: [Class ProfileActivity, entire file](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
-   [Class SuburbCardViewAdapter, entire file](../App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
-   [Class SuburbCard, entire file](../App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
-   [activity_profile.xml](../App/app/src/main/res/layout/activity_profile.xml) 
-   and [activity_profile_card.xml](../App/app/src/main/res/layout/activity_profile_card.xml)
-   * [Class ProfileActivity](../App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
+   [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
+   [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
+   [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml) 
+   and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
    updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 224-365
    * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
