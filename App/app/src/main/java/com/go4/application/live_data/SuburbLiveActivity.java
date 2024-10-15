@@ -1,14 +1,10 @@
 package com.go4.application.live_data;
 
-
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,19 +16,15 @@ import android.widget.AdapterView;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -40,45 +32,37 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-
+import com.go4.application.MainActivity;
 import com.go4.application.historical.SuburbHistoricalActivity;
 import com.go4.application.live_data.MockDataStream.MockJSONResponse;
 import com.go4.application.live_data.adapter.LoadMoreSearchResultAdapter;
 import com.go4.application.live_data.listener.SearchResultEndlessRecyclerOnScrollListener;
 import com.go4.application.profile.ProfileActivity;
-import com.go4.utils.GPSService;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 import com.go4.utils.tree.AVLTree;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
-
 import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
 
 /**
@@ -103,7 +87,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  * @see com.go4.utils.design_pattern.ExecutorServiceSingleton
  * @see com.go4.application.live_data.adapter.LoadMoreSearchResultAdapter
  *
- * @author u7902000 Gea Linggar, ,
+ * @author u7902000 Gea Linggar
  */
 public class SuburbLiveActivity extends AppCompatActivity {
     private AutoCompleteTextView suburbSpinnerLive;
@@ -112,54 +96,24 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private TextView resultTextViewLive;
     private TextView coTextView, no2TextView, pm25TextView, pm10TextView, o3TextView, so2TexView;
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
-    private Button historicalButton;
     private SemiCircleArcProgressBar semiCircleArcProgressBar;
-    private LinearLayout profile;
-
-
     private HashMap<String, double[]> suburbMap;
-    private static final String API_KEY = "4f6d63b7d7512fc4b14ee2aeb89d3128";
     private AVLTree<String, AirQualityRecord> records;
     private LineChart lineChart;
     private IntervalOption option;
     private AirQualityMetric metricOption;
-    private String selectedSuburb;
-    private String comparedSuburb;
+    private String selectedSuburb, comparedSuburb;
     private final ExecutorService executor = ExecutorServiceSingleton.getInstance();
-    private GPSService gpsService;
-    private boolean isBound = false;
     private List<AirQualityRecord> primarySuburbs;
     private List<AirQualityRecord> comparedSuburbs;
     private String email;
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable fetchTask;
-
     private LoadMoreSearchResultAdapter loadMoreSearchResultAdapter;
     private List<Map<String, String>> dataList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private List<Map<String, String>> resultDataset = new ArrayList<>();
-
-    Location currentLocation = null;
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
-            gpsService = binder.getService();
-            isBound = true;
-
-            // Get the recent location and update the UI
-            currentLocation = gpsService.getRecentLocation();
-            updateLocationUsingGPS(currentLocation);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,13 +138,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
         CsvParser csvParser = new CsvParser();
         records = csvParser.createAVLTree(this, false);
 
-        // Bind the GPS service
-        Intent gpsIntent = new Intent(this, GPSService.class);
-        bindService(gpsIntent, connection, Context.BIND_AUTO_CREATE);
-
         clickListener();
-
-
 
         ViewGroup.LayoutParams layoutParams = swipeRefreshLayout.getLayoutParams();
         layoutParams.height = 1;
@@ -202,24 +150,18 @@ public class SuburbLiveActivity extends AppCompatActivity {
         recyclerView.setAdapter(loadMoreSearchResultAdapter);
 
         // Set dropdown refresh
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // refresh data
-                dataList.clear();
-                getData(resultDataset);
-                loadMoreSearchResultAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // refresh data
+            dataList.clear();
+            getData(resultDataset);
+            loadMoreSearchResultAdapter.notifyDataSetChanged();
 
-                // Delay for 1 second to close dropdown refresh
-                swipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
-                }, 1000);
-            }
+            // Delay for 1 second to close dropdown refresh
+            swipeRefreshLayout.postDelayed(() -> {
+                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
         });
 
         // Set to load more listeners
@@ -234,12 +176,9 @@ public class SuburbLiveActivity extends AppCompatActivity {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getData(resultDataset);
-                                    loadMoreSearchResultAdapter.setLoadState(loadMoreSearchResultAdapter.LOADING_COMPLETE);
-                                }
+                            runOnUiThread(() -> {
+                                getData(resultDataset);
+                                loadMoreSearchResultAdapter.setLoadState(loadMoreSearchResultAdapter.LOADING_COMPLETE);
                             });
                         }
                     }, 1000);
@@ -250,20 +189,12 @@ public class SuburbLiveActivity extends AppCompatActivity {
             }
         });
 
-        loadMoreSearchResultAdapter.setOnItemClickListener(new LoadMoreSearchResultAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Map<String, String> data) {
-                //Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                //intent.putExtra("data", (Serializable)data);
-                //startActivity(intent);
-                selectedSuburb = data.get("title");
-                //fetchAndDisplayData();
-                // Fetch data in a background thread
-                executor.execute(() -> {
-                    showDataAndRefresh();
-                });
-                setTitle("Suburb: " + data.get("title"));
-            }
+        loadMoreSearchResultAdapter.setOnItemClickListener(data -> {
+            selectedSuburb = data.get("title");
+
+            // Fetch data in a background thread
+            executor.execute(this::showDataAndRefresh);
+            setTitle("Suburb: " + data.get("title"));
         });
     }
 
@@ -293,30 +224,25 @@ public class SuburbLiveActivity extends AppCompatActivity {
         pm25ProgressBar.setMax(50);
         no2ProgressBar.setMax(5);
         so2ProgressBar.setMax(10);
-        historicalButton = findViewById(R.id.historicalPageButton);
         semiCircleArcProgressBar = findViewById(R.id.semiCircleArcProgressBar);
         lineChart = findViewById(R.id.lineChart);
         lineChart.setVisibility(View.GONE);
         recyclerView = findViewById(R.id.recycler_view);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        profile = findViewById(R.id.nav_profile);
     }
 
-    public void updateLocationUsingGPS(Location location) {
+    public void updateLocationUsingGPS() {
         NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
+        Location location  = MainActivity.gpsService.getRecentLocation();
         selectedSuburb = nearestSuburbStrategy.getNearestSuburb(location.getLatitude(), location.getLongitude(), suburbMap);
-
         Log.d("LocationDebug: ", "Nearest suburb = " + selectedSuburb);
-
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) suburbSpinnerLive.getAdapter();
         int position = adapter.getPosition(selectedSuburb);
         if (position >= 0) {
-            //suburbSpinnerLive.setText(selectedSuburb, false);
             setTitle("Suburb: " + selectedSuburb);
         }
         // Fetch and display data based on the nearest suburb
         executor.execute(this::showDataAndRefresh);
-
     }
 
     public enum IntervalOption {
@@ -339,9 +265,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
                 String selectedInterval = intervals.get(position);
 
                 switch (selectedInterval) {
-                    case "Today":
-                        option = IntervalOption.TODAY;
-                        break;
                     case "Yesterday":
                         option = IntervalOption.YESTERDAY;
                         break;
@@ -374,7 +297,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
                 }
             }
 
-
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
@@ -385,43 +307,11 @@ public class SuburbLiveActivity extends AppCompatActivity {
         AQI, CO, NO2, PM2_5, PM10, O3, SO2
     }
 
-    private void fetchAndDisplayData() {
-        double[] coordinates = suburbMap.get(selectedSuburb);
-
-            String urlString = String.format(
-                    "https://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s",
-                    coordinates[0], coordinates[1], API_KEY);
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder response = new StringBuilder();
-                    String inputLine;
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-
-                    runOnUiThread(() -> displayAirQualityData(response.toString()));
-                } else {
-                    runOnUiThread(() -> resultTextViewLive.setText("Failed to fetch air quality data."));
-                }
-            } catch (Exception e) {
-                runOnUiThread(() -> resultTextViewLive.setText("Error fetching data: " + e.getMessage()));
-            }
-    }
-
     private void fetchAndDisplayMockData() {
         MockJSONResponse mockJSONResponse = new MockJSONResponse();
         String response = mockJSONResponse.getMockResponse();
         displayAirQualityData(response);
     }
-
 
     private void showDataAndRefresh() {
         fetchTask = new Runnable() {
@@ -441,151 +331,42 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
+    private void comparisonOnClick(){
+        lineChart.setVisibility(View.VISIBLE);
+        intervalSpinner.setVisibility(View.VISIBLE);
+        comparingSpinner.setVisibility(View.VISIBLE);
+        primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
+        plotPrimaryData(primarySuburbs, metricOption);
+        Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
+
+        if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
+            comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
+            plotComparisonData(comparedSuburbs, metricOption);
+            Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
+        }
+    }
 
     private void clickListener() {
-
-        resultTextViewLive.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.AQI;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-        });
-
-        coTextView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.CO;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-
-        });
-
-        no2TextView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.NO2;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-        });
-
-        pm25TextView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.PM2_5;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-        });
-
-        pm10TextView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.PM10;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-        });
-
-        o3TextView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            comparingSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.O3;
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-        });
-
-        so2TexView.setOnClickListener(v -> {
-            lineChart.setVisibility(View.VISIBLE);
-            intervalSpinner.setVisibility(View.VISIBLE);
-            metricOption = AirQualityMetric.SO2;
-            comparingSpinner.setVisibility(View.VISIBLE);
-            primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
-            plotPrimaryData(primarySuburbs, metricOption);
-            Log.d("Comparing debug", "Primary records hashcode: " + primarySuburbs);
-
-
-            if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
-                plotComparisonData(comparedSuburbs, metricOption);
-                Log.d("Comparing debug", "Comparison records hashcode: " + comparedSuburbs);
-            }
-
-
-        });
-
+        resultTextViewLive.setOnClickListener(v -> {metricOption = AirQualityMetric.AQI;comparisonOnClick();});
+        coTextView.setOnClickListener(v -> {metricOption = AirQualityMetric.CO;comparisonOnClick();});
+        no2TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.NO2;comparisonOnClick();});
+        pm25TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.PM2_5;comparisonOnClick();});
+        pm10TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.PM10;comparisonOnClick();});
+        o3TextView.setOnClickListener(v -> {metricOption = AirQualityMetric.O3;comparisonOnClick();});
+        so2TexView.setOnClickListener(v -> {metricOption = AirQualityMetric.SO2;comparisonOnClick();});
 
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
         comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
 
-        historicalButton.setOnClickListener(v -> {
+        findViewById(R.id.historicalPageButton).setOnClickListener(v -> {
             Intent suburbHistoricalIntent = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
             startActivity(suburbHistoricalIntent);
         });
 
-        profile.setOnClickListener(v -> {
+        findViewById(R.id.nav_profile).setOnClickListener(v -> {
             Intent profileIntent = new Intent(SuburbLiveActivity.this, ProfileActivity.class);
             profileIntent.putExtra("displayName", email);
             startActivity(profileIntent);
-            ;
         });
     }
 
@@ -635,25 +416,18 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
 
         // Filter records based on the selected suburb and time range
-
         recordsInSelectedSuburb = filterRecordsBySuburbAndTimestamp(records, selectedSuburb, startDate, endDate);
-
         Log.d("Comparing debug: ", "filtering in nearest suburb filtered by " + startDate + endDate + recordsInSelectedSuburb);
-
         return recordsInSelectedSuburb;
     }
-
 
     private void selectSuburbSpinner() {
         // Create a list of suburbs
         List<String> suburbsList = new ArrayList<>();
         suburbsList.addAll(suburbMap.keySet());
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
         suburbSpinnerLive.setAdapter(adapter);
-
         suburbSpinnerLive.setThreshold(1);
-
         suburbSpinnerLive.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 // Clear the text when user clicks the text
@@ -661,82 +435,65 @@ public class SuburbLiveActivity extends AppCompatActivity {
             }
         });
 
-
         // Set listener to handle suburb selection
         suburbSpinnerLive.setOnItemClickListener((parent, view, position, id) -> {
             selectedSuburb = (String) parent.getItemAtPosition(position);
-
             if (selectedSuburb != null && !selectedSuburb.isEmpty()) {
-
                 search(selectedSuburb);
                 executor.execute(() -> {
                     showDataAndRefresh();
                     primarySuburbs = fetchRecordsForSuburbAndInterval(selectedSuburb);
 
                     // Update UI on the main thread after data is fetched
-                    runOnUiThread(() -> {
-                        plotPrimaryData(primarySuburbs, metricOption);
-                    });
-
+                    runOnUiThread(() -> plotPrimaryData(primarySuburbs, metricOption));
                     Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
                     Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
-
                     comparedSuburb = "";
                     Log.d("Comparing debug", "primary location: " + selectedSuburb);
-
                 });
-
             } else {
-                resultTextViewLive.setText("No suburb selected.");
+                resultTextViewLive.setText(R.string.no_suburb_selected);
             }
         });
 
-        suburbSpinnerLive.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        (event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
-                                (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER))) {
+        suburbSpinnerLive.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
+                (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER))) {
 
-                    String query = suburbSpinnerLive.getText().toString();
-                    search(query);
-                    // 如果按下的是回车键，并且你想要关闭输入法键盘，可以调用如下代码：
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    }
-                    return true;
+                String query = suburbSpinnerLive.getText().toString();
+                search(query);
+
+                // English?
+                // 如果按下的是回车键，并且你想要关闭输入法键盘，可以调用如下代码：
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                return false;
+                return true;
             }
+            return false;
         });
     }
 
     private void selectComparingSpinner(){
-
         // Create a list of suburbs and add the default entry as the first item
-        List<String> suburbsList = new ArrayList<>();
+        List<String> suburbsList = new ArrayList<>(); // Why global variables?!?!
         suburbsList.addAll(suburbMap.keySet());
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
         comparingSpinner.setAdapter(adapter);
-
         comparingSpinner.setThreshold(1);
         comparingSpinner.setOnItemClickListener((parent, view, position, id) -> {
-
             comparedSuburb = (String) parent.getItemAtPosition(position);
-
             if (comparedSuburb != null && !comparedSuburb.isEmpty()) {
-                // Fetch data for the second suburb
-
+                // Fetch data for the second suburb]
                 executor.execute(() -> {
                     comparedSuburbs = fetchRecordsForSuburbAndInterval(comparedSuburb);
                     runOnUiThread(() -> {
                         plotComparisonData(comparedSuburbs, metricOption);
                     });
                 });
-
                 Log.d("Comparing debug", "Primary location: " + selectedSuburb + primarySuburbs);
                 Log.d("Comparing debug", "Comparing location: " + comparedSuburb + comparedSuburbs);
             }
@@ -744,13 +501,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
     }
 
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
-                                                                    String selectedSuburb, String startTimestamp,
-                                                                    String endTimestamp) {
-
-
+                                    String selectedSuburb, String startTimestamp, String endTimestamp) {
         List<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
-
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
@@ -762,17 +514,14 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
             // Traverse the AVL tree and filter by suburb and timestamp range
             records.inOrderTraversal(records.getRoot(), (k, r) -> {
-
                 if (k.startsWith(selectedSuburb)) {
                     // Extract the timestamp from the key
                     String[] keyParts = k.split("_");
                     if (keyParts.length > 1) {
                         String recordTimestamp = keyParts[1];
-
                         try {
                             // Convert record timestamp to Date object
                             Date recordDate = dateFormat.parse(recordTimestamp);
-
 
                             // Check if the record's timestamp is within the range
                             if (recordDate != null && !recordDate.before(startDate) && !recordDate.after(endDate)) {
@@ -785,15 +534,13 @@ public class SuburbLiveActivity extends AppCompatActivity {
                     }
                 }
             });
-
         } catch (ParseException e) {
             Log.e("AVLTree", "Error parsing start or end timestamp", e);
         }
-
-        // Return the filtered list
         return recordsInSelectedSuburb;
     }
 
+    // Duplicate of ProfileActivity's
     private HashMap<String, double[]> loadSuburbsFromJson() {
         HashMap<String, double[]> suburbMap = new HashMap<>();
         try {
@@ -845,7 +592,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
             updateProgressBar(no2ProgressBar, "NO2", components.getDouble("no2"));
 
             // Update semiCircleArcProgressBar and AQI status
-
             int aqi = (int) Math.round(main.getDouble("aqi"));
 
             // Ensure AQI is an integer
@@ -863,7 +609,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
                 resultTextViewLive.setTextColor(ContextCompat.getColor(this, R.color.red));  // Red
                 semiCircleArcProgressBar.setProgressBarColor(ContextCompat.getColor(this, R.color.red));  // Red
             }
-
         } catch (JSONException e) {
             resultTextViewLive.setText("Error parsing JSON response.");
         }
@@ -1001,7 +746,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
         lineChart.getAxisRight().setDrawGridLines(false);
     }
 
-
     // Unified method to update progress bars and their colors
     private void updateProgressBar(ProgressBar progressBar, String type, double value) {
         int colorResId;
@@ -1082,12 +826,6 @@ public class SuburbLiveActivity extends AppCompatActivity {
         progressBar.getProgressDrawable().setTint(ContextCompat.getColor(this, colorResId));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     protected void onPause() {
         super.onPause();
         stopShowDataRefresh();
@@ -1120,22 +858,17 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
 
         NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
-        resultDataset = nearestSuburbStrategy.getNearestSuburbList(currentLocation.getLatitude(), currentLocation.getLongitude(), newMap);
+        Location l = MainActivity.gpsService.getRecentLocation();
+        resultDataset = nearestSuburbStrategy.getNearestSuburbList(l.getLatitude(), l.getLongitude(), newMap);
 
         // Sort
-        Collections.sort(resultDataset, new Comparator<Map<String, String>>() {
-            @Override
-            public int compare(Map<String, String> o1, Map<String, String> o2) {
-                return Double.compare(Double.parseDouble(o1.get("distance")), Double.parseDouble(o2.get("distance")));
-            }
-        });
-
+        resultDataset.sort(Comparator.comparingDouble(o ->
+                Double.parseDouble(Objects.requireNonNull(o.get("distance")))));
         dataList.clear();
         getData(resultDataset);
         loadMoreSearchResultAdapter.notifyDataSetChanged();
 
         suburbSpinnerLive.dismissDropDown();
-
         ViewGroup.LayoutParams layoutParams = swipeRefreshLayout.getLayoutParams();
         if (resultDataset.isEmpty()) {
             Toast.makeText(SuburbLiveActivity.this, "No matching data was found in the search!", Toast.LENGTH_SHORT).show();
