@@ -4,7 +4,13 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This class is responsible for generating a list of mock JSON responses representing air quality data.
+ * used to simulate streaming of air quality data from an external source for testing purposes.
+ * The class generates 30 mock records, each containing air quality data for a location.
+ * method.
+ * @author u7902000 Gea Linggar
+ */
 public class MockJSONResponse {
     private List<String> mockResponse;
     private int index;
@@ -17,6 +23,11 @@ public class MockJSONResponse {
         populateMockData();
     }
 
+    /**
+     * Populates the list of mock JSON responses with 30 records of air quality data.
+     * Each record is serialized into JSON format using the {@code Gson} library.
+     * @author Gea Linggar
+     */
     private void populateMockData() {
         for(int i = 0; i < 30; i++){
             MockAirQualityRecord.AirQualityData.Components components = new MockAirQualityRecord.AirQualityData.Components(getRandomCO(), getRandomNo2(), getRandomO3(), getRandomSo2(), getRandomPm25(), getRandomPm10());
@@ -29,6 +40,13 @@ public class MockJSONResponse {
         }
     }
 
+    /**
+     * Retrieves the next mock JSON response from the list. The method cycles through
+     * the list of mock responses and resets to the first item after the last one is retrieved.
+     *
+     * @return the next mock JSON response as a {@code String}
+     * @author Gea Linggar
+     */
     public String getMockResponse(){
         String response = mockResponse.get(index);
         index++;
