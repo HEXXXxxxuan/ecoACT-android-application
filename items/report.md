@@ -167,60 +167,45 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 
 *I used the following data structures in my project:*
 
-1. LinkedList
+1. *ArrayList*
+   * *Objective: Used for managing a dynamic list of suburb cards and air quality records for the UI rendering.*
+   * *Code Locations: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/SuburbCardViewAdapter.java#L22) and [`AirQualityRecord`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/AirQualityRecord.java#L10); processed using `updateList()` method in both classes.*
+   * *Reasons:*
+      * *It is more efficient than LinkedList for accessing elements by index with a time complexity of O(1).*
+      * *We need frequent random access to the list items for rendering the UI, so direct indexing is necessary.*
+      * *The ability to dynamically resize the list is crucial as the number of suburbs and AQI records may vary over time.*
 
-Objective: Used for storing historical air quality data for the historical view feature.
+2. *HashMap*
+   * *Objective: Used for fast lookup of air quality data by suburb name to support real-time AQI monitoring.*
+   * *Code Locations: Defined in [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/SuburbLiveActivity.java#L50) and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/DataFetcher.java#L18); processed using `getSuburbAQI()` in both classes.*
+   * *Reasons:*
+      * *It is more efficient than using a list for key-value pair lookups with an average time complexity of O(1).*
+      * *We don't need ordered data for this feature because the suburbs are queried by name.*
+      * *HashMap ensures that data retrieval is fast enough for real-time monitoring without performance degradation.*
 
-Code Locations: Defined in DataFetcher class, methods fetchHistoricalData, storeData and SuburbHistoricalActivity class, lines 45-78; processed using addData and getHistory.
+3. *LinkedList*
+   * *Objective: Used for storing user search history in a dynamic manner.*
+   * *Code Locations: Defined in [`SearchRecord`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/SearchRecord.java#L30); processed using `addSearchTerm()` and `removeSearchTerm()` methods.*
+   * *Reasons:*
+      * *It is more efficient than ArrayList for insertion and deletion operations with a time complexity of O(1).*
+      * *We don't need to access items by index for the search history, as it operates as a sequential list.*
+      * *The data in the search history is constantly updated, so fast insertions and removals are crucial.*
 
-Reasons:
-It is more efficient than ArrayList for insertion with a time complexity of O(1).
-We don't need to access the item by index for the historical feature because data is processed sequentially for each time period.
-For historical air quality data, LinkedList is well-suited due to the sequential nature of the data flow and frequent additions.
+4. *PriorityQueue*
+   * *Objective: Used for prioritizing suburbs by proximity or air quality index for recommendation features.*
+   * *Code Locations: Defined in [`NearestSuburbStrategy`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/NearestSuburbStrategy.java#L12); processed using `getNearestSuburb()` method.*
+   * *Reasons:*
+      * *It automatically maintains sorted order with a time complexity of O(log n) for insertions and retrievals.*
+      * *We don't need to manually sort the list each time because PriorityQueue handles that internally.*
+      * *The queue prioritizes suburbs based on proximity or AQI, ensuring the most relevant suburb is retrieved first.*
 
-2. HashMap
-
-Objective: Used for storing the mapping between suburb names and corresponding air quality data for the live data feature.
-
-Code Locations: Defined in SuburbLiveActivity class, methods fetchLiveData, getSuburbData, lines 60-120; processed using put and get methods.
-
-Reasons:
-HashMap provides O(1) average-time complexity for lookups, making it ideal for fetching data quickly based on suburb names.
-We need to frequently access the air quality data for each suburb without iterating over all entries.
-The data structure ensures fast retrieval of data, which is crucial for displaying live air quality information to users in real time.
-
-3.  ArrayList
-
-Objective: Used for storing the list of favorite suburbs for the user's personalized view feature.
-
-Code Locations: Defined in MainActivity class, methods addFavorite, removeFavorite, lines 110-140; processed using add, remove, and get.
-
-Reasons:
-ArrayList provides O(1) access time for indexed data, allowing quick retrieval of favorite suburbs.
-We don't need to perform frequent insertions/deletions other than at the end, making ArrayList a suitable choice.
-For storing a small list of favorite suburbs that users can update, ArrayList provides simple and efficient management.
-
-4.AVL Tree
-Objective: Used for storing real-time air quality data to maintain balanced and efficient lookup and insertion operations.
-
-Code Locations: Defined in AVLTree.java class, methods insert, delete, balance, lines 10-150; processed using insertNode and rebalance.
-
-Reasons:
-AVL Tree maintains balance through rotations, ensuring O(log n) time complexity for insertions, deletions, and lookups.
-We need to maintain a sorted structure with fast access to the data without compromising efficiency during updates.
-For real-time air quality monitoring, AVL Tree helps in ensuring that newly incoming data is organized, allowing efficient retrieval and display of data.
-
-5.TreeMap
-
-Objective: Used for storing air quality data sorted by timestamp for the historical data viewing feature.
-
-Code Locations: Defined in SuburbHistoricalActivity class, methods storeHistoricalData, queryDateRange, lines 130-200; processed using put and subMap.
-
-Reasons:
-TreeMap maintains sorted keys, which makes it easy to handle date-based data for historical queries.
-We need to frequently access air quality data in a sorted order to facilitate date-range queries.
-It ensures that the data is always sorted by timestamp, making it easy to visualize historical trends in air quality.
-
+5. *AVL Tree*
+   * *Objective: Used for storing suburb data in a balanced manner to ensure efficient lookups, insertions, and deletions.*
+   * *Code Locations: Defined in [`AVLTree`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/src/main/java/com/go4/application/AVLTree.java#L15); processed using `insert()`, `delete()`, and `search()` methods.*
+   * *Reasons:*
+      * *It is more efficient than a standard binary search tree, with O(log n) time complexity for all operations.*
+      * *We need to maintain balanced performance as the dataset grows to avoid worst-case O(n) time complexity.*
+      * *AVL Tree ensures consistent performance for large datasets, which is crucial as the number of suburbs increases.*
 <hr>
 
 ### Design Patterns
