@@ -26,30 +26,16 @@ The key area(s) of responsibilities for each member
 
 | UID   |  Name  |                                                    Role |
 |:------|:------:|--------------------------------------------------------:|
-| [u7327620] | [Ryan Foote] |          [Firebase, Login, GPS, Code Refactors/Reviews] |
+| [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Integrations] |
 | [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
-| [u8003980] | [Cheng Leong Chan] |              [UI design in Figma, Search, Profile Page] |
-| [u8006862] | [Hexuan Wang] |   [UI design/layout, UI interface (UI Graphical), Logo, UML] |
-| [u7635535] | [Zechuan Liu] |               [Overall Functionality, Search Designate] |
+| [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search, Profile Page] |
+| [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo, UML] |
+| [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
 
 
 ## Summary of Individual Contributions
 
-### Template for Team Members
-1. **UID, NAME** I have contributed 20%: <br>
-   - **Outcome Impact (i.e. Location Services, Search-Designate)**
-      - Feature "Request Permissions" - class x: [gps.java](/App/app/src/main/java/com/go4/utils/GPSService.java)
-      - Design pattern - class y: [design](https://google.com)<br><br>
-
-  - **Code and App Design** 
-    - [What design patterns, data structures, did the involved member propose?]*
-    - [UI Design. Specify what design did the involved member propose? What tools were used for the design?]* <br><br>
-
-  - **Others**: (only if significant and significantly different from an "average contribution") 
-    - [Report Writing?] [Slides preparation?]*
-    - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
-
-2. **u8003980, Chan Cheng Leong** I have 20% contribution, as follows: <br>
+**u8003980, Chan Cheng Leong** I have 20% contribution, as follows:
 - **Code Contribution in the final App**
     - Feature Change Profile Picture in Profile Page - class ProfileActivity: [profileActivity.java](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
     - Feature Display Pinned Suburbs in Profile Page – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
@@ -57,52 +43,76 @@ The key area(s) of responsibilities for each member
     - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
     class Parser: [Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
     class Tokenizer: [Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
-    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java),
-    class SearchRecord: [SearchRecord.java](/App/app/src/main/java/com/go4/application/historical/SearchRecord.java)
+    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)
     - UI Profile Page - [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml)
     - UI Pinned Suburb Card - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
 
 - **Code and App Design**
     - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma with Hexuan.
 
-- **Others**: (only if significant and significantly different from an "average contribution")
-    - [Report Writing?] [Slides preparation?]*
-    - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
+***
 
-
-3. **u7635535, Zechuan Liu** I have 20% contribution, as follows: <br>
+**u7635535, Zechuan Liu** I have 20% contribution, as follows:
 - **Code Contribution in the final App**
     - Feature "selected nearest suburb" - class NearestSuburbStrategy: [NearestSuburbStrategy.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java)
     - Feature Display pinned Search result on live page – class SuburbLiveActivity:[SuburbLiveActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
     - Feature Search Designate by distances – class LoadMoreSearchResultAdapter: [LoadMoreSearchResultAdapter.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/adapter/LoadMoreSearchResultAdapter.java)
  class SearchResultEndlessRecyclerOnScrollListener: [SearchResultEndlessRecyclerOnScrollListener.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/listener/SearchResultEndlessRecyclerOnScrollListener.java),
-   
 
 - **Code and App Design**
     - Search: Designed how to meet the requirements for designate. 
-    - First version login: Designed the login page with out firebase.
+    - First version login: Designed the login page without firebase.
 
-- **Others**: (only if significant and significantly different from an "average contribution")
-    - [Report Writing?] [Slides preparation?]*
-    - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
+    ***
 
-4. **u8006862, Hexuan Wang** I have contributed 20%: <br>
+**u8006862, Hexuan Wang** I have contributed 20%:
    - **Code Contribution in the final App**
-      - Feature Data Graphical(air quality displays) in SuburbHistoricalActivity https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java and https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java and UI Layout in both activities
-      - Feature Navigation Bar for the app in Main Activity https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java and related XML.
-      - Feature SplashActivity  https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java and its UI.
-      - Feature UI Layout in landscape and portrait https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land
-
-      <br><br>
+      - Feature Data Graphical(air quality displays) in [SuburbHistoricalActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) [and](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java) UI Layout in both activities
+      - Feature Navigation Bar for the app in [Main Activity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)and related XML.
+      - Feature [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) and its UI.
+      - Feature [UI Layout in landscape and portrait](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land)
 
   - **Code and App Design** 
     - Design the logo and color/style used in app
     - Design the Figma with Chan
-    - Design/modify/create the layout in each XML to make the app have a consistent layout style(color/button/cardview etc.)<br><br>
+    - Design/modify/create the layout in each XML to make the app have a consistent layout style(color/button/cardview etc.)
 
-  - **Others**: (only if significant and significantly different from an "average contribution") 
-    - Create the UML<br><br>
+  - **Others**:
+    - Create the UML
 
+***
+
+**u7327620, Ryan Foote** I have contributed 20%:
+- **Code Contribution in the final App**
+   - [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) class
+   - Building on what Gea implemented; [checkPermissions flow](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java#L62)
+   - A few refactors; [notably](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/49/diffs#fc57be931eb08ba1143607ff8ef48225b5bb9f6f).
+- [MainActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)
+   - Integrated [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java) and [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+   - ActivityResultLauncher Implementation
+   - Notifications
+- [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java)
+   - [Further Refactors](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/f681406e2257af7d728bd7ad77d11ff672e60c3d)
+   - [Created](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7), [deprecated](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/6c7fd54462bd9ba938401ee06fa81d9f5bd4a80a) sorta [twice](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/8c6e62cd57a300effd4ff8229dc20db1f02fa187), [revived](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/edd9c3b7da70be004390b03db6e9e167d4dad676)
+   - ActivityResult contract allowing safe-usage
+   - Interactions with [firebaseAuth](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7#7bfdaf85de87d0757f3c20334e5b4d93a01f83cf_0_51)
+- [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+   - Implemented as bound service over background service after checkpoint 2 discussions
+   - Requests location updates...
+   - Integrated with notifications in mainActivity
+
+   - **Code and App Design** 
+      - Reviewed *requested* merge requests
+         - [Styling](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
+         - [Style bordering on Critique](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/58)
+         - [Reverting "Midnight Merges"](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/39/diffs)
+      - Location as a bound service
+      - ResultActivityApi usage
+
+- **Others**:
+   - The *working* [CI](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/.gitlab-ci.yml) (see reflection)
+   - The [firebase project](https://console.firebase.google.com/u/2/project/go4gp-s2/overview)
+   - 3/4 Meeting Minutes
 
 ## Application Description
 
@@ -313,36 +323,18 @@ Adaptability: By using a flexible, the system can handle different input sequenc
 
 Efficiency: Breaking data into tokens before parsing reduces complexity, leading to more efficient data handling. This design ensures that each step of data processing is straightforward and optimized.
 
-<hr>
-
-### Others
-
-*[What other design decisions have you made which you feel are relevant? Feel free to separate these into their own subheadings.]*
-
-
-<br>
-<hr>
-
 ## Implemented Features
-*[What features have you implemented? where, how, and why?]* <br>
-*List all features you have completed in their separate categories with their featureId. THe features must be one of the basic/custom features, or an approved feature from Voice Four Feature.*
-
 ### Basic Features
-1. [LogIn]. Description of the feature he app must support user login functionality. User sign-up is not required. (easy)
-Important: You must include the following two accounts for markers' access to your App:
-
+1. [LogIn]. The app must support user log-ins. User sign-up is not required. (easy)
 Username: comp2100@anu.edu.au Password: comp2100
-
 Username: comp6442@anu.edu.au Password: comp6442
   * **Code**: [`FirebaseLoginActivity.java, methods onCreate, signIn`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java), [`activity_firebase_login_ui.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml) <br>
    * **Description of feature**: This feature provides users with a secure way to log into the app using their email and password. Firebase Authentication is used to verify the credentials. Once successfully logged in, the user is redirected to the app's main functionality. Error messages are displayed in case of invalid credentials or network issues. Two predefined accounts (`comp2100@anu.edu.au` and `comp6442@anu.edu.au`) are provided for the markers to access the app. <br>
-   * **Description of your implementation**: The login functionality is implemented in `FirebaseLoginActivity`. In the `onCreate` method, Firebase Authentication is initialized (`mAuth = FirebaseAuth.getInstance()`), and the app checks if a user is already logged in via the `onStart` method. If a user is already authenticated, a `Toast` message is shown, and the user is redirected to the app's main flow. If not, the `signIn()` method is triggered when the user presses the login button (`bt_login`). The login form includes two `EditText` fields: `lg_username` for the email input and `lg_password` for the password, defined in the XML layout file [`activity_firebase_login_ui.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml). The `signIn()` method validates the input fields and uses Firebase's `signInWithEmailAndPassword` method to authenticate the user. If the login is successful, the user’s data is passed back using an `Intent`, and the activity finishes. If the login fails, a failure message is displayed using a `Toast` (`addOnFailureListener`) to inform the user. This ensures a smooth and user-friendly login experience, including proper error handling and input validation. <br>
+   * **Description of your implementation**: The login functionality is implemented in `FirebaseLoginActivity`. In the `onCreate` method, we retrieve the authorisation instance associated with the project(`mAuth = FirebaseAuth.getInstance()`), and checks for a cached user, before finally showing the result via a toast message. If no cached user exists, the layout instantiates and provides a form. The login form includes two `EditText` fields: `lg_username` for the email input and `lg_password` for the password, defined in the XML layout file [`activity_firebase_login_ui.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml). The `signIn()` method validates the input fields and uses Firebase's `signInWithEmailAndPassword` method to authenticate the user. If the login is successful, the resultant user data returns via an `Intent`. If the login fails, a failure message is displayed using a `Toast` (`addOnFailureListener`) to inform the user. This ensures a smooth and user-friendly login experience, including proper error handling and input validation. <br>
 
-2. [DataFiles]. Description he app must use a data set (which you may create) where each entry represents a meaningful piece of information relevant to the app. The data set must be represented and stored in a structured format as taught in the course. It must contain at least 2,500 valid instances. (easy)
-
-Important: You must include in your report the link to the data file(s) on your project's GitLab repository and/or the link to your Firebase repository. In the latter case, you must add comp21006442@gmail.com as an Editor in your Firebase repository and mention this in your report.
+2. [DataFiles]. The app must use a data set (which you may create) where each entry represents a meaningful piece of information relevant to the app. The data set must be represented and stored in a structured format as taught in the course. It must contain at least 2,500 valid instances. (easy)in your report.
    * Code to the Data File [`canberra_suburbs.json`](tFpOJ4pms32UhUzrfL4XFSK6), [`canberra_suburbs_coordinates.json`](SANICmkjDFxw6rcZdjZE65ur).
-   * Link to the Firebase repo: ...
+   * Link to the Firebase repo: https://console.firebase.google.com/u/2/project/go4gp-s2/overview
 
 3. [LoadShowData] The app must load and display data instances from the data set. Data must be retrieved from either a local file (e.g., JSON, XML) or Firebase. (easy)
    <br>
@@ -394,28 +386,21 @@ Feature Category: Data <br>
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
-     <br>
-
 4. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
-     <br>
-
 5. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
-     <br>
-
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L162-230): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-230
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
    * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
      The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
      The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
      The page also contains a LOGOUT button.
-     <br>
 
 Feature Category: UI Design and Testing <br>
 7. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
@@ -424,14 +409,14 @@ Feature Category: UI Design and Testing <br>
 
 Feature Cateory: User Interactivity <br>
 8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java), 
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
    [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java),
    [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml) 
    and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#232-451): 
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
-   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 232-451
+   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 224-365
    * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
    It also indicates whether the air quality in that suburb is "Good", "Moderate" or "Bad", based on the air quality index. 
    If it is "Good", the card will have a green background colour, and the image next to the text "Good" is a smiley face.
@@ -505,20 +490,13 @@ Feature Cateory: User Interactivity <br>
 
 *Here is an example:*
 
-1. *Bug 1: Timestamp Parsing Issue*
-   - *Description*: In the `SuburbLiveActivity` class, parsing timestamps can lead to a `ParseException` if the format is incorrect. This issue arises particularly during AVL tree traversal when attempting to filter air quality records based on a specific date range.
-   - *Code Location*: [`SuburbLiveActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
-   - *Potential Consequences*: Certain air quality records may be missed during data traversal, leading to data display inaccuracies or incomplete information. This could result in users receiving misleading air quality information.
+1. *Bug 1:*
+    - *A space bar (' ') in the sign in email will crash the application.*
+    - ...
 
-2. *Bug 2: Handling Null or Empty Data*
-   - *Description*: In the `SuburbLiveActivity` class, during the rendering process for air quality data, debug log messages ("Primary data is empty or null" or "Comparison data is empty or null") are triggered when data is null or empty. The application does not appropriately update the user interface to reflect this condition.
-   - *Code Location*: [`SuburbLiveActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
-   - *Potential Consequences*: The UI does not provide any indication to the user when data is unavailable, leading to confusion. Users might believe the app has encountered an error rather than simply displaying no data.
+2. *Bug 2:*
+3. ...
 
-3. *Bug 3: CSV Parsing Issues with Empty Files*
-   - *Description*: The `CSVParsingTest.java` indicates that the parser does not handle empty CSV files properly. If the CSV file being parsed is empty, the application may return a null list or fail to process the data correctly.
-   - *Code Location*: [`CSVParsingTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/CSVParsingTest.java)
-   - *Potential Consequences*: This can lead to application crashes or unhandled exceptions during initialization or data loading. It makes the application less robust, particularly when encountering edge cases such as missing or incorrectly formatted data.
 <br> <hr>
 
 
