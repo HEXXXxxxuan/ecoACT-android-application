@@ -10,13 +10,10 @@ import android.os.Looper;
 import android.Manifest;
 import android.util.Log;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -25,30 +22,26 @@ import com.go4.utils.DataFetcher;
 /**
  * Models the Splash Screen on app-startup.
  * <p>Fetches data using {@link DataFetcher}</p>
- * @author Shawn
- * @author Gea
- * @author Ryan
+ *
+ * @author Shawn, Gea, Ryan Foote
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
     private static final int GET_BACKGROUND_AFTER = 2000;
     private static final int START_ACTIVITY_AFTER = 1000;
-    private TextView statusText;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        statusText = findViewById(R.id.statusTextView);
-        progressBar =  findViewById(R.id.fetchingProgressBar);
-        progressBar.setMax(113);
+        ((ProgressBar) findViewById(R.id.fetchingProgressBar)).setMax(113);
         fetchData();
     }
 
     /**
      * <h1><strong>DOES NOT CHECK REQUIRED PERMISSIONS ARE GRANTED</strong></h1>
-     * Called to close {@link SplashActivity} and resume to next class ({@link MainActivity})</p>
+     * <p>Closes this {@link SplashActivity} and starts {@link MainActivity}.</p>
+     *
      * @author Ryan Foote
      */
     private void startNextActivity(){
@@ -58,13 +51,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     /**
-     * Calls {@link #startNextActivity()} upon finishing
+     * Calls {@link #startNextActivity()} upon finishing.
      * <p>Callback Logic implemented by {@link #onRequestPermissionsResult(int, String[], int[])}.</p>
      * <p>Requests location permissions and {@link Manifest.permission#ACCESS_BACKGROUND_LOCATION}
      * separately as per android docs</p>
      *
-     * @author Gea
-     * @author Ryan Foote
+     * @author Gea, Ryan Foote
      */
     private void checkPermissions(){
         ArrayList<String> permissions = new ArrayList<>();
@@ -94,7 +86,6 @@ public class SplashActivity extends AppCompatActivity {
             Log.d("Debug", "Requesting: " + Arrays.toString(req));
             ActivityCompat.requestPermissions(this, req, START_ACTIVITY_AFTER);
         }
-        Log.d("Permissions", "Checking for permissions before starting the next activity");
     }
 
     /**
@@ -142,18 +133,6 @@ public class SplashActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
-
-        statusText.setText("Hang tight! We're collecting some top-secret air quality info.");
-
-        dataFetcher.automaticAddRecords(this, "historical_data.csv", progressBar, () -> {
-
-            statusText.setText("Data fetched. Phew!");
-
-            // Delay to let user see final status before permission check
-            mainHandler.postDelayed(() -> {
-                Log.d("DelayedExecution", "Delay finished, calling checkPermissions()...");
-                checkPermissions();
-            }, 1000);
-        });
+        dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
     }
 }
