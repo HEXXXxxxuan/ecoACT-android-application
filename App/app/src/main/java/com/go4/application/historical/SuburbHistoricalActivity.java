@@ -228,6 +228,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     /**
      * Called to parse the user's search bar input using {@link Tokenizer} and {{@link Parser}}
+     *
      * @author u8003980 Chan Cheng Leong
      */
     private void parseSearchBarInput() {

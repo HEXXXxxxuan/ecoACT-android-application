@@ -7,16 +7,11 @@ import android.widget.Toast;
 import com.go4.application.historical.SearchRecord;
 
 /**
+ * This class is used to parser search bar input in the Suburb Historical Data Page.
+ *
  * @author u8003980 Chan Cheng Leong
  */
 public class Parser {
-    public static class IllegalProductionException extends IllegalArgumentException {
-        public IllegalProductionException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    // The tokenizer (class field) this parser will use.
     Tokenizer tokenizer;
     SearchRecord record;
     Context context;
@@ -27,6 +22,11 @@ public class Parser {
         this.context = context;
     }
 
+    /**
+     * This method is used to return data stored in record with type {@link SearchRecord}.
+     *
+     * @return      A list of strings from the user's input, including suburb, date and time.
+     */
     public String[] getData() {
         return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime()};
     }
@@ -75,20 +75,10 @@ public class Parser {
                 }
             }
         }
-//        else if (date.getType() == Token.Type.YEARMONTHDATE) {
-//            Token yearMonthDate = tokenizer.current();
-//            tokenizer.next();
-//            this.record.setSelectedDate(yearMonthDate.getToken());
-//        }
-//        else if (date.getType() == Token.Type.YEARMONTHDATE || date.getType() == Token.Type.YEARMONTHDATETIME) {
-//            tokenizer.next();
-//        } else {
-//            throw new IllegalProductionException("Expected a date");
-//        }
     }
 
     public void parseTime() {
-        // Parse the hour token
+        // Parse the time token
         Token time = tokenizer.current();
         tokenizer.next();
         record.setSelectedTime(time.getToken());

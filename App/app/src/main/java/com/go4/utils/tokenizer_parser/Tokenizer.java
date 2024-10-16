@@ -10,21 +10,21 @@ import java.util.regex.Pattern;
  * @author u8003980 Chan Cheng Leong
  */
 public class Tokenizer {
-    private String buffer;          // String to be transformed into tokens each time next() is called.
-    private Token currentToken;     // The current token. The next token is extracted when next() is called.
+    private String buffer;
+    private Token currentToken;
     private List<String> suburbs;
 
     public Tokenizer(String text, List<String> suburbs) {
-        this.buffer = text.toLowerCase();          // save input text (string)
+        this.buffer = text.toLowerCase();
         this.suburbs = suburbs;
-        next();                 // extracts the first token.
+        next();
     }
 
     public void next() {
-        buffer = buffer.trim();     // remove whitespace
+        buffer = buffer.trim();
 
         if (buffer.isEmpty()) {
-            currentToken = null;    // if there's no string left, set currentToken null and return
+            currentToken = null;
             return;
         }
 
