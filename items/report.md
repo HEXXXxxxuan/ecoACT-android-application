@@ -410,7 +410,7 @@ Feature Category: Data <br>
 
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L162-230): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L162-230): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-230
    * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
      The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
      The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
@@ -431,7 +431,7 @@ Feature Cateory: User Interactivity <br>
    and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
    * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#232-451): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
-   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 224-365
+   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 232-451
    * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
    It also indicates whether the air quality in that suburb is "Good", "Moderate" or "Bad", based on the air quality index. 
    If it is "Good", the card will have a green background colour, and the image next to the text "Good" is a smiley face.
