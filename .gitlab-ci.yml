@@ -1,19 +1,71 @@
-image: cimg/android:2024.09.1
-
 stages:
+  - build
   - test
+  - apk
 
-test-job:
-  stage: test
+variables:
+  PACKAGE_VERSION: "0.42"
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/KaoMo/${PACKAGE_VERSION}"
+
+build-job:
+  stage: build
+  image: cimg/android:2024.09.1
   tags:
     - comp2100
   script:
-    - echo "Running gradle test"
+    - echo "Assembling project"
     - cd App
+    - ./gradlew --build-cache assemble
+    - mkdir apk
+    - ls -a 
+    - cp ./app/build/outputs/apk/release/app-release-unsigned.apk apk/ourApk.apk
+    - cp ./app/build/outputs/apk/release/output-metadata.json apk/metadata.json
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - app/build
+      - .gradle
+      - apk
+
+test-job:
+  stage: test
+  image: cimg/android:2024.09.1
+  tags:
+    - comp2100
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - app/build
+      - .gradle
+  script:
+    - echo "Running gradle test"
     - ./gradlew test
   artifacts:
     when: always
     reports:
       junit: App/app/build/test-results/**/TEST-*.xml
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+apk-release:
+  stage: apk
+  image: curlimages/curl:latest
+  tags:
+    - comp2100
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - apk
+  script:
+    - echo "Pushing latest APK"
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
