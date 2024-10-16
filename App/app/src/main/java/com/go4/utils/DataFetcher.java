@@ -97,11 +97,14 @@ public class DataFetcher {
                         completedLocations[0]++;
 
                         //update loading bar
-                        mainHandler.post(() -> fetchingBar.setProgress(completedLocations[0]));
+                        mainHandler.post(() -> {
+                            int progress = (int) (((double) completedLocations[0] / totalLocations) * 113);  // Scale to max 113
+                            fetchingBar.setProgress(progress);
+                        });
 
                         if (completedLocations[0] == totalLocations) {
                             // runnable if ALL suburb has completely processed
-                            onComplete.run();
+                            mainHandler.post(onComplete);
                         }
                     }
                 });
@@ -213,7 +216,6 @@ public class DataFetcher {
                             }
                             Log.i("AirQualityAPI", "Data appended to internal storage file: " + localFile.getPath());
 
-                            // Call the callback after completion
                             if (onComplete != null) {
                                 // Runnable after each suburb is processed
                                 onComplete.run();
@@ -222,7 +224,7 @@ public class DataFetcher {
                         } catch (IOException e) {
                             Log.e("AirQualityAPI", "Error writing to CSV: ", e);
                         }
-                    }  // End of synchronized block
+                    }
                 } else {
                     Log.e("AirQualityAPI", "GET request failed: " + responseCode);
                 }
