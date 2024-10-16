@@ -807,10 +807,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             resultTextViewLive.setText("Error parsing JSON response.");
         }
     }
-    /**
-     * This method determines the state and colors for the progress bars
-     * @author Shawn(Hexuan)
-     */
+
 
     /**
      * Plots the primary air quality data on the line chart.
