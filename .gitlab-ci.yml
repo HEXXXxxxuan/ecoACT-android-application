@@ -12,7 +12,6 @@ build-job:
   image: cimg/android:2024.09.1
   tags:
     - comp2100
-  when: always
   script:
     - echo "Assembling project"
     - cd App
@@ -28,6 +27,9 @@ build-job:
       - App/app/build/*
       - App/.gradle/*
       - App/apk/*
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   
 
 test-job:
