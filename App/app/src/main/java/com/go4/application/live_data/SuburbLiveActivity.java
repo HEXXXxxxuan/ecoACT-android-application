@@ -987,7 +987,11 @@ public class SuburbLiveActivity extends AppCompatActivity {
         lineChart.getAxisLeft().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
     }
-
+    /**
+     * Define the degree of air quality progress bars and their colors
+     *
+     * @author Hexuan(Shawn)
+     */
     // Unified method to update progress bars and their colors
     private void updateProgressBar(ProgressBar progressBar, String type, double value) {
         int colorResId;
