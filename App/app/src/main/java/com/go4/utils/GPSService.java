@@ -22,6 +22,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class GPSService extends Service {
     private final IBinder binder = new LocalBinder();
@@ -33,9 +34,9 @@ public class GPSService extends Service {
     private NotificationManager notificationManager;
 
     public class LocalBinder extends Binder {
-       public GPSService getService(){
-           return GPSService.this;
-       }
+        public GPSService getService(){
+            return GPSService.this;
+        }
     }
 
     @Override
@@ -50,37 +51,39 @@ public class GPSService extends Service {
         locationClient = LocationServices.getFusedLocationProviderClient(this);
         request = createLocationRequest();
         notificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+
         locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(LocationResult locationResult){
+            public void onLocationResult(LocationResult locationResult) {
                 Log.d("Debugging", "Location received");
-                if(locationResult.getLastLocation()==null){
-                    locationNotification("You don't exist");
+                if (locationResult == null || locationResult.getLastLocation() == null) {
+                    locationNotification("Location not available");
+                    return;
                 }
-                else {
-                    latestLocation = locationResult.getLastLocation();
-                    if(latestLocation == previousLocation){
-                        CurrentLocationRequest req = new CurrentLocationRequest.Builder().build();
-                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Log.d("GPS", "no perms for currentLocationRequest");
-                            return;
-                        }
-                        latestLocation = locationClient.getCurrentLocation(req, new CancellationTokenSource().getToken()).getResult();
-                    }
+
+                latestLocation = locationResult.getLastLocation();
+                Log.d("Debugging", "Lat: " + latestLocation.getLatitude() + ", Long: " + latestLocation.getLongitude());
+
+
+                if (previousLocation != null && latestLocation.distanceTo(previousLocation) < 1) {
+                    Log.d("Debugging", "Location unchanged, not updating");
+                } else {
                     previousLocation = latestLocation;
-                    locationNotification("Lat: " + latestLocation.getLatitude() + ", Long:" + latestLocation.getLongitude());
+                    locationNotification("Updated Location: Lat = " + latestLocation.getLatitude() + ", Long = " + latestLocation.getLongitude());
                 }
             }
         };
+
         startLocationUpdates();
     }
 
     protected LocationRequest createLocationRequest() {
         return new LocationRequest.Builder(
-                LocationRequest.PRIORITY_HIGH_ACCURACY,5000).build();
+                LocationRequest.PRIORITY_HIGH_ACCURACY, 5000)
+                .build();
     }
 
-    private void locationNotification(String text){
+    private void locationNotification(String text) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Location Results")
                 .setContentText(text)
@@ -92,29 +95,29 @@ public class GPSService extends Service {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         locationClient.removeLocationUpdates(locationCallback);
         super.onDestroy();
     }
 
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("Debugging", "Not enough perms");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Debugging", "Not enough permissions, requesting");
             return;
         }
         locationClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
     }
 
-    public Location getRecentLocation(){
-        if(latestLocation==null){
-            Log.d("Debugging", "No stored latestLocation, giving fake (Ainslie)");
+    public Location getRecentLocation() {
+        if (latestLocation == null) {
+            Log.d("Debugging", "No stored latestLocation, giving default location (Ainslie)");
             Location location = new Location("");
             location.setLatitude(-35.27944d);
             location.setLongitude(149.11944d);
-            Log.d("Debugging", "Location: " + location);
             previousLocation = location;
+            return location;
         }
         return latestLocation;
     }
-
 }

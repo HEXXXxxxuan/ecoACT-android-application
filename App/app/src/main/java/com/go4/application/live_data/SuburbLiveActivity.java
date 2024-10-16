@@ -197,6 +197,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
             // Fetch data in a background thread
             executor.execute(this::showDataAndRefresh);
+            suburbSpinnerLive.setText(data.get("title"));
             setTitle("Suburb: " + data.get("title"));
         });
 
@@ -450,7 +451,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     private void selectSuburbSpinner() {
         // Create a list of suburbs
         List<String> suburbsList = new ArrayList<>();
-        suburbsList.addAll(suburbMap.keySet());
+        //suburbsList.addAll(suburbMap.keySet());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
         suburbSpinnerLive.setAdapter(adapter);
         suburbSpinnerLive.setThreshold(1);
@@ -491,8 +492,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
                 String query = suburbSpinnerLive.getText().toString();
                 search(query);
 
-                // English?
-                // 如果按下的是回车键，并且你想要关闭输入法键盘，可以调用如下代码：
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
