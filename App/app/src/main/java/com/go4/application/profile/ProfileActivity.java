@@ -212,6 +212,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method writes and stores the profile picture in internal storage.
+     *
+     * <p>The image of the profile picture is stored in the path returned from the function getFilePath()</p>
+     */
     public void writeProfilePicture(Bitmap bitmapImage) {
         String filePath = getFilePath();
         File file = new File(filePath);

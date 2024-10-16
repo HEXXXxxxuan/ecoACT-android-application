@@ -57,7 +57,8 @@ The key area(s) of responsibilities for each member
     - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
     class Parser: [Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
     class Tokenizer: [Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
-    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)
+    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java),
+    class SearchRecord: [SearchRecord.java](/App/app/src/main/java/com/go4/application/historical/SearchRecord.java)
     - UI Profile Page - [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml)
     - UI Pinned Suburb Card - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
 
@@ -402,8 +403,8 @@ Feature Category: Data <br>
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L162-230): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
    * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
      The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
      The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
@@ -416,12 +417,12 @@ Feature Category: UI Design and Testing <br>
 
 Feature Cateory: User Interactivity <br>
 8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
+   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
    [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java),
    [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml) 
    and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
+   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#232-451): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
    updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 224-365
    * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
