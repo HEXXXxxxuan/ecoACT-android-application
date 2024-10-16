@@ -4,12 +4,14 @@ import android.util.Log;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * This class provides a thread-safe singleton instance of an {@link ExecutorService}.
  * It is used to ensure that only one instance of the {@code ExecutorService} is created and shared across the
  * entire application
- * @author u7902000 Gea Linggar
+ * Use core calculator to allocate core to enhance performance and reduce the reaction time
+ * @author u7902000 Gea Linggar, u8006862 Hexuan(Shawn)
  */
 public class ExecutorServiceSingleton {
     private static ExecutorService instance;
@@ -18,16 +20,17 @@ public class ExecutorServiceSingleton {
     }
 
     public static ExecutorService getInstance() {
-        if (instance == null) {
-            synchronized (ExecutorServiceSingleton.class) {
-                if (instance == null) {
-                    instance = Executors.newFixedThreadPool(6);
-                }
+        synchronized (ExecutorServiceSingleton.class) {
+            if (instance == null || ((ThreadPoolExecutor) instance).isShutdown() || ((ThreadPoolExecutor) instance).isTerminated()) {
+                int numCores = Runtime.getRuntime().availableProcessors();
+                int numThreads = numCores * 2; //calculate the runtime core
+                instance = Executors.newFixedThreadPool(numThreads);
+
             }
-        } else {
-            Log.d("Executor Singleton", "Instance has already created");
+
+
+            return instance;
         }
-        return instance;
     }
 
     public static void shutdown() {
