@@ -497,13 +497,20 @@ Feature Cateory: User Interactivity <br>
 
 *Here is an example:*
 
-1. *Bug 1:*
-    - *A space bar (' ') in the sign in email will crash the application.*
-    - ...
+1. *Bug 1: Timestamp Parsing Issue*
+   - *Description*: In the `SuburbLiveActivity` class, parsing timestamps can lead to a `ParseException` if the format is incorrect. This issue arises particularly during AVL tree traversal when attempting to filter air quality records based on a specific date range.
+   - *Code Location*: [`SuburbLiveActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
+   - *Potential Consequences*: Certain air quality records may be missed during data traversal, leading to data display inaccuracies or incomplete information. This could result in users receiving misleading air quality information.
 
-2. *Bug 2:*
-3. ...
+2. *Bug 2: Handling Null or Empty Data*
+   - *Description*: In the `SuburbLiveActivity` class, during the rendering process for air quality data, debug log messages ("Primary data is empty or null" or "Comparison data is empty or null") are triggered when data is null or empty. The application does not appropriately update the user interface to reflect this condition.
+   - *Code Location*: [`SuburbLiveActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
+   - *Potential Consequences*: The UI does not provide any indication to the user when data is unavailable, leading to confusion. Users might believe the app has encountered an error rather than simply displaying no data.
 
+3. *Bug 3: CSV Parsing Issues with Empty Files*
+   - *Description*: The `CSVParsingTest.java` indicates that the parser does not handle empty CSV files properly. If the CSV file being parsed is empty, the application may return a null list or fail to process the data correctly.
+   - *Code Location*: [`CSVParsingTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/CSVParsingTest.java)
+   - *Potential Consequences*: This can lead to application crashes or unhandled exceptions during initialization or data loading. It makes the application less robust, particularly when encountering edge cases such as missing or incorrectly formatted data.
 <br> <hr>
 
 
