@@ -22,6 +22,7 @@ import com.go4.application.R;
 import com.go4.application.SplashActivity;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
+import com.go4.utils.SuburbJsonUtils;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
 import com.go4.utils.tokenizer_parser.Parser;
@@ -179,34 +180,18 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads a list of suburbs from a JSON file located in the application's assets folder.
+     * Loads a list of suburbs from the "canberra_suburbs.json" file in the assets folder.
      * <p>
-     * Each suburb name is extracted from the JSON array and added to the list.
-     * If an error occurs during file reading or JSON parsing, a {@link RuntimeException} is thrown.
+     * This method delegates the actual loading process to the {@link SuburbJsonUtils}
+     * which handles the JSON file parsing and returns a list of suburb names.
      * </p>
      *
-     * @return a list of suburb names parsed from the JSON file "canberra_suburbs.json"
+     * @return a list of suburb names parsed from the "canberra_suburbs.json" file.
+     * @throws RuntimeException if there is an error loading or parsing the JSON file.
      * @author u7902000 Gea Linggar
      */
     private List<String> loadSuburbsFromJson() {
-        List<String> suburbs = new ArrayList<>();
-        try {
-            InputStream is = getAssets().open("canberra_suburbs.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-
-            // Parse JSON array
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                suburbs.add(jsonArray.getString(i));
-            }
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
-        return suburbs;
+        return SuburbJsonUtils.loadSuburbsFromJson(this, "canberra_suburbs.json");
     }
 
     /**

@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createNotificationChannel();
-        BottomNavigationView nav = findViewById(R.id.bottom_navigation);
-        nav.setOnItemSelectedListener(item -> {
+        ((BottomNavigationView) findViewById(R.id.bottom_navigation)).setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_profile) {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));

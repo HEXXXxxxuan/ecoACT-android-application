@@ -62,9 +62,9 @@ apk-release:
   script:
     - echo "Pushing latest APK"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${CI_COMMMIT_SHA}"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${CI_COMMIT_SHA}"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 

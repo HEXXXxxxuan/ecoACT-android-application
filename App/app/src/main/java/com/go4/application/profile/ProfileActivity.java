@@ -34,6 +34,7 @@ import com.go4.application.FirebaseLoginActivity;
 import com.go4.application.R;
 import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.model.AirQualityRecord;
+import com.go4.utils.SuburbJsonUtils;
 import com.go4.utils.tree.AVLTree;
 import com.go4.utils.CsvParser;
 
@@ -377,25 +378,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private List<String> loadSuburbsFromJson(){
-        List<String> suburbs = new ArrayList<>();
-        try {
-            InputStream is = getAssets().open("canberra_suburbs.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-
-            // Parse JSON array
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                suburbs.add(jsonArray.getString(i));
-            }
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        return suburbs;
-
+        return SuburbJsonUtils.loadSuburbsFromJson(this, "canberra_suburbs.json");
     }
 }
