@@ -78,6 +78,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
     private TextView aqiStatusTextView;
 
+    private String email;
+
     private void initializeViews() {
         suburbSpinner = findViewById(R.id.suburbSpinner);
         hourSpinner = findViewById(R.id.hourSpinner);
@@ -105,6 +107,10 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        email = intent.getStringExtra("displayName");
+
         setContentView(R.layout.suburb_historical);
 
         initializeViews();
@@ -134,8 +140,9 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         });
 
         liveDataButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
-            startActivity(intent);
+            Intent suburbLiveIntent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
+            suburbLiveIntent.putExtra("displayName", email);
+            startActivity(suburbLiveIntent);
         });
 
         // Parse CSV and insert data into AVL tree
