@@ -19,7 +19,7 @@ build-job:
     - ./gradlew --build-cache assemble
     - cp ./app/build/outputs/apk/release/app-release-unsigned.apk ./apk/ourApk.apk
     - cp ./app/build/outputs/apk/release/output-metadata.json ./apk/metadata.json
-    - ls -T
+    - ls -a
   cache:
     - key: "$CI_COMMIT_SHA"
     - policy: push
@@ -47,7 +47,7 @@ test-job:
     - echo "Running gradle test"
     - cd App
     - ./gradlew test
-    - ls -T
+    - ls -a
   artifacts:
     when: always
     reports:
@@ -67,7 +67,7 @@ apk-release:
       - App/apk
   script:
     - echo "Pushing latest APK"
-    - ls -T
+    - ls -a
     - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
     - |
