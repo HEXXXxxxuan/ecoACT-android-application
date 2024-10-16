@@ -12,6 +12,7 @@ build-job:
   image: cimg/android:2024.09.1
   tags:
     - comp2100
+  when: always
   script:
     - echo "Assembling project"
     - cd App
@@ -21,12 +22,13 @@ build-job:
     - cp ./app/build/outputs/apk/release/app-release-unsigned.apk apk/ourApk.apk
     - cp ./app/build/outputs/apk/release/output-metadata.json apk/metadata.json
   cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - App/app/build
-      - App/.gradle
-      - App/apk
+    - key: "$CI_COMMIT_SHA"
+    - policy: push
+    - paths:
+      - App/app/build/*
+      - App/.gradle/*
+      - App/apk/*
+  
 
 test-job:
   stage: test
@@ -34,9 +36,9 @@ test-job:
   tags:
     - comp2100
   cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
+    - key: "$CI_COMMIT_SHA"
+    - policy: pull
+    - paths:
       - App/app/build
       - App/.gradle
   script:
@@ -56,16 +58,16 @@ apk-release:
   tags:
     - comp2100
   cache:
-    key: "$CI_COMMIT_REF_NAME"
+    key: "$CI_COMMIT_SHA"
     policy: pull
     paths:
       - App/apk
   script:
     - echo "Pushing latest APK"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${CI_COMMMIT_SHA}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${CI_COMMIT_SHA}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
