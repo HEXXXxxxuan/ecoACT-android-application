@@ -88,16 +88,16 @@ For example, if you live in the Bruce area and want to know whether it is suitab
 
 Screenshots:
 
-![Suburb Comparison Graph](./path-to-your-image-1.png)
+![Suburb Comparison Graph](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/items/media/_examples/comparable%20suburb.png)
 *Figure 1: Comparison of air quality between two suburbs.*
 
-![Regional Search](./path-to-your-image-2.jpg)
+![Regional Search](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/items/media/_examples/live.png)
 *Figure 2: The app's regional search function allows users to quickly search for different suburbs.*
 
-![Air Quality Monitoring](./path-to-your-image-3.png)
+![Air Quality Monitoring](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/items/media/_examples/historical.png)
 *Figure 3: Real-time air quality monitoring with detailed pollutant data.*
 
-![User Profile and Pinned Suburbs](./path-to-your-image-4.png)
+![User Profile and Pinned Suburbs](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/items/media/_examples/profile.png)
 *Figure 4: User profile section and personalized pinned suburbs feature.*
 
 The "EcoACT" app empowers Canberra residents to stay informed about the air quality in their environment and make decisions that positively impact their health and well-being.
