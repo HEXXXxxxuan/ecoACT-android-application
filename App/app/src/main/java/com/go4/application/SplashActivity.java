@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.go4.utils.DataFetcher;
+import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 
 /**
  * Models the Splash Screen on app-startup.
@@ -130,7 +131,7 @@ public class SplashActivity extends AppCompatActivity {
      * @author Gea
      */
     private void fetchData() {
-        ExecutorService executorService = Executors.newFixedThreadPool(6);
+        ExecutorService executorService = ExecutorServiceSingleton.getInstance();
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
         dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
