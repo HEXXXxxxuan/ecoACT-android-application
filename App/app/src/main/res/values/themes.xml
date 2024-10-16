@@ -3,4 +3,17 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!--
+    This XML file defines a custom theme for the application, based on the AppCompat theme without an action bar.
+
+    Key elements:
+    1. Theme.AppCompat.NoActionBar: A custom theme that removes the action bar.
+    2. Parent theme: Inherits from Theme.AppCompat.Light.NoActionBar to ensure a light background without the action bar.
+    3. windowActionBar: Set to false to disable the action bar.
+    4. windowNoTitle: Set to true to remove the window title.
+
+    This theme can be applied to activities that do not require a default action bar or title.
+
+    @author Shawn(Hexuan)
+-->
 </resources>

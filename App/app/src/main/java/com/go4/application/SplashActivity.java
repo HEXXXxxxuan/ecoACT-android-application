@@ -10,10 +10,10 @@ import android.os.Looper;
 import android.Manifest;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,7 +24,7 @@ import com.go4.utils.design_pattern.ExecutorServiceSingleton;
  * Models the Splash Screen on app-startup.
  * <p>Fetches data using {@link DataFetcher}</p>
  *
- * @author Shawn, Gea, Ryan Foote
+ * @author Shawn(Hexuan), Gea, Ryan Foote
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -133,7 +133,18 @@ public class SplashActivity extends AppCompatActivity {
     private void fetchData() {
         ExecutorService executorService = ExecutorServiceSingleton.getInstance();
         Handler mainHandler = new Handler(Looper.getMainLooper());
+        TextView statusText = findViewById(R.id.statusTextView);
+        ProgressBar progressBar = findViewById(R.id.fetchingProgressBar);
+
+        // Provides text updates and loading bar whilst fetching data.
+        statusText.setText("Hang tight! We're collecting info from the OpenWeather API.");
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
-        dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
+        dataFetcher.automaticAddRecords(this, "historical_data.csv", progressBar, () -> {
+            statusText.setText("Data fetched. Phew!");
+            mainHandler.postDelayed(() -> {
+                Log.d("DelayedExecution", "Delay finished, calling checkPermissions()...");
+                checkPermissions();
+            }, 1000);
+        });
     }
 }

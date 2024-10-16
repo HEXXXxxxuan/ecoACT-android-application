@@ -23,6 +23,8 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"/> <!-- Apply NoActionBar theme -->
 
+
+
         <activity
             android:name=".SplashActivity"
             android:exported="true"

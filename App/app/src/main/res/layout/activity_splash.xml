@@ -6,6 +6,20 @@
     android:visibility="visible"
     tools:context=".SplashActivity">
 
+    <!--
+    This XML layout defines the splash screen for the application using ConstraintLayout.
+    The layout includes an ImageView for the app logo, a horizontal ProgressBar to indicate loading,
+    and two TextViews to show the status and credits.
+
+    Key components:
+    1. ImageView: Displays the app logo centered on the screen.
+    2. ProgressBar: A horizontal progress bar placed below the logo to show progress during loading.
+    3. StatusTextView: Displays a message indicating the current loading status.
+    4. CreditsTextView: Displays credits or additional information below the status.
+
+    @author Shawn(Hexuan)
+-->
+
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="wrap_content"

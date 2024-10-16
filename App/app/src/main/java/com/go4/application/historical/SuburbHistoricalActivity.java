@@ -60,7 +60,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  * </p>
  *
  *
- * @author u7902000 Gea Linggar, u8003980 Chan Cheng Leong, Shawn
+ * @author u7902000 Gea Linggar, u8003980 Chan Cheng Leong, u8006862 Hexuan(Shawn)
  */
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
@@ -77,6 +77,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private SemiCircleArcProgressBar semiCircleArcProgressBar;
     private ProgressBar pm25ProgressBar, pm10ProgressBar, o3ProgressBar, so2ProgressBar, coProgressBar, no2ProgressBar;
     private TextView aqiStatusTextView;
+    private TextView pm25TextView, pm10TextView, o3TextView, so2TextView, coTextView, no2TextView;
 
     private String email;
 
@@ -102,6 +103,12 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         pm25ProgressBar.setMax(20);
         no2ProgressBar.setMax(5);
         so2ProgressBar.setMax(10);
+        pm25TextView = findViewById(R.id.pm25TextView);
+        pm10TextView = findViewById(R.id.pm10TextView);
+        o3TextView = findViewById(R.id.o3TextView);
+        so2TextView = findViewById(R.id.so2TextView);
+        coTextView = findViewById(R.id.coTextView);
+        no2TextView = findViewById(R.id.no2TextView);
     }
 
     @Override
@@ -280,7 +287,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      * This method retrieves the user-selected date, suburb, and hour from the UI, formats the date and time,
      * and searches for a corresponding record in the {@code recordTreeLocationAndDateKey} AVL tree.
      * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars </p>
-     * @author u7902000 Gea Linggar, shawn
+     * @author Gea,(Hexuan)Shawn
      */
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
@@ -319,6 +326,13 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             updateProgressBar(coProgressBar, "CO", record.getCo());
             updateProgressBar(no2ProgressBar, "NO2", record.getNo2());
 
+            pm25TextView.setText(" " + record.getPm2_5());
+            pm10TextView.setText(" " + record.getPm10());
+            o3TextView.setText(" " + record.getO3());
+            so2TextView.setText(" " + record.getSo2());
+            coTextView.setText(" " + record.getCo());
+            no2TextView.setText(" " + record.getNo2());
+
             // Update semiCircleArcProgressBar and AQI status
 
             int aqi = (int) Math.round(record.getAqi());
@@ -342,7 +356,10 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
             Toast.makeText(this, "No matching records.", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * This method retrieves the progress bar level and determine their color
+     * @author u8006862 (Hexuan)Shawn
+     */
     // Unified method to update progress bars and their colors
     private void updateProgressBar(ProgressBar progressBar, String type, double value) {
         int colorResId;

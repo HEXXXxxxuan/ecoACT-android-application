@@ -9,6 +9,19 @@
     android:background="@color/gray_background"
     tools:context="com.go4.application.profile.ProfileActivity">
 
+    <!--
+    This XML layout defines the Profile Activity screen of the application, using ConstraintLayout
+    to arrange the components. The layout includes two main CardViews side by side:
+
+    1. The left CardView displays the user's profile information with a profile picture, name,
+       and a logout button.
+    2. The right CardView displays pinned suburbs with options to add new suburbs and a list of pinned items.
+
+    At the bottom, a custom bottom navigation bar allows navigation between the Profile and Suburb Live sections.
+
+    @author Shawn(Hexuan)
+-->
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_upper"
         android:layout_width="0dp"

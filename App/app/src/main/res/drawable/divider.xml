@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This XML defines a shape with a fixed height of 8dp and a solid white color (#ffffff).
+    It can be used as a background or divider in layouts.
+
+    @author Shawn(Hexuan)
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
     <size android:height="8dp" />
-    <solid android:color="#ffffff"/>
+    <solid android:color="@color/primary_ColorW"/>
 </shape>

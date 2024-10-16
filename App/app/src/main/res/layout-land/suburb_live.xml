@@ -9,6 +9,17 @@
     android:background="@color/gray_background"
     tools:context=".live_data.SuburbLiveActivity">
 
+    <!--
+    This XML layout defines the Suburb Live Activity screen using a ConstraintLayout with three main CardViews side by side:
+    1. Left CardView: Provides an AutoCompleteTextView for searching suburbs and a RecyclerView for displaying data with swipe-to-refresh functionality.
+    2. Middle CardView: Displays the AQI (Air Quality Index) using a semi-circle progress bar along with pollutant information (PM2.5, PM10, O3, SO2, CO, NO2) in a grid layout.
+    3. Right CardView: Contains a line chart for historical data and a comparison feature with a Spinner for selecting intervals and an AutoCompleteTextView for comparing suburbs.
+    semi one imported from link "https://github.com/hadibtf/SemiCircleArcProgressBar"
+    At the bottom, a custom bottom navigation bar allows navigation between the Profile and Suburb Live sections.
+
+    @author Shawn(Hexuan)
+-->
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view1"
