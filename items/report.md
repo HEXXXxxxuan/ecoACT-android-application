@@ -155,8 +155,8 @@ Mr. Zhang is a running enthusiast. He likes to exercise along the running route 
 
 ### Application UML
 
-![ClassDiagramExample](media/_examples/ClassDiagramExample.png) <br>
-*[Replace the above with a class diagram. You can look at how we have linked an image here as an example of how you can do it too.]*
+![UML diagram](media/_examples/UML.png) <br>
+
 
 <hr>
 
