@@ -449,15 +449,42 @@ Feature Cateory: User Interactivity <br>
 
 *Here is an example:*
 
-1. Tests for Search
-   - Code: [TokenizerTest Class, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java) for the [Tokenizer Class, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43)
-   - *Number of test cases: ...*
-   - *Code coverage: ...*
-   - *Types of tests created and descriptions: ...*
+1.  Tests for **Data Fetching**
+- **Code**: [`DataFetcherTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/DataFetcherTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: This test ensures that the historical data fetching method (`fetchHistoricalDataTOCSV`) creates a CSV file in the cache directory using actual API calls. It verifies the file generation and includes a delay to account for network response times.
+- **Types of Tests and Descriptions**:
+  - Integration Test: Validates data fetching and storage logic for air quality data, using a real API endpoint to create and verify the generated CSV file.
 
-2. xxx
+ 2. Tests for **AVL Tree Operations**
+- **Code**: [`AVLTreeTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/AVLTreeTest.java)
+- **Number of Test Cases**: 3
+- **Code Coverage**: The test verifies AVL tree operations, including insertions, balancing, and height calculations.
+- **Types of Tests and Descriptions**:
+  - Functional Tests: Verifies AVL tree insertion, balancing operations, and checks tree height. The in-order traversal is also tested to confirm proper data arrangement.
 
-...
+ 3. Tests for **CSV Parsing**
+- **Code**: [`CSVParsingTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/CSVParsingTest.java)
+- **Number of Test Cases**: 6
+- **Code Coverage**: Tests cover CSV parsing logic for air quality data, including multiple scenarios such as empty records, correctly formatted records, invalid data, and safe parsing operations.
+- **Types of Tests and Descriptions**:
+  - Unit Tests: Covers CSV parsing functionality for various input scenarios, including valid data, empty files, and invalid records. Ensures that the parser handles errors gracefully and returns expected outputs without crashing.
+
+ 4. Instrumented Tests
+- **Code**: [`ExampleInstrumentedTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/ExampleInstrumentedTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: This test verifies the application context in an Android device environment.
+- **Types of Tests and Descriptions**:
+  - Context Validation: Ensures that the app runs correctly on an Android device, verifying the basic functionality of the application's environment.
+
+ 5. General Unit Tests
+- **Code**: [`ExampleUnitTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/ExampleUnitTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: A basic arithmetic test to verify the correctness of the unit test setup.
+-**Types of Tests and Descriptions**:
+  - Basic Unit Test: Validates arithmetic functionality, primarily used to verify the setup of the testing framework.
+
+
 
 <br> <hr>
 
