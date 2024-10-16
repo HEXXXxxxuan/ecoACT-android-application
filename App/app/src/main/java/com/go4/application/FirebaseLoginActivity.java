@@ -14,16 +14,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Interacts with {@link FirebaseAuth} to login and retrieve cached {@link FirebaseUser}s.
+ * <p>Contains an {@link ActivityResultContract} implementation {@link FirebaseLoginActivityResultContract}
+ * for type-safe returns</p>
+ * <p>Intended use-case launcher in {@link MainActivity} as a <code>private final</code> variable</p>
+ *
+ * @author Ryan Foote
+ */
 public class FirebaseLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Intent returnIntent;
 
     /**
-     * Using {@link ActivityResultContract} API for safety.
-     * <p>
-     *     Typical usage requires a {@link androidx.activity.result.ActivityResultLauncher} to store
-     *     the resulting contract
-     * </p>
+     * Extends {@link ActivityResultContract} API for safety.
+     * <p> Typical usage requires a {@link androidx.activity.result.ActivityResultLauncher} to store
+     * the resulting contract</p>
+     *
+     * @author Ryan Foote
      */
     public static class FirebaseLoginActivityResultContract extends ActivityResultContract <Void, FirebaseUser> {
         @NonNull
@@ -46,8 +54,8 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_firebase_login_ui);
+        mAuth = FirebaseAuth.getInstance();
         returnIntent = new Intent();
         signIn();
     }
@@ -68,11 +76,21 @@ public class FirebaseLoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Interacts with {@link FirebaseAuth} to handle user sign-ins.
+     * <p>Upon successful sign-in, puts {@link FirebaseUser} into {@link #returnIntent} with
+     * <code>name</code>: "User" and exits with {@link #RESULT_OK} status</p>
+     * <p>Upon a successful sign-in with a null user, exits with {@link #RESULT_CANCELED}.</p>
+     * <p>Failure behaviour maintains the login page with a {@link Toast} popup.</p>
+     *
+     * @author Ryan Foote
+     */
     private void signIn() {
         Button loginSubmit = findViewById(R.id.bt_login);
         loginSubmit.setOnClickListener(view -> {
             String email = ((EditText) findViewById(R.id.lg_username)).getText().toString();
             String pass = ((EditText) findViewById(R.id.lg_password)).getText().toString();
+
             if (email.isEmpty()) {
                 Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
                 return;
@@ -81,23 +99,23 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
                 return;
             }
-            mAuth.signInWithEmailAndPassword(email, pass)
-                .addOnSuccessListener(authResult -> {
-                    FirebaseUser user = authResult.getUser();
-                    if (user != null) {
-                        Toast.makeText(this, "Login successful!", Toast.LENGTH_LONG).show();
-                        returnIntent.putExtra("User", user);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    }
-                    else {
-                        Toast.makeText(this, "Successfully logged in as the null user?!?!?!", Toast.LENGTH_LONG).show();
-                        Log.e("Login", "Successful login as a null user");
-                        setResult(RESULT_CANCELED);
-                        finish();
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            mAuth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
+                FirebaseUser user = authResult.getUser();
+                if (user != null) {
+                    Toast.makeText(this, "Login successful!", Toast.LENGTH_LONG).show();
+                    returnIntent.putExtra("User", user);
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                }
+                else {
+                    // Error case
+                    Log.e("Login", "Successful login but user == null ?!");
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            })
+            .addOnFailureListener(e -> Toast.makeText(this, "Login failed: "
+                                  + e.getMessage(), Toast.LENGTH_LONG).show());
         });
     }
 }
