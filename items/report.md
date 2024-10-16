@@ -413,7 +413,7 @@ Feature Cateory: User Interactivity <br>
 8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
-   [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
+   [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java),
    [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml) 
    and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
    * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L224-365): 
