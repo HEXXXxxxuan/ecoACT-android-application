@@ -79,6 +79,8 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     private TextView aqiStatusTextView;
     private TextView pm25TextView, pm10TextView, o3TextView, so2TextView, coTextView, no2TextView;
 
+    private String email;
+
     private void initializeViews() {
         suburbSpinner = findViewById(R.id.suburbSpinner);
         hourSpinner = findViewById(R.id.hourSpinner);
@@ -112,6 +114,10 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        email = intent.getStringExtra("displayName");
+
         setContentView(R.layout.suburb_historical);
 
         initializeViews();
@@ -141,8 +147,9 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
         });
 
         liveDataButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
-            startActivity(intent);
+            Intent suburbLiveIntent = new Intent(getApplicationContext(), SuburbLiveActivity.class);
+            suburbLiveIntent.putExtra("displayName", email);
+            startActivity(suburbLiveIntent);
         });
 
         // Parse CSV and insert data into AVL tree
@@ -235,6 +242,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
 
     /**
      * Called to parse the user's search bar input using {@link Tokenizer} and {{@link Parser}}
+     *
      * @author u8003980 Chan Cheng Leong
      */
     private void parseSearchBarInput() {

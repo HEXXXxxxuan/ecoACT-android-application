@@ -18,16 +18,13 @@ import java.util.ArrayList;
 
 /**
  * This class is used to transform each SuburbCard Object into a view on screen.
+ *
  * <p>With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p></p>
  * @author u8003980 Chan Cheng Leong
  */
-
 public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAdapter.RecyclerViewHolder> {
-
-    // creating a variable for our array list and context.
     private ArrayList<SuburbCard> suburbDataArrayList;
 
-    // creating a constructor class.
     public SuburbCardViewAdapter(ArrayList<SuburbCard> recyclerDataArrayList) {
         this.suburbDataArrayList = recyclerDataArrayList;
     }
@@ -35,14 +32,12 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate Layout
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_profile_card, parent, false);
         return new RecyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        // Set the data to textview from our modal class.
         SuburbCard recyclerData = suburbDataArrayList.get(position);
         holder.label.setText(recyclerData.getLabel());
         holder.suburb.setText(recyclerData.getSuburb());
@@ -74,15 +69,17 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
 
     @Override
     public int getItemCount() {
-        // this method returns
-        // the size of recyclerview
         return suburbDataArrayList.size();
     }
 
     // View Holder Class to handle Recycler View.
+    /**
+     * This class extends {@link RecyclerView.ViewHolder} and is used to handler {@link RecyclerView}
+     *
+     * <p>It stores the links each component in the suburb card to a variable.</p>
+     * @author u8003980 Chan Cheng Leong
+     */
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-
-        // creating a variable for our text view.
         private TextView label;
         private TextView suburb;
         private TextView quality;
@@ -92,14 +89,12 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            // initializing our text views.
             label = itemView.findViewById(R.id.pa_card_label);
             suburb = itemView.findViewById(R.id.pa_card_suburb);
             quality = itemView.findViewById(R.id.pa_card_quality);
             pm10Number = itemView.findViewById(R.id.pa_card_number);
             imageView = itemView.findViewById(R.id.pa_card_image);
             background = itemView.findViewById(R.id.pa_card);
-
         }
     }
 }

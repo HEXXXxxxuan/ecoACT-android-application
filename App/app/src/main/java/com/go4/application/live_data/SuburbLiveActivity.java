@@ -488,6 +488,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         findViewById(R.id.historicalPageButton).setOnClickListener(v -> {
             Intent suburbHistoricalIntent = new Intent(getApplicationContext(), SuburbHistoricalActivity.class);
+            suburbHistoricalIntent.putExtra("displayName", email);
             startActivity(suburbHistoricalIntent);
         });
 

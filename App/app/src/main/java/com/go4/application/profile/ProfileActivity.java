@@ -56,6 +56,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * This activity launches the profile page after successful login.
+ *
  * <p>It displays user email, allows users to change profile picture, and add, rename and delete suburb cards</p>
  * @author u8003980 Chan Cheng Leong
  */
@@ -70,8 +71,6 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView suburbCardList;
     private ArrayList<SuburbCard> recyclerDataArrayList;
     private SuburbCardViewAdapter recyclerViewAdapter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +187,9 @@ public class ProfileActivity extends AppCompatActivity {
         readProfilePicture();
     }
 
+    /**
+     * This method returns the file path where the profile picture is stored in internal storage
+     */
     private String getFilePath() {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         String filename = "profile_picture.jpg";
@@ -195,6 +197,11 @@ public class ProfileActivity extends AppCompatActivity {
         return String.format("%s/%s", directory, filename);
     }
 
+    /**
+     * This method reads and shows the profile picture on screen.
+     *
+     * <p>The image of the profile picture is obtained from the function getFilePath()</p>
+     */
     private void readProfilePicture() {
         String filePath = getFilePath();
         File file = new File(filePath);
@@ -205,6 +212,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method writes and stores the profile picture in internal storage.
+     *
+     * <p>The image of the profile picture is stored in the path returned from the function getFilePath()</p>
+     */
     public void writeProfilePicture(Bitmap bitmapImage) {
         String filePath = getFilePath();
         File file = new File(filePath);
@@ -218,7 +230,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Display Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
+     * This method displays Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
+     *
      * <p>Swipe right on suburb card to delete it, and press undo button to undo.
      * With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p>
      */
@@ -254,6 +267,12 @@ public class ProfileActivity extends AppCompatActivity {
         }).attachToRecyclerView(suburbCardList);
     }
 
+    /**
+     * The method is called to search for the current PM10 number and air quality index based on the suburb.
+     *
+     * @param suburb           The name of the suburb to search for
+     * @return                 A list of 2 strings, the first string contains whether the quality is "Good", "Moderate" or "Bad", and the second string contains the PM10 number.
+     */
     private String[] searchForQualityAndPm10Number(String suburb) {
         String[] result = new String[2];
 
@@ -313,6 +332,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method writes the current pinned suburb details to internal storage,
+     * to the file "pinned_suburbs.txt"
+     *
+     * <p>This method is called when a pinned suburb is added, deleted, or when the labels of the pinned suburbs are edited, or when the activity is paused or stopped.</p>
+     */
     private void writePinnedSuburbs() {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         String filename = "pinned_suburbs.txt";
@@ -335,6 +360,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method updates the quality and the PM10 number of every pinned suburb.
+     *
+     * <p>This method is called every 15 minutes to update the pinned suburb cards.</p>
+     */
     private void updatePinnedSuburbs() {
         for (SuburbCard card: recyclerDataArrayList) {
             String suburb = card.getSuburb();
@@ -348,6 +378,12 @@ public class ProfileActivity extends AppCompatActivity {
         writePinnedSuburbs();
     }
 
+    /**
+     * This method searches for the quality and PM10 number of the selected suburb,
+     * then uses the data to add a new suburb card.
+     *
+     * <p>This method is called when the add button is clicked.</p>
+     */
     private void addButtonOnClick() {
         String selectedSuburb = suburbSpinner.getSelectedItem().toString();
         String[] result = searchForQualityAndPm10Number(selectedSuburb);
@@ -359,17 +395,39 @@ public class ProfileActivity extends AppCompatActivity {
         writePinnedSuburbs();
     }
 
-    private void addSuburbCard(String label, String suburb, String quality, String number) {
-        SuburbCard card = new SuburbCard(label, suburb, quality, number);
+    /**
+     * This method adds a new pinned suburb card to the bottom of the list.
+     *
+     * <p>This method is called by addButtonOnClick().</p>
+     *
+     * @param label            The label of the suburb card.
+     * @param suburb           The suburb of the suburb card.
+     * @param quality          The quality of the suburb card. The quality can be "Good", "Moderate" or "Bad".
+     * @param pm10Number       The PM10 number of the suburb card.
+     */
+    private void addSuburbCard(String label, String suburb, String quality, String pm10Number) {
+        SuburbCard card = new SuburbCard(label, suburb, quality, pm10Number);
         recyclerDataArrayList.add(card);
         suburbCardList.setAdapter(recyclerViewAdapter);
     }
 
+    /**
+     * Initializes the {@code recordTreeLocationAndDateKey} by parsing a CSV file
+     * and creating an AVL tree from the parsed data.
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void createAVLTree() {
         CsvParser csvParser = new CsvParser();
         recordTreeLocationAndDateKey = csvParser.createAVLTree(this, false);
     }
 
+    /**
+     * Initializes the suburb spinner by loading the list of suburbs from a {@code loadSuburbsFromJson()} and populating
+     * the spinner with this list.
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void suburbSpinner() {
         List<String> suburbList = loadSuburbsFromJson();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, suburbList);
@@ -377,6 +435,17 @@ public class ProfileActivity extends AppCompatActivity {
         suburbSpinner.setAdapter(adapter);
     }
 
+    /**
+     * Loads a list of suburbs from the "canberra_suburbs.json" file in the assets folder.
+     * <p>
+     * This method delegates the actual loading process to the {@link SuburbJsonUtils}
+     * which handles the JSON file parsing and returns a list of suburb names.
+     * </p>
+     *
+     * @return a list of suburb names parsed from the "canberra_suburbs.json" file.
+     * @throws RuntimeException if there is an error loading or parsing the JSON file.
+     * @author u7902000 Gea Linggar
+     */
     private List<String> loadSuburbsFromJson(){
         return SuburbJsonUtils.loadSuburbsFromJson(this, "canberra_suburbs.json");
     }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
             if(result != null){
                 Intent profile = new Intent(this, ProfileActivity.class);
-                profile.putExtra("User", result);
+                profile.putExtra("displayName", result.getEmail());
                 startActivity(profile);
             }
             else{
@@ -57,19 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         createNotificationChannel();
-        ((BottomNavigationView) findViewById(R.id.bottom_navigation)).setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_suburb_live) {
-                startActivity(new Intent(MainActivity.this, SuburbLiveActivity.class));
-                return true;
-            }
-            return false;
-        });
     }
 
     @Override

@@ -1,5 +1,10 @@
 package com.go4.application.historical;
 
+/**
+ * This class is used to store search bar input and is used in {@link com.go4.utils.tokenizer_parser.Parser}
+ *
+ * @author u8003980 Chan Cheng Leong
+ */
 public class SearchRecord {
     private String selectedSuburb;
     private String selectedDate;
@@ -11,10 +16,6 @@ public class SearchRecord {
         this.selectedDate = "";
         this.selectedTime = "";
         this.invalidSearch = false;
-    }
-
-    private String generateKey() {
-        return selectedSuburb + "_" + selectedDate + " " + selectedTime + ":00";
     }
 
     public void setSelectedSuburb(String suburb) {
@@ -43,9 +44,5 @@ public class SearchRecord {
 
     public String getSelectedTime() {
         return selectedTime;
-    }
-
-    public boolean getInvalidSearch() {
-        return invalidSearch;
     }
 }

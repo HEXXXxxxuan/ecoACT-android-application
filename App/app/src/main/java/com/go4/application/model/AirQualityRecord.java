@@ -82,16 +82,16 @@ public class AirQualityRecord {
     @Override
     public String toString() {
         return "AirQualityRecord{" +
-                "location='" + location + '\'' +
-                ", aqi=" + aqi +
-                ", co=" + co +
-                ", no2=" + no2 +
-                ", o3=" + o3 +
-                ", so2=" + so2 +
-                ", pm2_5=" + pm2_5 +
-                ", pm10=" + pm10 +
-                ", nh3=" + nh3 +
-                ", timestamp='" + timestamp + '\'' +
-                '}';
+            "location='" + location + '\'' +
+            ", aqi=" + aqi +
+            ", co=" + co +
+            ", no2=" + no2 +
+            ", o3=" + o3 +
+            ", so2=" + so2 +
+            ", pm2_5=" + pm2_5 +
+            ", pm10=" + pm10 +
+            ", nh3=" + nh3 +
+            ", timestamp='" + timestamp + '\'' +
+            '}';
     }
 }
