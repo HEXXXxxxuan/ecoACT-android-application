@@ -24,9 +24,9 @@ build-job:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
-      - app/build
-      - .gradle
-      - apk
+      - App/app/build
+      - App/.gradle
+      - App/apk
 
 test-job:
   stage: test
@@ -37,8 +37,8 @@ test-job:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - app/build
-      - .gradle
+      - App/app/build
+      - App/.gradle
   script:
     - echo "Running gradle test"
     - ./gradlew test
@@ -58,13 +58,13 @@ apk-release:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - apk
+      - App/apk
   script:
     - echo "Pushing latest APK"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
