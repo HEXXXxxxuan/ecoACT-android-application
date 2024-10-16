@@ -248,6 +248,8 @@ public class SuburbLiveActivity extends AppCompatActivity {
         if (position >= 0) {
             setTitle("Suburb: " + selectedSuburb);
         }
+
+        suburbSpinnerLive.setText(selectedSuburb);
         // Fetch and display data based on the nearest suburb
         executor.execute(this::showDataAndRefresh);
     }

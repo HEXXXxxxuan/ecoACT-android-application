@@ -8,59 +8,11 @@
     android:background="@color/gray_background"
     tools:context=".live_data.SuburbLiveActivity">
 
-    <!-- AutoCompleteTextView from both codes -->
-    <AutoCompleteTextView
-        android:id="@+id/SuburbSpinnerLive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search for suburb"
-        app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/selectedSuburbTextView" />
-
-    <TextView
-        android:id="@+id/selectedSuburbTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Selected Suburb: "
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/SuburbSpinnerLive"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- ScrollView or other existing layout components -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/selectedSuburbTextView"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Add your existing content here -->
-
-        </LinearLayout>
-    </ScrollView>
-
-
-
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/SuburbSpinnerLive"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -72,14 +24,11 @@
             android:padding="16dp">
 
 
-
-
-
-            <!-- First CardView (RecyclerView with SwipeRefreshLayout) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="32dp"
                 app:cardCornerRadius="12dp"
                 android:background="@color/primary_ColorW"
                 android:elevation="4dp">
@@ -90,6 +39,16 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+
+                    <AutoCompleteTextView
+                        android:id="@+id/SuburbSpinnerLive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:hint="Search for suburb"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- SwipeRefreshLayout RecyclerView -->
                     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                         android:id="@+id/swipe_refresh_layout"
                         android:layout_width="match_parent"
@@ -106,7 +65,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Second CardView (SemiCircleArcProgressBar with AQI data) -->
+            <!-- CardView (SemiCircleArcProgressBar with AQI data) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -349,7 +308,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Third CardView (LineChart and compare suburb) -->
+            <!--CardView (LineChart and compare suburb) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -422,7 +381,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1B6A37"
+        android:background="@color/secondaryColorDG"
         android:orientation="horizontal"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
