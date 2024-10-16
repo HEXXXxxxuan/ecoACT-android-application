@@ -21,7 +21,14 @@ import com.go4.utils.GPSService.LocalBinder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
- * Activity intended to handle backend operations
+ * <ul> Activity that integrates Activities and Services
+ *  <li>{@link GPSService} accessible as {@link #gpsService} with safety: {@link #bound}</li>
+ *  <li><code>private</code> {@link ActivityResultLauncher} for {@link FirebaseLoginActivity}
+ *  using the {@link com.go4.application.FirebaseLoginActivity.FirebaseLoginActivityResultContract}
+ *  to provide type-safety</li>
+ *  </ul>
+ *
+ * @author Ryan Foote
  */
 public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "main";
