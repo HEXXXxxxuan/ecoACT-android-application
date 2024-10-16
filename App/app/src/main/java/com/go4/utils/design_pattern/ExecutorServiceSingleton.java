@@ -21,7 +21,7 @@ public class ExecutorServiceSingleton {
         if (instance == null) {
             synchronized (ExecutorServiceSingleton.class) {
                 if (instance == null) {
-                    instance = Executors.newSingleThreadExecutor();
+                    instance = Executors.newFixedThreadPool(6);
                 }
             }
         } else {

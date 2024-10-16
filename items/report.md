@@ -381,8 +381,11 @@ Feature Category: Search <br>
      <br>
 
 2. [Search-Designate]. The app must rank search results based on the status of the users. For example, a user may have multiple roles within the app, which should result in different ranked lists of results. (medium)
-* Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of your implementation: ... <br>
+* Code: [`NearestSuburbStrategy.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java), method `getNearestSuburb` and [`LoadMoreSearchResultAdapter.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/java/com/go4/application/live_data/adapter), method `onBindViewHolder` <br>
+* Description of feature: The app ranks search results by calculating the distance between the user's current location and various suburbs, displaying the nearest suburbs first. This ensures that users receive more relevant information based on their physical proximity to the suburbs. <br>
+* Description of your implementation: The proximity-based ranking is implemented by first calculating the distance between the user's current GPS coordinates (latitude and longitude) and each suburb's coordinates, stored in a `HashMap<String, double[]>`. This calculation is done using the Haversine formula, which provides an accurate measure of the great-circle distance between two points on the Earth's surface. The`NearestSuburbStrategy.java` class manages this distance calculation within the `getNearestSuburb` method, iterating through each suburb to determine the shortest distance from the user.<br>
+Once the distances are calculated, the search results are ranked based on proximity. The`LoadMoreSearchResultAdapter.java` class is responsible for binding this sorted list of suburbs to the `RecyclerView`. In the `onBindViewHolder` method, the suburb data—including the name, distance, and coordinates—is dynamically displayed. The UI layout [`adapter_search_result_recyclerview`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/adapter_search_result_recyclerview.xml) ensures that the ranked suburbs are shown in ascending order of distance, making it easy for the user to see which suburbs are closest.<br>
+Additionally, the app is designed to provide real-time updates as the user moves or interacts with the app. The `SuburbLiveActivity.java` class triggers data fetching and re-ranking of the search results as the user's location changes. This ensures that the displayed results always reflect the user’s current location and proximity to various suburbs. The data is continually updated in the `RecyclerView`, maintaining a smooth and interactive experience for the user. <br>
      <br>
 
 Feature Category: Data <br>
@@ -446,15 +449,42 @@ Feature Cateory: User Interactivity <br>
 
 *Here is an example:*
 
-1. Tests for Search
-   - Code: [TokenizerTest Class, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java) for the [Tokenizer Class, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43)
-   - *Number of test cases: ...*
-   - *Code coverage: ...*
-   - *Types of tests created and descriptions: ...*
+1.  Tests for **Data Fetching**
+- **Code**: [`DataFetcherTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/DataFetcherTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: This test ensures that the historical data fetching method (`fetchHistoricalDataTOCSV`) creates a CSV file in the cache directory using actual API calls. It verifies the file generation and includes a delay to account for network response times.
+- **Types of Tests and Descriptions**:
+  - Integration Test: Validates data fetching and storage logic for air quality data, using a real API endpoint to create and verify the generated CSV file.
 
-2. xxx
+ 2. Tests for **AVL Tree Operations**
+- **Code**: [`AVLTreeTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/AVLTreeTest.java)
+- **Number of Test Cases**: 3
+- **Code Coverage**: The test verifies AVL tree operations, including insertions, balancing, and height calculations.
+- **Types of Tests and Descriptions**:
+  - Functional Tests: Verifies AVL tree insertion, balancing operations, and checks tree height. The in-order traversal is also tested to confirm proper data arrangement.
 
-...
+ 3. Tests for **CSV Parsing**
+- **Code**: [`CSVParsingTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/CSVParsingTest.java)
+- **Number of Test Cases**: 6
+- **Code Coverage**: Tests cover CSV parsing logic for air quality data, including multiple scenarios such as empty records, correctly formatted records, invalid data, and safe parsing operations.
+- **Types of Tests and Descriptions**:
+  - Unit Tests: Covers CSV parsing functionality for various input scenarios, including valid data, empty files, and invalid records. Ensures that the parser handles errors gracefully and returns expected outputs without crashing.
+
+ 4. Instrumented Tests
+- **Code**: [`ExampleInstrumentedTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/ExampleInstrumentedTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: This test verifies the application context in an Android device environment.
+- **Types of Tests and Descriptions**:
+  - Context Validation: Ensures that the app runs correctly on an Android device, verifying the basic functionality of the application's environment.
+
+ 5. General Unit Tests
+- **Code**: [`ExampleUnitTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/ExampleUnitTest.java)
+- **Number of Test Cases**: 1
+- **Code Coverage**: A basic arithmetic test to verify the correctness of the unit test setup.
+-**Types of Tests and Descriptions**:
+  - Basic Unit Test: Validates arithmetic functionality, primarily used to verify the setup of the testing framework.
+
+
 
 <br> <hr>
 
@@ -498,12 +528,37 @@ Feature Cateory: User Interactivity <br>
 (If you choose to make this an external document, link to it here)]*
 
 *If your group has issues, how will your group reach consensus or solve the problem?*
-*- e.g., if a member gets sick, what is the solution? Alternatively, what is your plan to mitigate the impact of unforeseen incidents for this 6-to-8-week project?*
 
-This shall include an agreed procedure for situations including (but not limited to):
-- A member is sick in the final week of the project.
-- A member didn't complete the assigned task which should've been completed before the checkpoint, and the checkpoint is approaching.
-- A member is unreachable (didn't respond messages in your agreed communication channels and emails in two days).
-- The team have different understandings toward the requirement of the assignment.
+Our team is committed to open communication, collaboration, and mutual support. This protocol outlines how we handle different challenges that may come up during our 6-to-8-week project, ensuring everyone feels valued and supported. Here’s how we plan to deal with potential issues:
+
+1. If a Team Member Gets Sick in the Final Week
+   - **Notify the Team**: If someone gets sick, they should let the group know as soon as possible using our regular communication channel(insgram or discord) .
+   - **Reassign Tasks**: We'll hold an emergency meeting to redistribute the workload of the sick member to make sure we stay on track. Tasks with immediate deadlines will be prioritized.
+   - **Offer Support**: The member who is sick will still be updated on the project progress but won’t be expected to work until they’re better. Other team members will help to fill in any gaps to keep things moving smoothly.
+
+2. If a Team Member Misses a Task Deadline Before a Checkpoint
+   - **Check Progress Early**: We'll do a quick check-in about two days before each checkpoint to make sure everyone is on track. If anyone thinks they won’t meet a deadline, they’re encouraged to let the team know so we can help.
+   - **Help Finish Tasks**: If a task isn’t done in time and the checkpoint is approaching, other members will step in to help complete it. We’ll work together to avoid missing critical deadlines.
+   - **Reflect and Adjust**: After the checkpoint, we’ll discuss what caused the delay and figure out how we can avoid similar issues in the future. This could involve adjusting timelines or offering more support where needed.
+
+3. If a Team Member Is Unreachable for Two Days
+   - **Multiple Ways to Contact**: If a member hasn’t responded to messages for two days without prior notice, the team lead will try to contact them through different means, like calling or emailing.
+   - **Temporary Task Reassignment**: If they still can’t be reached after 48 hours, we’ll temporarily reassign their tasks to other team members to keep the project on track.
+   - **Follow-up Conversation**: When the member returns, we’ll have a conversation to understand what happened and how to avoid similar situations in the future. The goal is to keep communication as open as possible.
+
+4. If There Are Different Understandings of Assignment Requirements
+   - **Team Discussion**: If there are different interpretations of the assignment, we’ll hold a team meeting to openly discuss it until we reach a shared understanding.
+   - **Ask for Clarification**: If we can’t reach a consensus internally, we’ll collectively put together questions and ask the course instructor or tutor for clarification.
+   - **Document Decisions**: Once we agree on the requirements, we’ll document them and share with everyone to make sure we all stay aligned moving forward.
+
+5. General Conflict Resolution
+   - **Open and Respectful Discussion**: If any conflict arises, the members involved will discuss the issue openly during a team meeting. Respectful communication is key, and everyone will get a chance to share their point of view.
+   - **Mediation**: If direct discussion doesn’t resolve the conflict, a neutral team member will act as a mediator to help find a solution.
+   - **Escalation**: If mediation fails, we’ll bring the issue to the course instructor for further guidance.
+
+6. Handling Unexpected Incidents
+   - **Risk Assessment**: At the start of the project, we’ll identify potential risks (like illness or technical problems) and create contingency plans for each.
+   - **Task Backups**: Every critical task will have a backup person familiar with it, so the work can continue if the main person is unavailable.
+   - **Regular Check-ins**: We’ll have weekly meetings to review our progress and spot any potential issues early. This will help us take action before they become bigger problems.
 
 

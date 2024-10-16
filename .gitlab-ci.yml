@@ -15,18 +15,22 @@ build-job:
   script:
     - echo "Assembling project"
     - cd App
-    - ./gradlew --build-cache assemble
     - mkdir apk
-    - ls -a 
-    - cp ./app/build/outputs/apk/release/app-release-unsigned.apk apk/ourApk.apk
-    - cp ./app/build/outputs/apk/release/output-metadata.json apk/metadata.json
+    - ./gradlew --build-cache assemble
+    - cp ./app/build/outputs/apk/release/app-release-unsigned.apk ./apk/ourApk.apk
+    - cp ./app/build/outputs/apk/release/output-metadata.json ./apk/metadata.json
+    - ls -T
   cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
+    - key: "$CI_COMMIT_SHA"
+    - policy: push
+    - paths:
       - App/app/build
       - App/.gradle
       - App/apk
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  
 
 test-job:
   stage: test
@@ -34,14 +38,16 @@ test-job:
   tags:
     - comp2100
   cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
+    - key: "$CI_COMMIT_SHA"
+    - policy: pull
+    - paths:
       - App/app/build
       - App/.gradle
   script:
     - echo "Running gradle test"
+    - cd App
     - ./gradlew test
+    - ls -T
   artifacts:
     when: always
     reports:
@@ -55,12 +61,13 @@ apk-release:
   tags:
     - comp2100
   cache:
-    key: "$CI_COMMIT_REF_NAME"
+    key: "$CI_COMMIT_SHA"
     policy: pull
     paths:
       - App/apk
   script:
     - echo "Pushing latest APK"
+    - ls -T
     - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file App/apk/ourApk.apk "${PACKAGE_REGISTRY_URL}/apk-${PACKAGE_VERSION}"
     - |
