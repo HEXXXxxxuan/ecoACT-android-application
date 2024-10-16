@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView Sliding monitoring
+ * @author u7635535 Zechuan Liu
  */
 public abstract class SearchResultEndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 

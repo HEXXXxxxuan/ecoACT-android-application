@@ -15,7 +15,8 @@ import java.util.Map;
  * This class calculates the distance between the user's coordinates and the coordinates
  * of various suburbs to determine the nearest suburb.
  *
- * @author u7902000 Gea Linggar,
+ * @author u7902000 Gea Linggar
+ * @author u7635535 Zechuan Liu
  */
 public class NearestSuburbStrategy implements LocationStrategy {
 
@@ -63,6 +64,7 @@ public class NearestSuburbStrategy implements LocationStrategy {
      * @param lon2 the longitude of the second point
      * @return the distance between the two points in kilometers
      * @author u7902000 Gea Linggar
+     * @author u7635535 Zechuan Liu
      */
     private static final double EARTH_RADIUS = 6371.0; // Earth radius in kilometers
     private double calculateDistanceKM(double lat1, double lon1, double lat2, double lon2) {

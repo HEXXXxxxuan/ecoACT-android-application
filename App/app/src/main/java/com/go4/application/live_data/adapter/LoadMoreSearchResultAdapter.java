@@ -16,24 +16,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 上拉加载更多
+ * @author u7635535 Zechuan Liu
  */
 
 public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private OnItemClickListener onItemClickListener;
     private List<Map<String, String>> dataList;
 
-    // 普通布局
+
     private final int TYPE_ITEM = 1;
-    // 脚布局
+
     private final int TYPE_FOOTER = 2;
-    // 当前加载状态，默认为加载完成
+
     private int loadState = 2;
-    // 正在加载
+
     public final int LOADING = 1;
-    // 加载完成
+
     public final int LOADING_COMPLETE = 2;
-    // 加载到底
+
     public final int LOADING_END = 3;
 
     public LoadMoreSearchResultAdapter(List<Map<String, String>> dataList) {
@@ -50,7 +50,7 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        // 最后一个item设置为FooterView
+
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
         } else {
@@ -60,7 +60,7 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // 通过判断显示类型，来创建不同的View
+        // create different view
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.adapter_search_result_recyclerview, parent, false);
@@ -85,19 +85,19 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {
-                case LOADING: // 正在加载
+                case LOADING:
                     footViewHolder.pbLoading.setVisibility(View.VISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.VISIBLE);
                     footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
-                case LOADING_COMPLETE: // 加载完成
+                case LOADING_COMPLETE:
                     footViewHolder.pbLoading.setVisibility(View.INVISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.INVISIBLE);
                     footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
-                case LOADING_END: // 加载到底
+                case LOADING_END:
                     footViewHolder.pbLoading.setVisibility(View.GONE);
                     footViewHolder.tvLoading.setVisibility(View.GONE);
                     footViewHolder.llEnd.setVisibility(View.VISIBLE);
@@ -168,9 +168,8 @@ public class LoadMoreSearchResultAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     /**
-     * 设置上拉加载状态
      *
-     * @param loadState 0.正在加载 1.加载完成 2.加载到底
+     * @param loadState 0.loading 1.load_complete 2.load_end
      */
     public void setLoadState(int loadState) {
         this.loadState = loadState;
