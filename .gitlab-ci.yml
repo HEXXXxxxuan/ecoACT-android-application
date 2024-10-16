@@ -5,13 +5,12 @@ stages:
 
 test-job:
   stage: test
-  when: manual
   tags:
     - comp2100
   script:
     - echo "Running gradle test"
     - cd App
-    - ./gradlew gradle test
+    - ./gradlew test
   artifacts:
     when: always
     reports:
