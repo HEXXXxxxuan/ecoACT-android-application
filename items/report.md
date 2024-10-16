@@ -167,7 +167,8 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 
 *I used the following data structures in my project:*
 
-1.  *Objective*: Used for storing and managing a list of suburb details and historical air quality records dynamically as new data is fetched and displayed in the UI.
+1. *ArrayList*
+   * *Objective**: Used for storing and managing a list of suburb details and historical air quality records dynamically as new data is fetched and displayed in the UI.
    * *Code Locations**: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbCardViewAdapter.java#L28) and [`SuburbHistoricalActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbHistoricalActivity.java#L159); processed using methods like `onBindViewHolder()` and `updateList()` to display air quality data and suburb information dynamically.
    * *Reasons*:
       * *It is more efficient than `LinkedList` for frequent random access operations where elements are accessed by index with a time complexity of O(1).*
@@ -187,7 +188,7 @@ Here is a partial (short) example for the subsection `Data Structures`:*
    * *Code Locations**: Defined in [`DataFetcher.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/DataFetcher.java#L138) in the `fetchHistoricalDataTOCSV()` method to ensure no duplicate records are stored in the CSV.
    * *Reasons*:
       * *O(1) average time complexity for both insertions and lookups, which is critical for checking the existence of records efficiently before writing to the CSV.*
-      * *Prevents the need for additional loops or checks to ensure that duplicate suburb records (with the same timestamp) are not written.*
+      * *Prevents the need for additional loops or checks to ensure that duplicate suburb records are not written.*
       * *Helps maintain the integrity of the dataset by ensuring that only new, unique records are appended to the file, reducing redundant data.*
 4. *AVL Tree*
    * *Objective: Used for storing suburb data in a balanced manner to ensure efficient lookups, insertions, and deletions.*
@@ -201,39 +202,29 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 ### Design Patterns
 *[What design patterns did your team utilise? Where and why?]*
 
-1. Factory Pattern
+1. **DAO (Data Access Object) Pattern**
+   * **Objective**: Used to abstract and encapsulate access to air quality data from APIs or files, separating data access logic from business logic. 
+   * **Code Locations**: Defined in [`DataAccessObject`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/design_pattern/DataAccessObject.java); used in [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/DataFetcher.java#L80-L169) for interacting with APIs and managing data storage.
+   * **Reasons**:
+      * *It separates data access logic from the core business logic, improving maintainability and scalability.*
+      * *It makes it easier to switch between data sources  without affecting the rest of the application.*
+      * *Improves testability by allowing mock data sources during testing, making it easier to isolate and test individual components.*
 
-Objective: Used for creating instances of different data parsers (e.g., JSON parser, CSV parser) based on the input data type.
+2. **Singleton Pattern**
+   * **Objective**: Ensures that only one instance of the `ExecutorService` is created and shared across the entire application to manage asynchronous tasks.
+   * **Code Locations**: Defined in [`ExecutorServiceSingleton`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java); used in [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/DataFetcher.java#L46-L48) to manage API calls and background tasks efficiently.
+   * **Reasons**:
+      * *It ensures that only one instance of the thread pool exists, preventing resource exhaustion by creating multiple thread pools.*
+      * *The Singleton pattern allows easy and consistent access to the thread pool across different parts of the application.*
+      * *It reduces resource consumption by sharing a single instance for background processing tasks, such as fetching air quality data.*
 
-Code Locations: Defined in ParserFactory.java class, methods createParser, getParserType, lines 10-70; processed using createParser in DataFetcher.
-
-Reasons:
-We need to create specific parser objects depending on the data format.
-Factory Pattern allows encapsulating the logic of object creation, promoting loose coupling by delegating instantiation responsibility.
-It provides flexibility for easily extending the system to support new data formats by adding new parser classes without modifying the existing codebase.
-
-2. Data Access Object (DAO) Pattern
-
-Objective: Used for abstracting and encapsulating all access to the application's data source, providing a simple API for querying and updating data.
-
-Code Locations: Defined in DataAccessObject.java class, methods getData, insertData, updateData, lines 20-85; processed using getConnection and executeQuery.
-
-Reasons:
-We need to separate the low-level data accessing operations from the higher-level business logic, ensuring clear and maintainable code.
-DAO Pattern provides a clear interface for interacting with the data source, minimizing code duplication and ensuring all data-related operations are performed consistently.
-It improves code readability and makes it easier to change or replace the data source without affecting the rest of the application, promoting a modular architecture.
-
-3. Singleton Pattern
-
-Objective: Used for managing a single instance of the data access object (DAO) to ensure efficient resource management and centralized database access.
-
-Code Locations: Defined in DataAccessObject.java class, methods getInstance, getConnection, lines 15-55; processed using getInstance to ensure a single object is created.
-
-Reasons:
-We need to manage a single instance of the DAO for accessing the database throughout the application, avoiding multiple connections and potential conflicts.
-Singleton Pattern ensures there is only one instance of the DAO, minimizing overhead and ensuring consistency in data access.
-It provides a global point of access to the database connection, making it easier to manage and reuse the same instance.
-
+3. **Strategy Pattern**
+   * **Objective**: Allows for different strategies to be implemented for determining the nearest suburb or calculating distances based on user location.
+   * **Code Locations**: Defined in [`LocationStrategy`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/design_pattern/LocationStrategy.java); implemented in [`NearestSuburbStrategy`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java) for calculating the nearest suburb based on geographic coordinates.
+   * **Reasons**:
+      * *It enables flexibility in choosing or adding new location-based calculation methods without modifying existing code.*
+      * *Adheres to the open-closed principle, allowing new strategies to be added without altering the core logic.*
+      * *It decouples the algorithm from the context where it's used, improving code maintainability and making it easier to switch or extend strategies.*
 <hr>
 
 ### Parser
