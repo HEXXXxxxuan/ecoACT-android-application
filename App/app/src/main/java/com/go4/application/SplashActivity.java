@@ -25,9 +25,8 @@ import com.go4.utils.DataFetcher;
 /**
  * Models the Splash Screen on app-startup.
  * <p>Fetches data using {@link DataFetcher}</p>
- * @author Shawn(Hexuan)
- * @author Gea
- * @author Ryan
+ *
+ * @author Shawn(Hexuan), Gea, Ryan Foote
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
