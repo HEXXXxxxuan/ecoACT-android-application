@@ -2,7 +2,6 @@ package com.go4.utils;
 
 import static com.go4.application.MainActivity.CHANNEL_ID;
 import static com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY;
-
 import android.Manifest;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -66,12 +65,11 @@ public class GPSService extends Service {
                 if (locationResult == null || locationResult.getLastLocation() == null) {
                     locationNotification("Location not available");
                 }
-                else{
+                else {
                     latestLocation = locationResult.getLastLocation();
-                    locationNotification("Current Location: Lat=" + latestLocation.getLatitude() + ", Long=" + latestLocation.getLongitude());
+                    locationNotification("Lat: " + latestLocation.getLatitude() +", Long: " + latestLocation.getLongitude());
                 }
-            }
-        };
+            }};
         LocationRequest request = new LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, 5000).build();
         startLocationUpdates(request, locationCallback);
     }
