@@ -59,7 +59,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  * </p>
  *
  *
- * @author u7902000 Gea Linggar, u8003980 Chan Cheng Leong, Shawn
+ * @author u7902000 Gea Linggar, u8003980 Chan Cheng Leong, u8006862 Hexuan(Shawn)
  */
 public class SuburbHistoricalActivity extends AppCompatActivity {
     private Spinner suburbSpinner;
@@ -287,7 +287,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      * This method retrieves the user-selected date, suburb, and hour from the UI, formats the date and time,
      * and searches for a corresponding record in the {@code recordTreeLocationAndDateKey} AVL tree.
      * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars </p>
-     * @author u7902000 Gea Linggar, shawn
+     * @author u8006862 (Hexuan)Shawn
      */
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();

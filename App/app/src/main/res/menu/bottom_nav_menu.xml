@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+    This XML file defines the menu for the bottom navigation bar.
+    It includes two items: one for navigating to the Profile section and another for navigating to the Suburb Live section.
+
+    Key components:
+    1. nav_profile: Displays an icon and title for navigating to the Profile screen.
+    2. nav_suburb_live: Displays an icon and title for navigating to the Suburb Live screen.
+
+    This menu can be referenced by the BottomNavigationView in the layout XML.
+    Both icons imported from https://fonts.google.com/icons
+
+    @author Shawn(Hexuan)
+-->
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/nav_profile"

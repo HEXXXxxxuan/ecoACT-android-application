@@ -9,6 +9,17 @@
     android:background="@color/gray_background"
     tools:context="com.go4.application.historical.SuburbHistoricalActivity">
 
+    <!--
+    This XML layout defines a scrollable screen for viewing historical air quality data by suburb.
+    The layout contains two main CardViews:
+    1. Date and Location CardView: Allows users to select a suburb and date, then search for historical data.
+    2. Progress Data CardView: Displays various air quality metrics (PM2.5, PM10, O3, SO2, CO, NO2) along with progress bars.
+
+    The progress bars are displayed in a grid format, and the overall layout is wrapped in a ScrollView to handle varying screen sizes.
+    semi one imported from link "https://github.com/hadibtf/SemiCircleArcProgressBar"
+    @author Shawn(Hexuan)
+-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

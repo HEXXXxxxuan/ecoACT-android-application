@@ -25,7 +25,7 @@ import com.go4.utils.DataFetcher;
 /**
  * Models the Splash Screen on app-startup.
  * <p>Fetches data using {@link DataFetcher}</p>
- * @author Shawn
+ * @author Shawn(Hexuan)
  * @author Gea
  * @author Ryan
  */
@@ -35,7 +35,10 @@ public class SplashActivity extends AppCompatActivity {
     private static final int START_ACTIVITY_AFTER = 1000;
     private TextView statusText;
     private ProgressBar progressBar;
-
+    /**
+     * link to XML
+     * @author Shawn(Hexuan)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

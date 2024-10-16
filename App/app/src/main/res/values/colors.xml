@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+    This XML file defines the color resources used throughout the application.
+    The colors are categorized into primary, secondary, accent, and utility colors.
+
+    Color definitions:
+    1. primary_ColorW: The primary white color used in the application.
+    2. secondaryColorLG, MG, DG: Variations of green used for secondary branding colors (Light, Medium, Dark).
+    3. accendColorB: A bright blue accent color.
+    4. dividerColor: A light gray color used for dividers.
+    5. gray_background: The background gray color for the UI.
+    6. black: Standard black color.
+    7. yellow: Used for warnings or moderate alerts.
+    8. red: Used for errors or high alerts.
+
+    @author Shawn(Hexuan)
+-->
 
     <color name="primary_ColorW">#FFFFFF</color>
 

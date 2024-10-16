@@ -6,7 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".FirebaseLoginActivity">
 
+    <!--
+    This XML defines a login screen layout using ConstraintLayout.
+    The layout includes an ImageView for displaying the app logo,
+    two EditText fields for the username and password inputs, and a login button.
+    The design uses constraint-based positioning to center and align elements within the screen.
 
+    @author Shawn(Hexuan)
+-->
+
+    <!-- Logo Image at the top -->
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="374dp"
@@ -23,6 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
+    <!-- Username input field -->
     <EditText
         android:id="@+id/lg_username"
         android:layout_width="0dp"
@@ -37,6 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo_image" />
 
+    <!-- Password input field -->
     <EditText
         android:id="@+id/lg_password"
         android:layout_width="0dp"
@@ -51,6 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lg_username" />
 
+    <!-- Login button -->
     <Button
         android:id="@+id/bt_login"
         android:layout_width="0dp"
@@ -65,6 +77,5 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lg_password" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

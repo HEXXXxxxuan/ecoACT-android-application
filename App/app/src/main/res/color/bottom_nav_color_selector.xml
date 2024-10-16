@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This XML file defines a color selector for different states of a UI element.
+    When the element is checked, it will use the "accendColorB" color,
+    and when it is unchecked, it will use the "primary_ColorW" color.
+
+    @author Shawn(Hexuan)
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/accendColorB" android:state_checked="true"/>
     <item android:color="@color/primary_ColorW" android:state_checked="false"/>

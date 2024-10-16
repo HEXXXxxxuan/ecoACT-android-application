@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This XML defines a layer list with a single item. The item is a bitmap
+    that displays an image (gp_logo) centered within its container.
+    The layer-list can be used for combining multiple drawable layers into one.
+
+    @author Shawn(Hexuan)
+-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <bitmap

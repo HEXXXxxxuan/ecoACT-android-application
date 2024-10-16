@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--
+    This XML layout defines a screen with a search bar, a search button, a fragment container,
+    and a bottom navigation view. It uses a ConstraintLayout to manage the positioning of
+    the UI components, ensuring they are responsive to different screen sizes.
+
+    The layout includes:
+    1. An EditText for user input (search query).
+    2. A Button for triggering the search.
+    3. A FrameLayout as a container for fragments that will display search results.
+    4. A BottomNavigationView for navigation between different sections of the app.
+
+    @author Shawn(Hexuan)
+-->
+
     <EditText
         android:id="@+id/editTextSearch"
         android:layout_width="0dp"

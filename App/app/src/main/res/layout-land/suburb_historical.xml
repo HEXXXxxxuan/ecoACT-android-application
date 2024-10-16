@@ -8,6 +8,17 @@
     android:background="@color/gray_background"
     tools:context="com.go4.application.historical.SuburbHistoricalActivity">
 
+    <!--
+    This XML layout defines the Suburb Historical Activity screen, where users can search for air quality data
+    for a selected suburb and time, and view the corresponding AQI (Air Quality Index) and pollutants' data.
+
+    The layout uses a ConstraintLayout and contains two main CardViews side by side:
+    1. The left CardView: Allows users to search by suburb and date.
+    2. The right CardView: Displays AQI data with a semi-circular progress bar and pollutant information using a GridLayout.
+    semi one imported from link "https://github.com/hadibtf/SemiCircleArcProgressBar"
+    @author Shawn(Hexuan)
+-->
+
     <!-- Left cardView -->
     <androidx.cardview.widget.CardView
         android:id="@+id/date_location_container"

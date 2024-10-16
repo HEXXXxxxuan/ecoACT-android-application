@@ -43,6 +43,7 @@ import com.go4.application.profile.ProfileActivity;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
+import com.go4.utils.DataFetcher;
 import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 import com.go4.utils.tree.AVLTree;
 
@@ -87,6 +88,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  *
  * @author u7902000 Gea Linggar
  * @author u7635535 Zechuan Liu
+ * @author u8006862 Hexuan(Shawn)
  * @see com.go4.application.historical.SuburbHistoricalActivity
  * @see com.github.mikephil.charting.charts.LineChart
  * @see com.go4.utils.GPSService
@@ -597,7 +599,19 @@ public class SuburbLiveActivity extends AppCompatActivity {
 
         return suburbMap;
     }
-
+    /**
+     * Parses the provided JSON response to extract air quality data and update various UI elements
+     * including text views and progress bars, as well as a semi-circular arc progress bar for AQI (Air Quality Index).
+     * Implements semi-circular bar from @link(<a href="https://github.com/hadibtf/SemiCircleArcProgressBar">...</a>).
+     *
+     * @param jsonResponse the JSON string containing air quality data, which includes pollutants like CO, NO2, PM2.5, PM10, O3, and SO2.
+     *
+     * @ensures the text views and progress bars are updated with the correct air quality data, and the AQI value is displayed
+     *          with the appropriate progress bar color and status text (low, moderate, or high).
+     * @requires jsonResponse is a valid JSON string that includes the necessary air quality components.
+     *
+     * @author Shawn(Hexuan)
+     */
     private void displayAirQualityData(String jsonResponse) {
         try {
             JSONObject responseObj = new JSONObject(jsonResponse);

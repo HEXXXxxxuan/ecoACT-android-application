@@ -1,3 +1,8 @@
+<!--
+
+    @author Shawn(Hexuan)
+-->
+
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/secondaryColorMG"/>
     <corners android:radius="12dp"/>

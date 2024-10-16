@@ -9,6 +9,21 @@
     android:background="@color/gray_background"
     tools:context="com.go4.application.profile.ProfileActivity">
 
+    <!--
+    This XML layout defines the profile screen of an application, using a ConstraintLayout
+    to arrange the elements. The layout includes two CardViews (one for the profile and one
+    for pinned suburbs), a RecyclerView for displaying a list of cards, and a custom bottom
+    navigation bar at the bottom.
+
+    Key components:
+    1. Upper CardView: Displays the user's profile image, name, and a logout button.
+    2. Lower CardView: Contains a Spinner to select suburbs, and a RecyclerView to display
+       pinned suburbs.
+    3. Bottom navigation: Custom navigation bar with profile and suburb live sections.
+
+    @author Shawn(Hexuan)/Chan cheng leong
+-->
+
     <!-- Upper cardView -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_upper"

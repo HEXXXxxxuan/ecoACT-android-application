@@ -23,10 +23,12 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"/> <!-- Apply NoActionBar theme -->
 
+
+
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar"> <!-- Apply NoActionBar theme -->
+            android:theme="@style/Theme.AppCompat.NoActionBar"> <!-- Write by Shawn(Hexuan)-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

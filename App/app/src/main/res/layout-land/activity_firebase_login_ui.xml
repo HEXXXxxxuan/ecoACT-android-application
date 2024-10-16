@@ -7,6 +7,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".FirebaseLoginActivity">
 
+    <!--
+    This XML layout defines the Firebase login screen for the application using ConstraintLayout.
+    The layout includes an ImageView for the app logo, two EditText fields for the username and password inputs,
+    and a Button for login functionality.
+
+    Key components:
+    1. ImageView: Displays the app logo at the top, centered horizontally.
+    2. EditText: Two input fields, one for the username (email) and one for the password, placed side by side.
+    3. Button: A login button centered horizontally, below the input fields.
+
+    The layout uses constraints to ensure proper alignment and spacing between elements.
+
+    @author Shawn(Hexuan)
+-->
+
 
     <ImageView
         android:id="@+id/logo_image"
