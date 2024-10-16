@@ -394,14 +394,20 @@ Feature Category: Data <br>
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
+     <br>
+
 4. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
+     <br>
+
 5. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
+     <br>
+
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
    * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L162-230): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
@@ -409,6 +415,7 @@ Feature Category: Data <br>
      The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
      The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
      The page also contains a LOGOUT button.
+     <br>
 
 Feature Category: UI Design and Testing <br>
 7. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
