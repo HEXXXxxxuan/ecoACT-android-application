@@ -86,6 +86,7 @@ import me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar;
  * </ul>
  *
  * @author u7902000 Gea Linggar
+ * @author u7635535 Zechuan Liu
  * @see com.go4.application.historical.SuburbHistoricalActivity
  * @see com.github.mikephil.charting.charts.LineChart
  * @see com.go4.utils.GPSService
