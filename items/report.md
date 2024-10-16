@@ -62,7 +62,7 @@ The key area(s) of responsibilities for each member
     - UI Pinned Suburb Card - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
 
 - **Code and App Design**
-    - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma
+    - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma with Hexuan.
 
 - **Others**: (only if significant and significantly different from an "average contribution")
     - [Report Writing?] [Slides preparation?]*
@@ -75,7 +75,7 @@ The key area(s) of responsibilities for each member
     - Feature Display pinned Search result on live page – class SuburbLiveActivity:[SuburbLiveActivity.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
     - Feature Search Designate by distances – class LoadMoreSearchResultAdapter: [LoadMoreSearchResultAdapter.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/adapter/LoadMoreSearchResultAdapter.java)
  class SearchResultEndlessRecyclerOnScrollListener: [SearchResultEndlessRecyclerOnScrollListener.java](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/listener/SearchResultEndlessRecyclerOnScrollListener.java),
-      
+   
 
 - **Code and App Design**
     - Search: Designed how to meet the requirements for designate. 
@@ -85,7 +85,22 @@ The key area(s) of responsibilities for each member
     - [Report Writing?] [Slides preparation?]*
     - [You are welcome to provide anything that you consider as a contribution to the project or team.] e.g., APK, setups, firebase* <br><br>
 
+4. **u8006862, Hexuan Wang** I have contributed 20%: <br>
+   - **Code Contribution in the final App**
+      - Feature Data Graphical(air quality displays) in SuburbHistoricalActivity https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java and https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java and UI Layout in both activities
+      - Feature Navigation Bar for the app in Main Activity https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java and related XML.
+      - Feature SplashActivity  https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java and its UI.
+      - Feature UI Layout in landscape and portrait https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land
 
+      <br><br>
+
+  - **Code and App Design** 
+    - Design the logo and color/style used in app
+    - Design the Figma with Chan
+    - Design/modify/create the layout in each XML to make the app have a consistent layout style(color/button/cardview etc.)<br><br>
+
+  - **Others**: (only if significant and significantly different from an "average contribution") 
+    - Create the UML<br><br>
 
 
 ## Application Description
