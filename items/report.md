@@ -501,12 +501,37 @@ Feature Cateory: User Interactivity <br>
 (If you choose to make this an external document, link to it here)]*
 
 *If your group has issues, how will your group reach consensus or solve the problem?*
-*- e.g., if a member gets sick, what is the solution? Alternatively, what is your plan to mitigate the impact of unforeseen incidents for this 6-to-8-week project?*
 
-This shall include an agreed procedure for situations including (but not limited to):
-- A member is sick in the final week of the project.
-- A member didn't complete the assigned task which should've been completed before the checkpoint, and the checkpoint is approaching.
-- A member is unreachable (didn't respond messages in your agreed communication channels and emails in two days).
-- The team have different understandings toward the requirement of the assignment.
+Our team is committed to open communication, collaboration, and mutual support. This protocol outlines how we handle different challenges that may come up during our 6-to-8-week project, ensuring everyone feels valued and supported. Here’s how we plan to deal with potential issues:
+
+1. If a Team Member Gets Sick in the Final Week
+   - **Notify the Team**: If someone gets sick, they should let the group know as soon as possible using our regular communication channel(insgram or discord) .
+   - **Reassign Tasks**: We'll hold an emergency meeting to redistribute the workload of the sick member to make sure we stay on track. Tasks with immediate deadlines will be prioritized.
+   - **Offer Support**: The member who is sick will still be updated on the project progress but won’t be expected to work until they’re better. Other team members will help to fill in any gaps to keep things moving smoothly.
+
+2. If a Team Member Misses a Task Deadline Before a Checkpoint
+   - **Check Progress Early**: We'll do a quick check-in about two days before each checkpoint to make sure everyone is on track. If anyone thinks they won’t meet a deadline, they’re encouraged to let the team know so we can help.
+   - **Help Finish Tasks**: If a task isn’t done in time and the checkpoint is approaching, other members will step in to help complete it. We’ll work together to avoid missing critical deadlines.
+   - **Reflect and Adjust**: After the checkpoint, we’ll discuss what caused the delay and figure out how we can avoid similar issues in the future. This could involve adjusting timelines or offering more support where needed.
+
+3. If a Team Member Is Unreachable for Two Days
+   - **Multiple Ways to Contact**: If a member hasn’t responded to messages for two days without prior notice, the team lead will try to contact them through different means, like calling or emailing.
+   - **Temporary Task Reassignment**: If they still can’t be reached after 48 hours, we’ll temporarily reassign their tasks to other team members to keep the project on track.
+   - **Follow-up Conversation**: When the member returns, we’ll have a conversation to understand what happened and how to avoid similar situations in the future. The goal is to keep communication as open as possible.
+
+4. If There Are Different Understandings of Assignment Requirements
+   - **Team Discussion**: If there are different interpretations of the assignment, we’ll hold a team meeting to openly discuss it until we reach a shared understanding.
+   - **Ask for Clarification**: If we can’t reach a consensus internally, we’ll collectively put together questions and ask the course instructor or tutor for clarification.
+   - **Document Decisions**: Once we agree on the requirements, we’ll document them and share with everyone to make sure we all stay aligned moving forward.
+
+5. General Conflict Resolution
+   - **Open and Respectful Discussion**: If any conflict arises, the members involved will discuss the issue openly during a team meeting. Respectful communication is key, and everyone will get a chance to share their point of view.
+   - **Mediation**: If direct discussion doesn’t resolve the conflict, a neutral team member will act as a mediator to help find a solution.
+   - **Escalation**: If mediation fails, we’ll bring the issue to the course instructor for further guidance.
+
+6. Handling Unexpected Incidents
+   - **Risk Assessment**: At the start of the project, we’ll identify potential risks (like illness or technical problems) and create contingency plans for each.
+   - **Task Backups**: Every critical task will have a backup person familiar with it, so the work can continue if the main person is unavailable.
+   - **Regular Check-ins**: We’ll have weekly meetings to review our progress and spot any potential issues early. This will help us take action before they become bigger problems.
 
 
