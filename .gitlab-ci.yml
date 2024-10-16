@@ -41,6 +41,7 @@ test-job:
       - App/.gradle
   script:
     - echo "Running gradle test"
+    - cd App
     - ./gradlew test
   artifacts:
     when: always
