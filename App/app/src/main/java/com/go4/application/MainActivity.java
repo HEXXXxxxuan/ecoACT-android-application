@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.widget.Toast;
 import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +20,21 @@ import com.go4.utils.GPSService;
 import com.go4.utils.GPSService.LocalBinder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Activity intended to handle backend operations
+ */
 public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "main";
     public static boolean bound;
     public static GPSService gpsService;
 
+    /**
+     * Implements {@link com.go4.application.FirebaseLoginActivity.FirebaseLoginActivityResultContract}
+     * into an {@link ActivityResultLauncher<Void>} to provide type safety for user returns.
+     * <p>On success, it launches {@link ProfileActivity} with the resulting user.</p>
+     *
+     * @author Ryan Foote
+     */
     private final ActivityResultLauncher<Void> getUser = registerForActivityResult(
         new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
             if(result != null){
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    // unbinds gpsService to avoid memory leakage
     protected void onDestroy(){
         if (bound) {
             unbindService(connection);
@@ -73,10 +83,22 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * Stylistic wrapper for {@link #getUser}.
+     * literally calls: <p>"<code>getUser.launch(null)</code>"</p>
+     *
+     * @author Ryan Foote
+     */
     private void checkUserLogin() {
         getUser.launch(null);
     }
 
+    /**
+     * Checks for {@link Manifest.permission#ACCESS_BACKGROUND_LOCATION} before
+     * calling {@link #bindService}
+     *
+     * @author Ryan Foote
+     */
     private void startGps(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)==PackageManager.PERMISSION_GRANTED){
             Intent intent = new Intent(this, GPSService.class);
@@ -87,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Utilizing {@link ServiceConnection}, effectively binds the gpsService.
+     *
+     * @author Ryan Foote
+     */
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -101,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     /**
-     * Creates a {@link NotificationChannel} for the associated {@link NotificationManager}
+     * Creates a {@link NotificationChannel} for the associated {@link NotificationManager}.
+     * <p>Allows for notifications to be sent via {@link #CHANNEL_ID}</p>
+     *
+     * @author Ryan Foote
      */
     private void createNotificationChannel() {
         CharSequence name = getString(R.string.channel_name);
