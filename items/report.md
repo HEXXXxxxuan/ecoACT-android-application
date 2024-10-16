@@ -78,16 +78,29 @@ The key area(s) of responsibilities for each member
 Our app is called "EcoACT", which aims to provide users with real-time air quality information for communities in the Canberra area. This app allows users to view the air quality index (AQI) of different areas on a map, so as to understand the current air conditions in the environment and make better life decisions.
 
 The main features of the app include the following:
-
-Real-time air quality monitoring: Users can view the real-time air quality of various areas in Canberra on a map.
-
-Regional search: Users can quickly view the air quality of an area by entering the name of the area.
-
-Personalized collection: Users can collect frequently visited areas so that they can check the air quality of these places at any time.
-
-Historical data analysis: The app also provides historical data on air quality to help users understand the changing trends of air quality in a certain area.
+**Real-time air quality monitoring**: Users can view the real-time air quality of various areas in Canberra on a map.
+**Regional search**: Users can quickly view the air quality of an area by entering the name of the area.
+**Personalized collection**: Users can collect frequently visited areas so that they can check the air quality of these places at any time.
+**Historical data analysis**: The app also provides historical data on air quality to help users understand the changing trends of air quality in a certain area.
+**Suburb Comparison**: Users can compare the air quality between two suburbs, allowing them to make informed decisions about which area is safer or more suitable for activities.
 
 For example, if you live in the Bruce area and want to know whether it is suitable for outdoor activities today, you can open the app and view the air quality index of the Bruce area. In addition, the app will mark the location of nearby public facilities, such as parks, hospitals, etc., to help users make more appropriate living arrangements.
+
+Screenshots:
+
+![Suburb Comparison Graph](./path-to-your-image-1.png)
+*Figure 1: Comparison of air quality between two suburbs.*
+
+![Regional Search](./path-to-your-image-2.jpg)
+*Figure 2: The app's regional search function allows users to quickly search for different suburbs.*
+
+![Air Quality Monitoring](./path-to-your-image-3.png)
+*Figure 3: Real-time air quality monitoring with detailed pollutant data.*
+
+![User Profile and Pinned Suburbs](./path-to-your-image-4.png)
+*Figure 4: User profile section and personalized pinned suburbs feature.*
+
+The "EcoACT" app empowers Canberra residents to stay informed about the air quality in their environment and make decisions that positively impact their health and well-being.
 
 ### Problem Statement
 
