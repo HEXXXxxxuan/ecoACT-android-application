@@ -205,6 +205,10 @@ public class SuburbLiveActivity extends AppCompatActivity {
         updateLocationUsingGPS();
     }
 
+    /**
+     * Initializes and sets up all the UI components of the activity.
+     *
+     */
     private void initializeView() {
         suburbSpinnerLive = findViewById(R.id.SuburbSpinnerLive);
         suburbSpinnerLive.setSingleLine();
@@ -238,6 +242,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
     }
 
+    /**
+     * Updates the selected suburb based on the user's current GPS location and periodically update the data.
+     * <p>
+     * This method uses the GPS service to obtain the user's most recent location, determines the nearest suburb
+     * using the {@link NearestSuburbStrategy}, and updates the UI to display the nearest suburb. It then triggers
+     * a background task to fetch and refresh the air quality data for the selected suburb.
+     * </p>
+     *
+     * @author u7902000 Gea Linggar
+     */
     public void updateLocationUsingGPS() {
         NearestSuburbStrategy nearestSuburbStrategy = new NearestSuburbStrategy();
         Location location = MainActivity.gpsService.getRecentLocation();
@@ -254,10 +268,37 @@ public class SuburbLiveActivity extends AppCompatActivity {
         executor.execute(this::showDataAndRefresh);
     }
 
+    /**
+     * Enum representing the available time intervals for fetching air quality data.
+     * <p>
+     * The available options are:
+     * <ul>
+     *   <li>{@link #TODAY}: Fetch data for today.</li>
+     *   <li>{@link #YESTERDAY}: Fetch data for yesterday.</li>
+     *   <li>{@link #LASTWEEK}: Fetch data for the last week.</li>
+     * </ul>
+     */
     public enum IntervalOption {
         TODAY, YESTERDAY, LASTWEEK
     }
 
+    /**
+     * Sets up the {@link Spinner} for selecting a time interval and handles the selection events.
+     * <p>
+     * This method populates the spinner with a list of interval options such as "Today", "Yesterday",
+     * and "Last week". When an item is selected, the corresponding {@link IntervalOption} is set,
+     * and the air quality data is fetched and displayed for the selected suburb.
+     * </p>
+     * <ul>
+     *   <li>Populates the interval spinner with "Today", "Yesterday", and "Last week" options.</li>
+     *   <li>Handles user selection by triggering a data fetch for the selected interval.</li>
+     *   <li>If the user has selected a suburb, the method fetches the data for that suburb based on the selected interval.</li>
+     *   <li>If a comparison suburb is selected, it also fetches data for the comparison suburb.</li>
+     *   <li>The data is displayed on the UI through the methods {@link #plotPrimaryData} and {@link #plotComparisonData}.</li>
+     * </ul>
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void selectIntervalSpinner() {
         List<String> intervals = new ArrayList<>();
         intervals.add("Today");
@@ -312,16 +353,45 @@ public class SuburbLiveActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Enum representing the different air quality metrics that can be displayed.
+     * @author u7902000 Gea Linggar
+     */
     public enum AirQualityMetric {
         AQI, CO, NO2, PM2_5, PM10, O3, SO2
     }
 
+    /**
+     * Fetches and displays mock air quality data.
+     * <p>
+     * This method utilizes the {@link MockJSONResponse} class to fetch mock air quality data
+     * in the form of a JSON response. The retrieved data is then passed to
+     * {@link #displayAirQualityData(String)} for display on the UI. This is used to demonstrate
+     * our app's ability to stream data. Otherwise, it would take an hour for the data from the API
+     * to change.
+     * </p>
+     * @author Gea Lingar
+     */
     private void fetchAndDisplayMockData() {
         MockJSONResponse mockJSONResponse = new MockJSONResponse();
         String response = mockJSONResponse.getMockResponse();
         displayAirQualityData(response);
     }
 
+    private void fetchAndDisplayData(){}
+
+    /**
+     * Starts a periodic task to fetch and display air quality data every two minutes.
+     * <p>
+     * This method sets up a {@link Runnable} task that calls {@link #fetchAndDisplayMockData()} to
+     * fetch air quality data. The task is scheduled to run every 2 minutes (120,000 ms)
+     * This allows the app to refresh the displayed data periodically.
+     * The developer can choose to select between {@link #fetchAndDisplayData()} and
+     * {@link #fetchAndDisplayMockData()} to select the source of stream data.
+     * </p>
+     *
+     * @author u7902000 Gea linggar
+     */
     private void showDataAndRefresh() {
         fetchTask = new Runnable() {
             @Override
@@ -334,12 +404,33 @@ public class SuburbLiveActivity extends AppCompatActivity {
         handler.post(fetchTask);
     }
 
+    /**
+     * Stops the periodic data refresh task.
+     *
+     * <p>This method is called to stop the periodic refresh when the activity is paused or destroyed,
+     * to prevent memory leaks or unnecessary updates.</p>
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void stopShowDataRefresh() {
         if (handler != null && fetchTask != null) {
             handler.removeCallbacks(fetchTask);
         }
     }
 
+    /**
+     * Handles the comparison button click event by displaying and comparing air quality data.
+     * <p>
+     * This method makes the necessary UI components visible (such as the line chart, interval spinner,
+     * and comparison suburb spinner) and fetches the air quality records for both the selected and compared suburbs.
+     * </p>
+     * <p>
+     * The method first fetches and plots the primary suburb's data using {@link #fetchRecordsForSuburbAndInterval(String)}
+     * and {@link #plotPrimaryData(List, AirQualityMetric)}. If a comparison suburb is selected, it also fetches the comparison
+     * data and plots it on the chart using {@link #plotComparisonData(List, AirQualityMetric)}.
+     * </p>
+     * @author u7902000 Gea Linggar
+     */
     private void comparisonOnClick() {
         lineChart.setVisibility(View.VISIBLE);
         intervalSpinner.setVisibility(View.VISIBLE);
@@ -355,6 +446,11 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initializes the click listeners for various UI components in the Suburb Live Activity.
+     *
+     * @author u7902000 Gea Linggar
+     */
     private void clickListener() {
         resultTextViewLive.setOnClickListener(v -> {
             metricOption = AirQualityMetric.AQI;
@@ -385,6 +481,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
             comparisonOnClick();
         });
 
+        //reset the text when clicked
         suburbSpinnerLive.setOnClickListener(v -> suburbSpinnerLive.setText(""));
         comparingSpinner.setOnClickListener(v -> comparingSpinner.setText(""));
 
@@ -400,6 +497,20 @@ public class SuburbLiveActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches air quality records for the selected suburb and a specific time interval.
+     * <p>
+     * This method calculates the time range based on the selected interval option
+     * (e.g., Today, Yesterday, Last Week) and formats the start and end dates. It then
+     * filters the records for the given suburb within the specified date range by calling
+     * {@link #filterRecordsBySuburbAndTimestamp(AVLTree, String, String, String)}.
+     * </p>
+     *
+     * @param selectedSuburb the name of the suburb to fetch records for.
+     * @return a list of {@link AirQualityRecord} instances that match the suburb and the selected time range.
+     *
+     * @author u7902000 Gea Linggar
+     */
     private List<AirQualityRecord> fetchRecordsForSuburbAndInterval(String selectedSuburb) {
         List<AirQualityRecord> recordsInSelectedSuburb;
         Calendar startCalendar = Calendar.getInstance();
@@ -451,10 +562,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         return recordsInSelectedSuburb;
     }
 
+    /**
+     * Initializes the suburb selection spinner and configures its behavior.
+     * <p>
+     * When a suburb is selected, the method triggers data fetching for that suburb and displays
+     * the fetched data. The UI is updated on the main thread after fetching is complete.
+     * </p>
+     */
     private void selectSuburbSpinner() {
         // Create a list of suburbs
         List<String> suburbsList = new ArrayList<>();
-        //suburbsList.addAll(suburbMap.keySet());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suburbsList);
         suburbSpinnerLive.setAdapter(adapter);
         suburbSpinnerLive.setThreshold(1);
@@ -506,6 +623,19 @@ public class SuburbLiveActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes the comparing suburb spinner and configures its behavior.
+     * <p>
+     * This method sets up an {@link AutoCompleteTextView} (comparingSpinner) to allow users
+     * to search for and select a suburb from the list of available suburbs. It handles
+     * user selection of a suburb and triggers the comparison process.
+     * </p>
+     * <p>
+     * When a suburb is selected from the comparingSpinner, the method fetches air quality
+     * records for the selected suburb and displays the comparison data alongside the primary suburb.
+     * </p>
+     * @author u7902000 Gea linggar
+     */
     private void selectComparingSpinner() {
         // Create a list of suburbs and add the default entry as the first item
         List<String> suburbsList = new ArrayList<>(); // Why global variables?!?!
@@ -529,6 +659,21 @@ public class SuburbLiveActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filters records in an AVL tree based on the selected suburb and a specified timestamp range.
+     * <p>
+     * This method traverses the AVL tree and filters air quality records by matching the suburb name
+     * and ensuring that the record's timestamp falls within the provided start and end timestamps.
+     * Records are added to the result list if they meet these criteria.
+     * </p>
+     *
+     * @param records          The AVL tree containing air quality records with a key format of "suburb_timestamp".
+     * @param selectedSuburb   The name of the suburb to filter records for.
+     * @param startTimestamp   The start of the timestamp range in the format "yyyy-MM-dd HH:mm:ss".
+     * @param endTimestamp     The end of the timestamp range in the format "yyyy-MM-dd HH:mm:ss".
+     * @return                 A list of {@link AirQualityRecord} objects filtered by the specified suburb and timestamp range.
+     * @author u7902000 Gea Linggar
+     */
     public List<AirQualityRecord> filterRecordsBySuburbAndTimestamp(AVLTree<String, AirQualityRecord> records,
                                                                     String selectedSuburb, String startTimestamp, String endTimestamp) {
         List<AirQualityRecord> recordsInSelectedSuburb = new ArrayList<>();
@@ -569,7 +714,14 @@ public class SuburbLiveActivity extends AppCompatActivity {
         return recordsInSelectedSuburb;
     }
 
-    // Duplicate of ProfileActivity's
+    /**
+     * Loads a map of suburb names and their corresponding geographical coordinates from the
+     * json file located in the assets folder.
+     *
+     * @return a {@code HashMap<String, double[]>} where each key is a suburb name, and each value
+     *         is an array containing the latitude and longitude of the suburb.
+     * @throws RuntimeException if there is an error loading or parsing the JSON file.
+     */
     private HashMap<String, double[]> loadSuburbsFromJson() {
         HashMap<String, double[]> suburbMap = new HashMap<>();
         try {
@@ -643,6 +795,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Plots the primary air quality data on the line chart.
+     * <p>
+     * The X-axis labels are set based on the time values extracted from the records.
+     * </p>
+     *
+     * @param data   the list of {@link AirQualityRecord} containing air quality data to plot
+     * @param metric the selected {@link AirQualityMetric} (e.g., AQI, CO, etc.) for plotting
+     * @author u7902000
+     */
     private void plotPrimaryData(List<AirQualityRecord> data, AirQualityMetric metric) {
         if (data == null || data.isEmpty()) {
             Log.d("Plotting Error", "Primary data is empty or null");
@@ -688,6 +850,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         lineChart.invalidate();
     }
 
+    /**
+     * Plots the comparing air quality data on the line chart.
+     * <p>
+     * The X-axis labels are set based on the time values extracted from the records.
+     * </p>
+     *
+     * @param data   the list of {@link AirQualityRecord} containing air quality data to plot
+     * @param metric the selected {@link AirQualityMetric} (e.g., AQI, CO, etc.) for plotting
+     * @author u7902000 Gea Linggar
+     */
     private void plotComparisonData(List<AirQualityRecord> data, AirQualityMetric metric) {
         if (data == null || data.isEmpty()) {
             Log.d("Plotting Error", "Comparison data is empty or null");
@@ -733,6 +905,15 @@ public class SuburbLiveActivity extends AppCompatActivity {
         lineChart.invalidate();
     }
 
+    /**
+     * Helper method for plotting data
+     * Extracts the metric value (e.g., AQI, CO, etc.) from an air quality record.
+     *
+     * @param record the {@link AirQualityRecord} from which to extract the metric value
+     * @param metric the selected {@link AirQualityMetric} to retrieve the value for
+     * @return the value of the selected metric for the given air quality record
+     * @author Gea Linggar
+     */
     private float getMetricValue(AirQualityRecord record, AirQualityMetric metric) {
         switch (metric) {
             case AQI:
@@ -754,6 +935,16 @@ public class SuburbLiveActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Helper method for plotting data
+     * Creates a new {@link LineDataSet} for the chart.
+     *
+     * @param entries the list of {@link Entry} data points for the dataset
+     * @param label   the label for the dataset
+     * @param color   the color for the dataset's line and fill
+     * @return a {@link LineDataSet} for the chart
+     * @author Gea Linggar
+     */
     private LineDataSet createDataSet(ArrayList<Entry> entries, String label, int color) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -766,6 +957,13 @@ public class SuburbLiveActivity extends AppCompatActivity {
         return dataSet;
     }
 
+    /**
+     * Helper method for plotting
+     * Sets the labels for the X-axis of the chart based on the time values.
+     *
+     * @param hourIndex the list of hour values (in "HH:mm" format) to set as X-axis labels
+     * @author Gea Linggar
+     */
     private void setXAxisLabels(ArrayList<String> hourIndex) {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(hourIndex));
