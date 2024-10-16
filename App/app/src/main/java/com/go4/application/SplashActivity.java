@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.Manifest;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -30,12 +32,16 @@ import com.go4.utils.DataFetcher;
 public class SplashActivity extends AppCompatActivity {
     private static final int GET_BACKGROUND_AFTER = 2000;
     private static final int START_ACTIVITY_AFTER = 1000;
+    private TextView statusText;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ((ProgressBar) findViewById(R.id.fetchingProgressBar)).setMax(113);
+        statusText = findViewById(R.id.statusTextView);
+        progressBar =  findViewById(R.id.fetchingProgressBar);
+        progressBar.setMax(113);
         fetchData();
     }
 
@@ -88,6 +94,7 @@ public class SplashActivity extends AppCompatActivity {
             Log.d("Debug", "Requesting: " + Arrays.toString(req));
             ActivityCompat.requestPermissions(this, req, START_ACTIVITY_AFTER);
         }
+        Log.d("Permissions", "Checking for permissions before starting the next activity");
     }
 
     /**
@@ -132,6 +139,18 @@ public class SplashActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 7);
-        dataFetcher.automaticAddRecords(this, "historical_data.csv", findViewById(R.id.fetchingProgressBar), this::checkPermissions);
+
+        statusText.setText("Hang tight! We're collecting some top-secret air quality info.");
+
+        dataFetcher.automaticAddRecords(this, "historical_data.csv", progressBar, () -> {
+
+            statusText.setText("Data fetched. Phew!");
+
+            // Delay to let user see final status before permission check
+            mainHandler.postDelayed(() -> {
+                Log.d("DelayedExecution", "Delay finished, calling checkPermissions()...");
+                checkPermissions();
+            }, 1000);
+        });
     }
 }
