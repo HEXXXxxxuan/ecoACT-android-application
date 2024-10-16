@@ -1080,7 +1080,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ExecutorServiceSingleton.shutdown();
+        stopShowDataRefresh();
     }
 
     // Get 20 latest data each time
