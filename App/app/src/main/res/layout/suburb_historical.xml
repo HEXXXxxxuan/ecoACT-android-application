@@ -230,7 +230,7 @@
                             android:id="@+id/pm25TextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 
@@ -267,7 +267,7 @@
                             android:id="@+id/pm10TextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 
@@ -303,7 +303,7 @@
                             android:id="@+id/o3TextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 
@@ -341,7 +341,7 @@
                             android:id="@+id/so2TextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 
@@ -378,7 +378,6 @@
                             android:id="@+id/coTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 
@@ -415,7 +414,7 @@
                             android:id="@+id/no2TextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+
                             android:textSize="16sp"
                             android:layout_marginTop="8dp" />
 

@@ -35,10 +35,7 @@ public class SplashActivity extends AppCompatActivity {
     private static final int START_ACTIVITY_AFTER = 1000;
     private TextView statusText;
     private ProgressBar progressBar;
-    /**
-     * link to XML
-     * @author Shawn(Hexuan)
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

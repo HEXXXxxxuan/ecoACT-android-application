@@ -43,7 +43,6 @@ import com.go4.application.profile.ProfileActivity;
 import com.go4.application.R;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
-import com.go4.utils.DataFetcher;
 import com.go4.utils.design_pattern.ExecutorServiceSingleton;
 import com.go4.utils.tree.AVLTree;
 
@@ -610,7 +609,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
      *          with the appropriate progress bar color and status text (low, moderate, or high).
      * @requires jsonResponse is a valid JSON string that includes the necessary air quality components.
      *
-     * @author Shawn(Hexuan)
+     * @author Gea,Hexuan(Shawn)
      */
     private void displayAirQualityData(String jsonResponse) {
         try {
@@ -656,6 +655,10 @@ public class SuburbLiveActivity extends AppCompatActivity {
             resultTextViewLive.setText("Error parsing JSON response.");
         }
     }
+    /**
+     * This method determines the state and colors for the progress bars
+     * @author Shawn(Hexuan)
+     */
 
     private void plotPrimaryData(List<AirQualityRecord> data, AirQualityMetric metric) {
         if (data == null || data.isEmpty()) {

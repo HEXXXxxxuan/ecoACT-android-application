@@ -53,13 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Login", "GUAH NO USER");
             }
         });
-    /**
-     * The main activity that sets up the bottom navigation bar and its event listeners.
-     * It initializes the layout, creates a notification channel, and handles navigation actions.
-     *
-     * @author Shawn(Hexuan)
-     *
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
