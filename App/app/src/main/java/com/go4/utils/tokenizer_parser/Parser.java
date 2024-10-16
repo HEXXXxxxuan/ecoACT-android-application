@@ -31,6 +31,15 @@ public class Parser {
         return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime()};
     }
 
+    /**
+     * This method checks the type of the current token,
+     * decides which method to use and parse the token
+     * and then calls itself recursively to parse the next token.
+     *
+     * <p>This method is called every time the text in the search bar is changed.</p>
+     *
+     * <p>All strings are case insensitive.</p>
+     */
     public void parseInput() {
         if (tokenizer.current() == null) {
             return;
@@ -51,6 +60,9 @@ public class Parser {
         parseInput();
     }
 
+    /**
+     * This method parses the location token and stores it in record with type {@link SearchRecord}.
+     */
     public void parseLocation() {
         // Parse the location token
         Token location = tokenizer.current();
@@ -58,6 +70,10 @@ public class Parser {
         record.setSelectedSuburb(location.getToken());
     }
 
+    /**
+     * This method parses the date, which must contain a year token, a month token and a day token in that order.
+     * It forms a date string with the three tokens and stores it in record with type {@link SearchRecord}.
+     */
     public void parseDate() {
         // Parse the date token
         Token date = tokenizer.current();
@@ -77,6 +93,9 @@ public class Parser {
         }
     }
 
+    /**
+     * This method parses the time token and stores it in record with type {@link SearchRecord}.
+     */
     public void parseTime() {
         // Parse the time token
         Token time = tokenizer.current();
