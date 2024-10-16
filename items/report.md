@@ -167,41 +167,31 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 
 *I used the following data structures in my project:*
 
-1. *ArrayList*
-   * *Objective: Used for managing a dynamic list of suburb cards and air quality records for the UI rendering.*
-   * *Code Locations: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java#L22) and [`AirQualityRecord`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/model/AirQualityRecord.java#L10); processed using `updateList()` method in both classes.*
-   * *Reasons:*
-      * *It is more efficient than LinkedList for accessing elements by index with a time complexity of O(1).*
-      * *We need frequent random access to the list items for rendering the UI, so direct indexing is necessary.*
-      * *The ability to dynamically resize the list is crucial as the number of suburbs and AQI records may vary over time.*
+1.  *Objective*: Used for storing and managing a list of suburb details and historical air quality records dynamically as new data is fetched and displayed in the UI.
+   * *Code Locations**: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbCardViewAdapter.java#L28) and [`SuburbHistoricalActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbHistoricalActivity.java#L159); processed using methods like `onBindViewHolder()` and `updateList()` to display air quality data and suburb information dynamically.
+   * *Reasons*:
+      * *It is more efficient than `LinkedList` for frequent random access operations where elements are accessed by index with a time complexity of O(1).*
+      * *We need to frequently update and access elements in the list for UI rendering, such as when new air quality data is loaded or the list of suburbs is displayed.*
+      * *ArrayList supports dynamic resizing, which is essential as the number of suburb cards and air quality records may vary during real-time data updates.*
 
 2. *HashMap*
-   * *Objective: Used for fast lookup of air quality data by suburb name to support real-time AQI monitoring.*
-   * *Code Locations: Defined in [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java#L50) and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/DataFetcher.java#L18); processed using `getSuburbAQI()` in both classes.*
-   * *Reasons:*
+   * *Objective**: Used for storing suburb names as keys and their geographical coordinates as values to determine proximity in nearest suburb calculations.
+   * *Code Locations**: Defined in [`NearestSuburbStrategy`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java#L92); processed using `getNearestSuburb()` and `getNearestSuburbList()` methods.
+   * *Reasons*:
       * *It is more efficient than using a list for key-value pair lookups with an average time complexity of O(1).*
       * *We don't need ordered data for this feature because the suburbs are queried by name.*
-      * *HashMap ensures that data retrieval is fast enough for real-time monitoring without performance degradation.*
+      * *HashMap allows fast retrieval of suburb coordinates during proximity calculations without performance degradation, ensuring a smooth user experience.*
 
-3. *LinkedList*
-   * *Objective: Used for storing user search history in a dynamic manner.*
-   * *Code Locations: Defined in [`SearchRecord`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SearchRecord.java#L30); processed using `addSearchTerm()` and `removeSearchTerm()` methods.*
-   * *Reasons:*
-      * *It is more efficient than ArrayList for insertion and deletion operations with a time complexity of O(1).*
-      * *We don't need to access items by index for the search history, as it operates as a sequential list.*
-      * *The data in the search history is constantly updated, so fast insertions and removals are crucial.*
-
-4. *PriorityQueue*
-   * *Objective: Used for prioritizing suburbs by proximity or air quality index for recommendation features.*
-   * *Code Locations: Defined in [`NearestSuburbStrategy`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java#L12); processed using `getNearestSuburb()` method.*
-   * *Reasons:*
-      * *It automatically maintains sorted order with a time complexity of O(log n) for insertions and retrievals.*
-      * *We don't need to manually sort the list each time because PriorityQueue handles that internally.*
-      * *The queue prioritizes suburbs based on proximity or AQI, ensuring the most relevant suburb is retrieved first.*
-
-5. *AVL Tree*
+3. *HashSet*
+   * *Objective**: Used to store unique combinations of suburb names and timestamps to prevent duplicate air quality records from being written to the CSV file.
+   * *Code Locations**: Defined in [`DataFetcher.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/DataFetcher.java#L138) in the `fetchHistoricalDataTOCSV()` method to ensure no duplicate records are stored in the CSV.
+   * *Reasons*:
+      * *O(1) average time complexity for both insertions and lookups, which is critical for checking the existence of records efficiently before writing to the CSV.*
+      * *Prevents the need for additional loops or checks to ensure that duplicate suburb records (with the same timestamp) are not written.*
+      * *Helps maintain the integrity of the dataset by ensuring that only new, unique records are appended to the file, reducing redundant data.*
+4. *AVL Tree*
    * *Objective: Used for storing suburb data in a balanced manner to ensure efficient lookups, insertions, and deletions.*
-   * *Code Locations: Defined in [`AVLTree`]https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tree/AVLTree.java#L15); processed using `insert()`, `delete()`, and `search()` methods.*
+   * *Code Locations: Defined in [`AVLTree`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tree/AVLTree.java#L11); processed using `insert()`, `delete()`, and `search()` methods.*
    * *Reasons:*
       * *It is more efficient than a standard binary search tree, with O(log n) time complexity for all operations.*
       * *We need to maintain balanced performance as the dataset grows to avoid worst-case O(n) time complexity.*
