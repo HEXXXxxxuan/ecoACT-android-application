@@ -22,6 +22,16 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+
+/**
+ * This class contains unit tests for the CsvParser utility class, which parses CSV files containing
+ * air quality data. The tests verify the correct parsing of valid records, the handling of invalid
+ * formats, and edge cases such as empty files.
+ *
+ * Mocking and temporary files are used to simulate various CSV files with different data formats
+ * and record structures.
+ * @author Gea Linggar
+ */
 public class CSVParsingTest {
     @Mock
     private final Context context = mock(Context.class);
@@ -29,6 +39,17 @@ public class CSVParsingTest {
     @Rule
     public TemporaryFolder cacheDir = new TemporaryFolder();
 
+    /**
+     * Sets up the test environment before each test by creating temporary CSV files with various
+     * contents. These include:
+     * - An empty file (`text_file_empty.csv`) to test edge cases.
+     * - A file with two valid records (`test_file_2.csv`).
+     * - A file with many valid records (`test_file_many`).
+     * - A file with incorrect formatting and missing fields (`test_wrong_format`).
+     *
+     * The setup method also mocks the `context.getCacheDir()` call to point to the temporary folder
+     * created during testing.
+     */
     @Before
     public void setup() throws IOException {
         cacheDir.newFile("text_file_empty.csv");
@@ -70,6 +91,9 @@ public class CSVParsingTest {
         writer.close();
     }
 
+    /**
+     * Tests the behavior of CsvParser when parsing an empty CSV file.
+     */
     @Test
     public void testEmptyCSV(){
         CsvParser csvParser = new CsvParser();
@@ -78,6 +102,9 @@ public class CSVParsingTest {
         assertEquals("Record should be empty list", 0, records.size());
     }
 
+    /**
+     * Tests the parsing of a small CSV file containing two valid AirQualityRecord entries.
+     */
     @Test
     public void testSmallRecords(){
         CsvParser csvParser = new CsvParser();
@@ -90,6 +117,10 @@ public class CSVParsingTest {
         assertEquals(1.0, records.get(1).getNh3(), 0);
     }
 
+    /**
+     * Tests the parsing of a CSV file with many records. Verifies that the number of records parsed
+     * is correct and ensures no data loss during the process.
+     */
     @Test
     public void testManyRecords(){
         CsvParser csvParser = new CsvParser();
@@ -98,6 +129,9 @@ public class CSVParsingTest {
         assertEquals( 13, records.size());
     }
 
+    /**
+     * Tests the handling of a CSV file with invalid formatting.
+     */
     @Test
     public void testInvalidRecord(){
         CsvParser csvParser = new CsvParser();
@@ -105,6 +139,9 @@ public class CSVParsingTest {
         assertEquals("Should have parsed 2 valid records", 2, records.size());
     }
 
+    /**
+     * Tests the method CsvParser.parseDoubleSafely, which parses a string into a double value.
+     */
     @Test
     public void testParseDoubleSafely(){
         CsvParser csvParser = new CsvParser();
@@ -112,6 +149,9 @@ public class CSVParsingTest {
         assertEquals("Should parse valid double", 123.45, result, 0.001);
     }
 
+    /**
+     * Tests the CsvParser.parseDoubleSafely method with invalid input.
+     */
     @Test
     public void testParseDoubleSafely_InvalidInput() {
         CsvParser csvParser = new CsvParser();
@@ -119,6 +159,9 @@ public class CSVParsingTest {
         assertEquals("Should return default value for invalid input", 5.0, result, 0.001);
     }
 
+    /**
+     * Tests the method CsvParser.parseLongSafely, which parses a string into a long value.
+     */
     @Test
     public void testParseLongSafely(){
         CsvParser csvParser = new CsvParser();
@@ -126,6 +169,9 @@ public class CSVParsingTest {
         assertEquals("Should parse valid long", 123456789, result, 0.001);
     }
 
+    /**
+     * Tests the CsvParser.parseLongSafely method with invalid input.
+     */
     @Test
     public void testParseLongSafely_InvalidInput() {
         CsvParser csvParser = new CsvParser();
