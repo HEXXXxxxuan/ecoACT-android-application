@@ -6,27 +6,23 @@ plugins {
 android {
     namespace = "com.go4.application"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.go4.application"
         minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
-    buildToolsVersion = "34.0.0"
 }
 
 dependencies {
@@ -44,7 +40,6 @@ dependencies {
     implementation(libs.semicirclearcprogressbar)
     implementation(libs.pager.bottom.tab.strip)
     implementation(libs.gson)
-    implementation(libs.json.simple)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation (libs.mockito.inline)
