@@ -3,6 +3,12 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+java{
+    toolchain{
+        languageVersion = JavaLanguageVersion.of(17);
+    }
+}
+
 android {
     namespace = "com.go4.application"
     compileSdk = 34
@@ -12,7 +18,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    testOptions {
+        unitTests.isReturnDefaultValues = true;
     }
     buildTypes {
         release {
@@ -22,6 +30,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    compileOptions {
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -33,16 +44,13 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.play.services.location)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
-    implementation(libs.play.services.location)
     implementation(libs.mpandroidchart)
     implementation(libs.semicirclearcprogressbar)
     implementation(libs.pager.bottom.tab.strip)
     implementation(libs.gson)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
-    testImplementation (libs.mockito.inline)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.espresso.intents)

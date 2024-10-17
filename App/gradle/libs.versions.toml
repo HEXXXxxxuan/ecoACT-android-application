@@ -9,8 +9,8 @@ appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
-mockitoCore = "5.0.0"
-mockitoInline = "4.6.1"
+mockitoAndroid = "5.14.2"
+mockitoCore = "5.14.2"
 mpandroidchart = "v3.1.0"
 pagerBottomTabStrip = "2.4.0"
 playServicesLocation = "21.3.0"
@@ -20,8 +20,7 @@ swiperefreshlayout = "1.1.0"
 
 [libraries]
 espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoCoreVersion" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version = "23.0.0" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -31,7 +30,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 pager-bottom-tab-strip = { module = "me.majiajie:pager-bottom-tab-strip", version.ref = "pagerBottomTabStrip" }
 rules = { module = "androidx.test:rules", version.ref = "rules" }
