@@ -24,7 +24,7 @@ import com.go4.utils.design_pattern.ExecutorServiceSingleton;
  * Models the Splash Screen on app-startup.
  * <p>Fetches data using {@link DataFetcher}</p>
  *
- * @author Shawn(Hexuan), Gea, u7327620 Ryan Foote
+ * @author u8006862 Shawn(Hexuan), u7902000 Gea, u7327620 Ryan Foote
  */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -57,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
      * <p>Requests location permissions and {@link Manifest.permission#ACCESS_BACKGROUND_LOCATION}
      * separately as per android docs</p>
      *
-     * @author Gea, u7327620 Ryan Foote
+     * @author u7902000 Gea, u7327620 Ryan Foote
      */
     private void checkPermissions(){
         ArrayList<String> permissions = new ArrayList<>();

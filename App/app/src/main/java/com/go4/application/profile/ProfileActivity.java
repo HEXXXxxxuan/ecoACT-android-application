@@ -57,6 +57,16 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * This activity launches the profile page after successful login.
  *
+ * <p>This class includes several key features:</p>
+ * <ul>
+ *     <li>Display User Email</li>
+ *     <li>Change Profile Picture with Photo Picker</li>
+ *     <li>Log out of account/li>
+ *     <li>Add pinned suburb card, displaying PM10 number of air quality of the suburb</li>
+ *     <li>Edit the labels of suburb cards </li>
+ *     <li>Swipe right to delete suburb cards </li>
+ * </ul>
+ *
  * <p>It displays user email, allows users to change profile picture, and add, rename and delete suburb cards</p>
  * @author u8003980 Chan Cheng Leong
  */
