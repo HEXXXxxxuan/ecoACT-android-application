@@ -30,8 +30,8 @@ declaration: >-
 
 ### Questions (answer before final submission):
 1. You (as a group) completed this work (tick the most appropriate option):
-  - [X] by yourself (as a group) without the help of others;
-      [ ] with Gen AI tools (e.g., ChatGPT, Co-Pilot).
+  - [] by yourself (as a group) without the help of others;
+      [X] with Gen AI tools (e.g., ChatGPT, Co-Pilot).
       [ ] using online resources (e.g., Stackoverflow, blogs)
 
 2. If not completed by yourself only, how did the use of Gen AI tools (and which ones), contribute to completing this assignment?
@@ -47,13 +47,13 @@ declaration: >-
 
 # for each member, sign by inputting your name and uid here (remove any empty "name+uid" entries)
 members:
-  - name: Cheng Leong Chan
-    uid: u8003980
-  - name: Zechuan Liu
-    uid: u7635535
+  - name:
+    uid:
+  - name:
+    uid:
   - name: Ryan Foote
     uid: u7327620
-  - name: Gea Linggar Galih
-    uid: u7902000
+  - name:
+    uid:
   - name: Hexuan Wang
     uid: u8006862
