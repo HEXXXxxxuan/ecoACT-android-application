@@ -32,6 +32,7 @@ public class CSVParsingTest {
     @Before
     public void setup() throws IOException {
         cacheDir.newFile("text_file_empty.csv");
+        when(context.getCacheDir()).thenReturn(cacheDir.getRoot());
         File testFile2Records = cacheDir.newFile("test_file_2.csv");
         File testFileManyRecords = cacheDir.newFile("test_file_many");
         File testWrongFormat = cacheDir.newFile("test_wrong_format");
