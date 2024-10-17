@@ -166,243 +166,243 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
-                android:id="@+id/semiCircleArcProgressBar"
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                app:progressBarColor="@color/secondaryColorLG"
-                app:progressBarWidth="10"
-                app:progressPlaceHolderColor="@color/accendColorB"
-                app:progressPlaceHolderWidth="10" />
-
-            <TextView
-                android:id="@+id/aqiStatusTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/secondaryColorLG"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/dividerColor" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alignmentMode="alignMargins"
-                android:columnCount="3"
-                android:columnOrderPreserved="false"
-                android:rowCount="2">
+                <me.bastanfar.semicirclearcprogressbar.SemiCircleArcProgressBar
+                    android:id="@+id/semiCircleArcProgressBar"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    app:progressBarColor="@color/secondaryColorLG"
+                    app:progressBarWidth="10"
+                    app:progressPlaceHolderColor="@color/accendColorB"
+                    app:progressPlaceHolderWidth="10" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/aqiStatusTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/secondaryColorLG"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/pm25Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PM2.5"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/dividerColor" />
 
-                    <TextView
-                        android:id="@+id/pm25TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
-
-                    <ProgressBar
-                        android:id="@+id/pm25ProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
-
-                <LinearLayout
+                <GridLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:alignmentMode="alignMargins"
+                    android:columnCount="3"
+                    android:columnOrderPreserved="false"
+                    android:rowCount="2">
 
-                    <TextView
-                        android:id="@+id/pm10Label"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PM10"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/pm10TextView"
+                        <TextView
+                            android:id="@+id/pm25Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="PM2.5"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/pm25TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/pm25ProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <ProgressBar
-                        android:id="@+id/pm10ProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/pm10Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="PM10"
+                            android:textColor="@color/black" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                        <TextView
+                            android:id="@+id/pm10TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/o3Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="O3"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        <ProgressBar
+                            android:id="@+id/pm10ProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/o3TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
-
-                    <ProgressBar
-                        android:id="@+id/o3ProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
-
-                <!-- SO2 -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/so2Label"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SO2"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/so2TextView"
+                        <TextView
+                            android:id="@+id/o3Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="O3"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/o3TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/o3ProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
+
+                    <!-- SO2 -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <ProgressBar
-                        android:id="@+id/so2ProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/so2Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="SO2"
+                            android:textColor="@color/black" />
 
-                <!-- CO -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                        <TextView
+                            android:id="@+id/so2TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/coLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CO"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        <ProgressBar
+                            android:id="@+id/so2ProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/coTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
-
-                    <ProgressBar
-                        android:id="@+id/coProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
-
-                <!-- NO2 -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/no2Label"
+                    <!-- CO -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NO2"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/no2TextView"
+                        <TextView
+                            android:id="@+id/coLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="CO"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/coTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/coProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
+
+                    <!-- NO2 -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <ProgressBar
-                        android:id="@+id/no2ProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:max="100"
-                        android:rotation="270" />
-                </LinearLayout>
-            </GridLayout>
+                        <TextView
+                            android:id="@+id/no2Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="NO2"
+                            android:textColor="@color/black" />
 
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/no2TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/no2ProgressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:max="100"
+                            android:rotation="270" />
+                    </LinearLayout>
+                </GridLayout>
+
+            </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
 
