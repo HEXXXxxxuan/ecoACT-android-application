@@ -5,38 +5,37 @@ import android.util.Log;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CSVParsingTest {
-    private Context context;
-    private static MockedStatic<Log> mockedLog;
+    @Mock
+    private Context context = mock();
 
+    @Rule
+    TemporaryFolder cacheDir = new TemporaryFolder();
 
     @Before
-    public void setup() throws Exception{
-        context = Mockito.mock(Context.class);
-
-        File cacheDir = new File(System.getProperty("java.io.tmpdir", "cache"));
-        cacheDir.mkdir();
-
-        Mockito.when(context.getCacheDir()).thenReturn(cacheDir);
-
-        Mockito.when(android.util.Log.e(anyString(), anyString())).thenReturn(0);
-        Mockito.when(android.util.Log.d(anyString(), anyString())).thenReturn(0);
-
-        File testFileEmptyRecords = new File(cacheDir, "test_file_empty.csv");
+    public void setup() throws IOException {
+        when(context.getCacheDir()).thenReturn(cacheDir.getRoot());
+        cacheDir.newFile("text_file_empty.csv");
+        cacheDir.newFile("test_file_2.csv");
+        cacheDir.newFile("test_file_many");
+        cacheDir.newFile("test_wrong_format");
         File testFile2Records = new File(cacheDir, "test_file_2.csv");
         File testFileManyRecords = new File(cacheDir, "test_file_many");
         File testWrongFormat = new File(cacheDir, "test_wrong_format");
