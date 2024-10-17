@@ -47,8 +47,8 @@ declaration: >-
 
 # for each member, sign by inputting your name and uid here (remove any empty "name+uid" entries)
 members:
-  - name:
-    uid:
+  - name: Cheng Leong Chan
+    uid: u8003980
   - name:
     uid:
   - name: Ryan Foote
