@@ -371,7 +371,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
      * our app's ability to stream data. Otherwise, it would take an hour for the data from the API
      * to change.
      * </p>
-     * @author Gea Lingar
+     * @author u7902000Gea Lingar
      */
     private void fetchAndDisplayMockData() {
         MockJSONResponse mockJSONResponse = new MockJSONResponse();
@@ -762,7 +762,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
      *          with the appropriate progress bar color and status text (low, moderate, or high).
      * @requires jsonResponse is a valid JSON string that includes the necessary air quality components.
      *
-     * @author Gea,Hexuan(Shawn)
+     * @author u7902000 Gea,u7902000 Hexuan(Shawn)
      */
     private void displayAirQualityData(String jsonResponse) {
         try {
@@ -818,7 +818,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
      *
      * @param data   the list of {@link AirQualityRecord} containing air quality data to plot
      * @param metric the selected {@link AirQualityMetric} (e.g., AQI, CO, etc.) for plotting
-     * @author u7902000
+     * @author u7902000 Gea
      */
     private void plotPrimaryData(List<AirQualityRecord> data, AirQualityMetric metric) {
         if (data == null || data.isEmpty()) {
@@ -990,7 +990,7 @@ public class SuburbLiveActivity extends AppCompatActivity {
     /**
      * Define the degree of air quality progress bars and their colors
      *
-     * @author Hexuan(Shawn)
+     * @author u7902000 Hexuan(Shawn)
      */
     // Unified method to update progress bars and their colors
     private void updateProgressBar(ProgressBar progressBar, String type, double value) {
