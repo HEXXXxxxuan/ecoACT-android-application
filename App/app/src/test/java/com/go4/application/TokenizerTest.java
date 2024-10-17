@@ -1,4 +1,5 @@
 package com.go4.application;
+import com.go4.utils.tokenizer_parser.Parser;
 import com.go4.utils.tokenizer_parser.Token;
 import com.go4.utils.tokenizer_parser.Tokenizer;
 
@@ -9,6 +10,11 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is used test the class {@link Tokenizer}.
+ *
+ * @author u8003980 Chan Cheng Leong
+ */
 public class TokenizerTest {
     private static Tokenizer tokenizer;
     private static final List<String> LOCATION_STRINGS = Arrays.asList(new String[]{"Acton"});

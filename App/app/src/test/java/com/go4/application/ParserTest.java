@@ -11,8 +11,12 @@ import com.go4.utils.tokenizer_parser.Tokenizer;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is used test the class {@link Parser}.
+ *
+ * @author u8003980 Chan Cheng Leong
+ */
 public class ParserTest {
-    private static Tokenizer tokenizer;
     private static final List<String> LOCATION_STRINGS = Arrays.asList(new String[]{"Acton"});
 
     private static final String[] testOrder = new String[]{"Acton 2024 Oct 16 8pm", "Acton 8pm 2024 Oct 16",
