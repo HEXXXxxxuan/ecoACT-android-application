@@ -287,7 +287,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      * This method retrieves the user-selected date, suburb, and hour from the UI, formats the date and time,
      * and searches for a corresponding record in the {@code recordTreeLocationAndDateKey} AVL tree.
      * If a matching record is found, it updates the UI by displaying air quality metrics and progress bars </p>
-     * @author Gea,(Hexuan)Shawn
+     * @author u7902000Gea,u8006862(Hexuan)Shawn
      */
     private void searchForRecord() {
         String selectedDate = editTextDate.getText().toString();
