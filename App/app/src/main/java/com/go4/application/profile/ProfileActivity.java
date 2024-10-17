@@ -234,7 +234,7 @@ public class ProfileActivity extends AppCompatActivity {
      * This method displays Suburb Cards using {@link SuburbCardViewAdapter} and {@link SuburbCard}
      *
      * <p>Swipe right on suburb card to delete it, and press undo button to undo.
-     * With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p>
+     * With reference to <a href="https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/">this website</a></p>
      */
     private void displayPinnedSuburbCards() {
         recyclerDataArrayList = new ArrayList<>();

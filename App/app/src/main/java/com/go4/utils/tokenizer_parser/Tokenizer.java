@@ -116,9 +116,7 @@ public class Tokenizer {
 
         // Remove the extracted token from buffer
         int tokenLen = currentToken.getLength();
-        Log.d("SearchDebug", "Current Token Length:" + tokenLen);
         buffer = buffer.substring(tokenLen);
-        Log.d("SearchDebug", "Shortened Buffer:" + buffer);
     }
 
     public Token current() {

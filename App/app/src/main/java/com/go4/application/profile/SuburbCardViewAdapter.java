@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * This class is used to transform each SuburbCard Object into a view on screen.
  *
- * <p>With reference to <a href="https://www.geeksforgeeks.org/how-to-add-dividers-in-android-recyclerview/">this website</a></p></p>
+ * <p>With reference to <a href="https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/">this website</a></p></p>
  * @author u8003980 Chan Cheng Leong
  */
 public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAdapter.RecyclerViewHolder> {
@@ -72,11 +72,10 @@ public class SuburbCardViewAdapter extends RecyclerView.Adapter<SuburbCardViewAd
         return suburbDataArrayList.size();
     }
 
-    // View Holder Class to handle Recycler View.
     /**
-     * This class extends {@link RecyclerView.ViewHolder} and is used to handler {@link RecyclerView}
+     * This class extends {@link RecyclerView.ViewHolder} and is used to handle {@link RecyclerView}.
      *
-     * <p>It stores the links each component in the suburb card to a variable.</p>
+     * <p>It links each component in the suburb card to a variable.</p>
      * @author u8003980 Chan Cheng Leong
      */
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
