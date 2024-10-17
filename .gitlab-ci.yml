@@ -21,12 +21,12 @@ build-job:
     - cp ./app/build/outputs/apk/release/output-metadata.json ./apk/metadata.json
     - ls -a
   cache:
-    - key: "$CI_COMMIT_SHA"
+    - key: "cache-${CI_COMMIT_SHA}"
     - policy: push
     - paths:
-      - App/app/build
-      - App/.gradle
-      - App/apk
+      - App/app/build/
+      - App/.gradle/
+      - App/apk/
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -38,11 +38,11 @@ test-job:
   tags:
     - comp2100
   cache:
-    - key: "$CI_COMMIT_SHA"
+    - key: "cache-${CI_COMMIT_SHA}"
     - policy: pull
     - paths:
-      - App/app/build
-      - App/.gradle
+      - App/app/build/
+      - App/.gradle/
   script:
     - echo "Running gradle test"
     - cd App
@@ -61,10 +61,10 @@ apk-release:
   tags:
     - comp2100
   cache:
-    key: "$CI_COMMIT_SHA"
+    key: "cache-${CI_COMMIT_SHA}"
     policy: pull
     paths:
-      - App/apk
+      - App/apk/
   script:
     - echo "Pushing latest APK"
     - ls -a
