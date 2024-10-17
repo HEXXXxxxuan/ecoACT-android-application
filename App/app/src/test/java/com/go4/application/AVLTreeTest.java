@@ -17,12 +17,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * This class provides unit tests for the AVLTree implementation using AirQualityRecord objects as values.
+ * It tests the insertion and balancing of the AVLTree, as well as the traversal and height of the tree.
+ * The test inserts 6 records in a specific order, where the values of the keys are designed to
+ * trigger both single and double rotations in the AVLTree. This ensures that the AVLTree maintains
+ * its balanced property.
+ *
+ * @author Gea Linggar
+ */
 public class AVLTreeTest {
     private AVLTree<String, AirQualityRecord> avlTree;
     private SimpleDateFormat dateFormat;
     private Context context;
 
+    /**
+     * Sets up the AVLTree and inserts several AirQualityRecord objects into the tree.
+     * The keys used for the AVLTree are a combination of the location and timestamp of each record.
+     */
     @Before
     public void testInsertAndBalance(){
         long baseTimestamp = 1635724800;
@@ -44,11 +56,18 @@ public class AVLTreeTest {
         }
     }
 
+    /**
+     * Tests the height of the AVL tree after insertion. The expected height is 2.
+     */
     @Test
     public void testHeight(){
         assertEquals(2, avlTree.getHeight());
     }
 
+    /**
+     * Tests the in-order traversal of the AVL tree. The traversal result is compared with the expected
+     * list of keys formed from the AirQualityRecord objects.
+     */
     @Test
     public void testElement(){
         List<String> inOrderTranversalResult = new ArrayList<>();

@@ -13,6 +13,12 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class contains a unit test for the DataFetcher class, specifically testing whether it correctly
+ * creates a file during the `automaticAddRecords` operation. The test verifies that the file is generated
+ * and exists within the cache directory of the Android context after the data-fetching process completes.
+ * @author Gea Linggar
+ */
 public class DataFetcherTest {
     @Test (timeout = 10000)
     public void DataFetcherCreatesFile() {
@@ -21,7 +27,7 @@ public class DataFetcherTest {
         Handler mainHandler = new Handler(Looper.getMainLooper());
         DataFetcher dataFetcher = new DataFetcher(executorService, mainHandler, 1);
 
-        // Mock a ProgressBar (optional, just to prevent errors)
+        // Mock a ProgressBar
         ProgressBar mockProgressBar = new ProgressBar(context);
         String fileName = "test_file.csv";
         dataFetcher.automaticAddRecords(context, fileName, mockProgressBar, () -> {
