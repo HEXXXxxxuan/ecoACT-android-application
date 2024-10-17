@@ -212,7 +212,7 @@ Here is a partial (short) example for the subsection `Data Structures`:*
 
 1. *ArrayList*
    * *Objective**: Used for storing and managing a list of suburb details and historical air quality records dynamically as new data is fetched and displayed in the UI.
-   * *Code Locations**: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbCardViewAdapter.java#L28) and [`SuburbHistoricalActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbHistoricalActivity.java#L159); processed using methods like `onBindViewHolder()` and `updateList()` to display air quality data and suburb information dynamically.
+   * *Code Locations**: Defined in [`SuburbCardViewAdapter`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java#L28) and [`SuburbHistoricalActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L159); processed using methods like `onBindViewHolder()` and `updateList()` to display air quality data and suburb information dynamically.
    * *Reasons*:
       * *It is more efficient than `LinkedList` for frequent random access operations where elements are accessed by index with a time complexity of O(1).*
       * *We need to frequently update and access elements in the list for UI rendering, such as when new air quality data is loaded or the list of suburbs is displayed.*
