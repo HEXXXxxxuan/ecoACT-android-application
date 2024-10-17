@@ -15,7 +15,7 @@ build-job:
   script:
     - echo "Assembling project"
     - cd App
-    - mkdir apk
+    - mkdir -p apk
     - ./gradlew --build-cache assemble
     - cp ./app/build/outputs/apk/release/app-release-unsigned.apk ./apk/ourApk.apk
     - cp ./app/build/outputs/apk/release/output-metadata.json ./apk/metadata.json
