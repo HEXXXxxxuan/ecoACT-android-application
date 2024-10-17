@@ -24,21 +24,17 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class CSVParsingTest {
     @Mock
-    private Context context = mock();
+    private final Context context = mock(Context.class);
 
     @Rule
-    TemporaryFolder cacheDir = new TemporaryFolder();
+    public TemporaryFolder cacheDir = new TemporaryFolder();
 
     @Before
     public void setup() throws IOException {
-        when(context.getCacheDir()).thenReturn(cacheDir.getRoot());
         cacheDir.newFile("text_file_empty.csv");
-        cacheDir.newFile("test_file_2.csv");
-        cacheDir.newFile("test_file_many");
-        cacheDir.newFile("test_wrong_format");
-        File testFile2Records = new File(cacheDir, "test_file_2.csv");
-        File testFileManyRecords = new File(cacheDir, "test_file_many");
-        File testWrongFormat = new File(cacheDir, "test_wrong_format");
+        File testFile2Records = cacheDir.newFile("test_file_2.csv");
+        File testFileManyRecords = cacheDir.newFile("test_file_many");
+        File testWrongFormat = cacheDir.newFile("test_wrong_format");
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(testFile2Records));
         writer.write("location,timestamp,aqi,co,no2,o3,so2,pm2_5,pm10,nh3\n");
@@ -71,30 +67,12 @@ public class CSVParsingTest {
         writer.write("Deakin,1728090000,invalidAQI,230.31,1.0,50.0,1.0,20.0,30.0,0.7\n");
         writer.write("Yarralumla,1728090000,1.0,240.31,1.5,55.0,1.1,21.0,32.0,0.9\n"); // Correctly formatted row
         writer.close();
-
-    }
-
-    @BeforeClass
-    public static void setupClass() {
-
-        MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class);
-        mockedLog.when(() -> Log.e(anyString(), anyString())).thenReturn(0);
-        mockedLog.when(() -> Log.d(anyString(), anyString())).thenReturn(0);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        // Deregister the static mock after all tests
-        if (mockedLog != null) {
-            mockedLog.close();
-        }
     }
 
     @Test
     public void testEmptyCSV(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"testFileEmptyRecords");
-
         assertNotNull("List should not be null", records);
         assertEquals("Record should be empty list", 0, records.size());
     }
@@ -103,7 +81,6 @@ public class CSVParsingTest {
     public void testSmallRecords(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"test_file_2.csv");
-
         assertNotNull("List should not be null", records);
         assertEquals("Acton", records.get(0).getLocation());
         assertEquals(42, records.get(0).getAqi(), 0);
@@ -116,7 +93,6 @@ public class CSVParsingTest {
     public void testManyRecords(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"test_file_many");
-
         assertNotNull("List should not be null", records);
         assertEquals( 13, records.size());
     }
@@ -155,5 +131,4 @@ public class CSVParsingTest {
         double result = csvParser.parseLongSafely("invalidLong", 5);
         assertEquals("Should return default value for invalid input", 5, result, 0.001);
     }
-
 }
