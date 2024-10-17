@@ -21,8 +21,12 @@ and I am aware of the relevant
 declaration: >-
   I declare that everything I have submitted in this assignment is entirely our
   own work, with the following exceptions:
-  
-
+    - OpenWeather API (Data retrieval)
+    - Firebase (User authentication)
+    - Play Services (FusedLocationClientProvider)
+    - [semiCircleArcProgressBar](https://github.com/hadibtf/SemiCircleArcProgressBar)
+    - [mpAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+    - [pager-bottom-tab-strip](https://github.com/tyzlmjj/PagerBottomTabStrip)
 
 ### Questions (answer before final submission):
 1. You (as a group) completed this work (tick the most appropriate option):
