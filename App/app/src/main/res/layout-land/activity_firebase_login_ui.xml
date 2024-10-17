@@ -7,22 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".FirebaseLoginActivity">
 
-    <!--
-    This XML layout defines the Firebase login screen for the application using ConstraintLayout.
-    The layout includes an ImageView for the app logo, two EditText fields for the username and password inputs,
-    and a Button for login functionality.
-
-    Key components:
-    1. ImageView: Displays the app logo at the top, centered horizontally.
-    2. EditText: Two input fields, one for the username (email) and one for the password, placed side by side.
-    3. Button: A login button centered horizontally, below the input fields.
-
-    The layout uses constraints to ensure proper alignment and spacing between elements.
-
-    @author Shawn(Hexuan)
--->
-
-
+    <!-- App Logo -->
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="244dp"
@@ -30,50 +15,61 @@
         android:layout_marginTop="16dp"
         android:contentDescription="App Logo"
         android:scaleType="fitCenter"
-        android:src="@drawable/gp_logo"
+        android:src="@drawable/gp_logo_words"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Horizontal Chain for Username and Password -->
     <EditText
         android:id="@+id/lg_username"
-        android:layout_width="348dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:hint="Username"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toStartOf="@+id/lg_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
+        android:layout_width="0dp"
+    android:layout_height="48dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="8dp"
+    android:hint="Username"
+    android:inputType="textEmailAddress"
+    app:layout_constraintEnd_toStartOf="@+id/lg_password"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/logo_image"
+    app:layout_constraintHorizontal_weight="1" />
 
     <EditText
         android:id="@+id/lg_password"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lg_username"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
+    android:layout_height="48dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:hint="Password"
+    android:inputType="textPassword"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/lg_username"
+    app:layout_constraintTop_toBottomOf="@+id/logo_image"
+    app:layout_constraintHorizontal_weight="1" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_chain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="300dp" />
+
 
     <Button
         android:id="@+id/bt_login"
-        android:layout_width="302dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/round_button"
-        android:textColor="@color/primary_ColorW"
-        android:text="Login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lg_username" />
+        android:layout_width="0dp"
+    android:layout_height="50dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="24dp"
+    android:background="@drawable/round_button"
+    android:textColor="@color/primary_ColorW"
+    android:text="Login"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/lg_password"
+    app:layout_constraintWidth_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
