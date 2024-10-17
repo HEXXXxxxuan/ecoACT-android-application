@@ -14,11 +14,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import androidx.core.content.ContextCompat;
-import com.go4.application.live_data.SuburbLiveActivity;
 import com.go4.application.profile.ProfileActivity;
 import com.go4.utils.GPSService;
 import com.go4.utils.GPSService.LocalBinder;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * <ul> Activity that integrates Activities and Services
@@ -28,7 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  *  to provide type-safety</li>
  *  </ul>
  *
- * @author Ryan Foote
+ * @author u7327620 Ryan Foote
  */
 public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "main";
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
      * into an {@link ActivityResultLauncher<Void>} to provide type safety for user returns.
      * <p>On success, it launches {@link ProfileActivity} with the resulting user.</p>
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private final ActivityResultLauncher<Void> getUser = registerForActivityResult(
         new FirebaseLoginActivity.FirebaseLoginActivityResultContract(), result->{
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
      * Stylistic wrapper for {@link #getUser}.
      * literally calls: <p>"<code>getUser.launch(null)</code>"</p>
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private void checkUserLogin() {
         getUser.launch(null);
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
      * Checks for {@link Manifest.permission#ACCESS_BACKGROUND_LOCATION} before
      * calling {@link #bindService}
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private void startGps(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)==PackageManager.PERMISSION_GRANTED){
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Utilizing {@link ServiceConnection}, effectively binds the gpsService.
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
      * Creates a {@link NotificationChannel} for the associated {@link NotificationManager}.
      * <p>Allows for notifications to be sent via {@link #CHANNEL_ID}</p>
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private void createNotificationChannel() {
         CharSequence name = getString(R.string.channel_name);

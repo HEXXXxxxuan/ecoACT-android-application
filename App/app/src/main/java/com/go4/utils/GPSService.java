@@ -27,7 +27,7 @@ import com.google.android.gms.location.LocationServices;
  * {@link android.content.ServiceConnection} where <code>gps = binder.getService()</code></p>
  * <p>Retrieve location with {@link #getRecentLocation()}</p>
  *
- * @author Ryan Foote
+ * @author u7327620 Ryan Foote
  */
 public class GPSService extends Service {
     private final IBinder binder = new LocalBinder();
@@ -40,7 +40,7 @@ public class GPSService extends Service {
      * Extends {@link Binder} with a single method {@link #getService()} to return the surrounding
      * {@link GPSService} instance.
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     public class LocalBinder extends Binder {
         public GPSService getService(){
@@ -78,7 +78,7 @@ public class GPSService extends Service {
      * Helper for {@link NotificationCompat.Builder}
      * @param text for {@link NotificationCompat.Builder#setContentText}
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private void locationNotification(String text) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -110,7 +110,7 @@ public class GPSService extends Service {
      * <strong>Returns a mock location (Ainslie) if no location has been retrieved yet.</strong>
      * @return {@link #latestLocation}
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     public Location getRecentLocation() {
         if (latestLocation == null) {

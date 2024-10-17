@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * for type-safe returns</p>
  * <p>Intended use-case launcher in {@link MainActivity} as a <code>private final</code> variable</p>
  *
- * @author Ryan Foote
+ * @author u7327620 Ryan Foote
  */
 public class FirebaseLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -31,7 +31,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
      * <p> Typical usage requires a {@link androidx.activity.result.ActivityResultLauncher} to store
      * the resulting contract</p>
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     public static class FirebaseLoginActivityResultContract extends ActivityResultContract <Void, FirebaseUser> {
         @NonNull
@@ -83,7 +83,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
      * <p>Upon a successful sign-in with a null user, exits with {@link #RESULT_CANCELED}.</p>
      * <p>Failure behaviour maintains the login page with a {@link Toast} popup.</p>
      *
-     * @author Ryan Foote
+     * @author u7327620 Ryan Foote
      */
     private void signIn() {
         Button loginSubmit = findViewById(R.id.bt_login);
