@@ -124,8 +124,4 @@ public class Tokenizer {
     public Token current() {
         return currentToken;
     }
-
-    public boolean hasNext() {
-        return currentToken != null;
-    }
 }

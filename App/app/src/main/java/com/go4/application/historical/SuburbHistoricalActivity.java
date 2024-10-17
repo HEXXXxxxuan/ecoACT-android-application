@@ -247,7 +247,7 @@ public class SuburbHistoricalActivity extends AppCompatActivity {
      */
     private void parseSearchBarInput() {
         Tokenizer tokenizer = new Tokenizer(searchBar.getText().toString(), suburbList);
-        Parser parser = new Parser(tokenizer, getApplicationContext());
+        Parser parser = new Parser(tokenizer);
         parser.parseInput();
 
         String suburb = parser.getData()[0];

@@ -45,4 +45,9 @@ public class SearchRecord {
     public String getSelectedTime() {
         return selectedTime;
     }
+
+    public String getInvalidSearch() {
+        if (invalidSearch) return "invalid";
+        else return "valid";
+    }
 }
