@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class is used test the class {@link Tokenizer}.
+ * This class is used to test the class {@link Tokenizer}.
  *
  * @author u8003980 Chan Cheng Leong
  */

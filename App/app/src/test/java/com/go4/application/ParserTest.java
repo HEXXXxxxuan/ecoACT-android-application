@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class is used test the class {@link Parser}.
+ * This class is used to test the class {@link Parser}.
  *
  * @author u8003980 Chan Cheng Leong
  */
