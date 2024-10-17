@@ -1,9 +1,5 @@
 
 package com.go4.utils.tokenizer_parser;
-
-import android.content.Context;
-import android.widget.Toast;
-
 import com.go4.application.historical.SearchRecord;
 
 /**
@@ -14,12 +10,10 @@ import com.go4.application.historical.SearchRecord;
 public class Parser {
     Tokenizer tokenizer;
     SearchRecord record;
-    Context context;
 
-    public Parser(Tokenizer tokenizer, Context context) {
+    public Parser(Tokenizer tokenizer) {
         this.tokenizer = tokenizer;
         this.record = new SearchRecord();
-        this.context = context;
     }
 
     /**
@@ -28,7 +22,7 @@ public class Parser {
      * @return      A list of strings from the user's input, including suburb, date and time.
      */
     public String[] getData() {
-        return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime()};
+        return new String[]{record.getSelectedSuburb(), record.getSelectedDate(), record.getSelectedTime(), record.getInvalidSearch()};
     }
 
     /**

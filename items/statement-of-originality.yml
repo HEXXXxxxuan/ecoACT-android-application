@@ -35,10 +35,10 @@ declaration: >-
       [ ] using online resources (e.g., Stackoverflow, blogs)
 
 2. If not completed by yourself only, how did the use of Gen AI tools (and which ones), contribute to completing this assignment?
-  - Tool(s): <tools used here>
+  - Tool(s): GPT-4o
   
 3. How did they contribute to the completion of this assignment?
-  - <your answer here>
+  - Cheng Leong Chan (u8003980) used GPT-4o as an aid to write the method next() in the class Tokenizer, in Tokenizer.java from lines 33-115.
 
 4. How long did it take to complete this assignment (approximately, in hours)?
   - 75 hours
