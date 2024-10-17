@@ -5,41 +5,37 @@ import android.util.Log;
 import com.go4.application.model.AirQualityRecord;
 import com.go4.utils.CsvParser;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CSVParsingTest {
-    private Context context;
-    private static MockedStatic<Log> mockedLog;
+    @Mock
+    private final Context context = mock(Context.class);
 
+    @Rule
+    public TemporaryFolder cacheDir = new TemporaryFolder();
 
     @Before
-    public void setup() throws Exception{
-        context = Mockito.mock(Context.class);
-
-        File cacheDir = new File(System.getProperty("java.io.tmpdir", "cache"));
-        cacheDir.mkdir();
-
-        Mockito.when(context.getCacheDir()).thenReturn(cacheDir);
-
-        Mockito.when(android.util.Log.e(anyString(), anyString())).thenReturn(0);
-        Mockito.when(android.util.Log.d(anyString(), anyString())).thenReturn(0);
-
-        File testFileEmptyRecords = new File(cacheDir, "test_file_empty.csv");
-        File testFile2Records = new File(cacheDir, "test_file_2.csv");
-        File testFileManyRecords = new File(cacheDir, "test_file_many");
-        File testWrongFormat = new File(cacheDir, "test_wrong_format");
+    public void setup() throws IOException {
+        cacheDir.newFile("text_file_empty.csv");
+        when(context.getCacheDir()).thenReturn(cacheDir.getRoot());
+        File testFile2Records = cacheDir.newFile("test_file_2.csv");
+        File testFileManyRecords = cacheDir.newFile("test_file_many");
+        File testWrongFormat = cacheDir.newFile("test_wrong_format");
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(testFile2Records));
         writer.write("location,timestamp,aqi,co,no2,o3,so2,pm2_5,pm10,nh3\n");
@@ -72,30 +68,12 @@ public class CSVParsingTest {
         writer.write("Deakin,1728090000,invalidAQI,230.31,1.0,50.0,1.0,20.0,30.0,0.7\n");
         writer.write("Yarralumla,1728090000,1.0,240.31,1.5,55.0,1.1,21.0,32.0,0.9\n"); // Correctly formatted row
         writer.close();
-
-    }
-
-    @BeforeClass
-    public static void setupClass() {
-
-        MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class);
-        mockedLog.when(() -> Log.e(anyString(), anyString())).thenReturn(0);
-        mockedLog.when(() -> Log.d(anyString(), anyString())).thenReturn(0);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        // Deregister the static mock after all tests
-        if (mockedLog != null) {
-            mockedLog.close();
-        }
     }
 
     @Test
     public void testEmptyCSV(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"testFileEmptyRecords");
-
         assertNotNull("List should not be null", records);
         assertEquals("Record should be empty list", 0, records.size());
     }
@@ -104,7 +82,6 @@ public class CSVParsingTest {
     public void testSmallRecords(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"test_file_2.csv");
-
         assertNotNull("List should not be null", records);
         assertEquals("Acton", records.get(0).getLocation());
         assertEquals(42, records.get(0).getAqi(), 0);
@@ -117,7 +94,6 @@ public class CSVParsingTest {
     public void testManyRecords(){
         CsvParser csvParser = new CsvParser();
         List<AirQualityRecord> records = csvParser.parseData(context,"test_file_many");
-
         assertNotNull("List should not be null", records);
         assertEquals( 13, records.size());
     }
@@ -156,5 +132,4 @@ public class CSVParsingTest {
         double result = csvParser.parseLongSafely("invalidLong", 5);
         assertEquals("Should return default value for invalid input", 5, result, 0.001);
     }
-
 }
