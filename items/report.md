@@ -383,17 +383,23 @@ Additionally, the app is designed to provide real-time updates as the user moves
 
 Feature Category: Data <br>
 3. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
-   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
-   * Description of your implementation: ... <br>
+   *  Code:[`GPSService.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java), and [`MainActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java).
+
+* Description of feature: The app tracks the user's real-time location using GPS to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location in the background, the app ensures that the displayed data is always relevant to the user's current surroundings. <br>
+
+* Description of your implementation:  
+  The GPS tracking feature connects to Android's location services via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
 4. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
 5. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
-   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
-   * Description of your implementation: ... <br>
+   ***Code:** [`SuburbJsonUtils.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java), method `parseSuburbsFromJson`, and [`environment_monitoring_data.csv`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/assets/environment_monitoring_data.csv), parsed in `CsvParser.java` <br>
+
+* Description of feature: The app reads and processes data from local JSON and CSV files. The JSON file contains geographical data about suburbs, including suburb names and their respective coordinates (latitude and longitude). The CSV file contains environmental monitoring data, such as air quality measurements for various suburbs. These two formats provide the app with both static geographic data and dynamic, time-based environmental data.<br>
+
+* Description of your implementation:
+  The app reads local data in two formats: JSON and CSV. JSON data is handled by `SuburbJsonUtils.java`, where the `parseSuburbsFromJson()` method reads suburb names and coordinates stored in a `HashMap<String, double[]>`, supporting location-based features like distance calculations. The app also processes CSV data from `environment_monitoring_data.csv`, with `CsvParser.java` using the `parseCsvData()` method to extract air quality index (AQI) values for real-time environmental updates. By integrating JSON for geographic data and CSV for dynamic data, the app provides accurate, location-based information.<br>
 6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
    * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-217): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-217
