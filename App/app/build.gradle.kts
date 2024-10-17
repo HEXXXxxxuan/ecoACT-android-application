@@ -50,7 +50,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core.v340)
     androidTestImplementation(libs.espresso.intents)
     androidTestImplementation(libs.rules)
-    androidTestImplementation(libs.junit.v113)
+    androidTestImplementation(libs.junit)
     implementation(libs.semicirclearcprogressbar.v111)
     implementation ("me.majiajie:pager-bottom-tab-strip:2.4.0")
     implementation("com.google.code.gson:gson:2.8.8")
