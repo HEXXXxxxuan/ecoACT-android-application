@@ -420,23 +420,7 @@ Feature Category: Data
 
    * Description of your implementation: The `SuburbHistoricalActivity` class includes a graphical report viewer that visualizes air   quality data for various suburbs over a selected time period. The `plotPrimaryData()` method plots the primary suburb’s air quality metrics using a line chart. Users can view trends for specific air quality components such as AQI, CO, NO2, PM2.5, PM10, O3, and SO2. The data points are plotted with corresponding time labels on the X-axis, which are dynamically generated based on the retrieved records. The `plotComparisonData()` method provides an additional feature that allows users to compare air quality trends between two suburbs. The method plots a second set of data on the same line chart, using different colors to visually differentiate between the primary and comparison suburb data. The implementation is integrated with the [`MPAndroidChart`](https://github.com/PhilJay/MPAndroidChart) library
    
-4. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
-   ***Code:** [`SuburbJsonUtils.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java), method `parseSuburbsFromJson`, and [`environment_monitoring_data.csv`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/assets/environment_monitoring_data.csv), parsed in `CsvParser.java` <br>
-
-* Description of feature: The app reads and processes data from local JSON and CSV files. The JSON file contains geographical data about suburbs, including suburb names and their respective coordinates (latitude and longitude). The CSV file contains environmental monitoring data, such as air quality measurements for various suburbs. These two formats provide the app with both static geographic data and dynamic, time-based environmental data.<br>
-
-* Description of your implementation:
-  The app reads local data in two formats: JSON and CSV. JSON data is handled by `SuburbJsonUtils.java`, where the `parseSuburbsFromJson()` method reads suburb names and coordinates stored in a `HashMap<String, double[]>`, supporting location-based features like distance calculations. The app also processes CSV data from `environment_monitoring_data.csv`, with `CsvParser.java` using the `parseCsvData()` method to extract air quality index (AQI) values for real-time environmental updates. By integrating JSON for geographic data and CSV for dynamic data, the app provides accurate, location-based information.<br>
-5. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-231): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-231
-   * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
-     The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
-     The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
-     The page also contains a LOGOUT button.
-
-Feature Category: UI Design and Testing <br>
-6. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
+4. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
    * Code: [layout-land, entire folder](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land?ref_type=heads) 
    * [activity_firebase_login_ui.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml?ref_type=heads) and [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads) and [suburb_historical.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml?ref_type=heads) and [suburb_live.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads)
 
@@ -448,7 +432,7 @@ Feature Category: UI Design and Testing <br>
 
 
 Feature Cateory: User Interactivity <br>
-7. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
+5. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
    [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java),
