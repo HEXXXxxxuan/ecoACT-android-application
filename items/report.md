@@ -466,30 +466,22 @@ We here at Dogs incorporated wish to extend our sincerest apologies for the mism
 
 ([Issue/merge documentation stem](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4))
 
-1. 
-- To ensure scalability and reusability, we've identified multiple usages of the ExecutorService class. This causes multiple instances of the class that consume system resources without optimal usage. To rectify the mistake, we've implemented a Singleton design pattern and migrated our Activity classes to the new version. This means that the code can be re-used elsewhere under different executor handling conditions and the code within the project will optimally use the system resources assigned to it.
+1. To ensure scalability and reusability, we've identified multiple usages of the ExecutorService class. This causes multiple instances of the class that consume system resources without optimal usage. To rectify the mistake, we've implemented a Singleton design pattern and migrated our Activity classes to the new version. This means that the code can be re-used elsewhere under different executor handling conditions and the code within the project will optimally use the system resources assigned to it.
    - [Associated Issue](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/5)
    - [Merge Request 1](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/48) creates the singleton rendition of the class.
       - [Relevant file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/7b172896d7d871f479bc3ba7de8d2ac85abc0d09/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java)
    - [Merge Request 2](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/59) updates activity usages of the ExecutorService class to our new singleton version.
 These upgrades to the system rectifies the improper system resource management and aligns with our project vision for reusability through robust design patterns.
 
-2. 
-The Dogs™ are vehemently apologetic to the lack care taken to avoid ethical violations, and as such, violating the industry standards. We've conducted an explosive internal review spearheaded by our scrum masters to identify decadent developers and conducted ethical training modules where needed. The Dogs™ have identified that the usage of the OpenWeather Api has gone without accreditation within the project. Since the availability of data is the foundation to the project, we've rectified the mistake and added accreditation into the app to maintain amicable business agreements with the company.
+2. The Dogs™ are vehemently apologetic to the lack care taken to avoid ethical violations, and as such, violating the industry standards. We've conducted an explosive internal review spearheaded by our scrum masters to identify decadent developers and conducted ethical training modules where needed. The Dogs™ have identified that the usage of the OpenWeather Api has gone without accreditation within the project. Since the availability of data is the foundation to the project, we've rectified the mistake and added accreditation into the app to maintain amicable business agreements with the company.
    - [Associated Issue](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4?work_item_iid=6)
    - [Merge Request Solution](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
 We hope our rapid response exemplifies The Dogs™ strict moral code and adherance to perpetuating positive ethics through our work.
 
-3.
-The Dogs™ have selected the MIT license for the project as (despite being a very real and epic company) we're a group of students who's code is going to be hidden in a sea of student submissions. If a user reviewed our code and wished to use it, I'm sure we would be honoured (if not a little confused). The license protects us against any potential legal issues regarding warranties whilst allowing anyone to utilise and adapt the software to their needs.
+3. The Dogs™ have selected the MIT license for the project as (despite being a very real and epic company) we're a group of students who's code is going to be hidden in a sea of student submissions. If a user reviewed our code and wished to use it, I'm sure we would be honoured (if not a little confused). The license protects us against any potential legal issues regarding warranties whilst allowing anyone to utilise and adapt the software to their needs.
 
 
 ## Testing Summary
-
-*[What features have you tested? What is your testing coverage?]*
-*Please provide details (see rubrics) including some screenshots of your testing summary, showing the achieved testing coverage. Feel free to provide further details on your tests.*
-
-*Here is an example:*
 
 1.  Tests for **Data Fetching**
 - **Code**: [`DataFetcherTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/DataFetcherTest.java)
@@ -539,13 +531,6 @@ The Dogs™ have selected the MIT license for the project as (despite being a ve
 1. *Caching:*
     - persistent bug that show up only in real APK, however the error is not shown in android emulator, [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/items/media/_examples/462563872_554352077247235_7338037996929308810_n.png)
     - After running the debug using the Android setup, we found that `firebaseAuth` was returning a `null` user's email. We didn't realize this earlier due to differences in how the cache is stored between the emulator and the real device. We modified the code in the login activity class, and the bug was resolved.
-
-2. *Permissions Denial*
-   - When a user denies most permissions, the app can simply re-request until the permissions are granted. There is a specific issue with the background location permission where we can't request it multiple times. Presently, if the user denies the "Access at all times" option for location, the app will continually chew up resources trying to request the permission until it crasheds.
-   - The simple fix is: settings > apps > Application > permissions > location > allow access all the time
-
-
-
 
 ## Team Management
 ### Meeting Minutes
