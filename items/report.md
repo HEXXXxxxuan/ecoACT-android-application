@@ -439,8 +439,15 @@ Feature Category: Data <br>
 
 Feature Category: UI Design and Testing <br>
 6. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
-   * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
+   * Code: [layout-land, entire folder](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land?ref_type=heads) 
+   * [activity_firebase_login_ui.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml?ref_type=heads) and [activity_profile.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads) and [suburb_historical.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml?ref_type=heads) and [suburb_live.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads)
+
+   * Description of your implementation: Our app utilized CardView for a unified visual style, along with flexible layout managers, enhances both the aesthetic appeal and performance of the app. The modular layout structure further facilitates easy maintenance and scalability, allowing the app to adapt seamlessly to future requirements.
+   * The use of match_parent and wrap_content in combination with ConstraintLayout and GridLayout allows UI components to automatically adjust their size and position based on the device's screen size and resolution. For instance, in SuburbHistoricalActivity, ConstraintLayout and GridLayout are employed to dynamically adapt to different screen arrangements seamlessly.
+   * ScrollView is used to wrap the main content, ensuring that on smaller screens or with extensive content, users can scroll to access all information. This is implemented in both suburb_historical.xml and suburb_live.xml to handle content overflow gracefully.
+   * All CardViews utilize a consistent color theme (@color/primary_ColorW) and corner radius (app:cardCornerRadius="12dp") to maintain a cohesive visual appearance across different layouts and orientations.
+   * 
+
 
 Feature Cateory: User Interactivity <br>
 7. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
