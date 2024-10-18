@@ -10,6 +10,7 @@ variables:
 build-job:
   stage: build
   image: cimg/android:2024.09.1
+  when: manual
   tags:
     - comp2100
   script:
@@ -20,6 +21,7 @@ build-job:
     - cp app/build/outputs/apk/release/app-release-unsigned.apk apk/ourApk.apk
     - cp app/build/outputs/apk/release/output-metadata.json apk/metadata.json
     - ls -a
+    - ls -a apk
   cache:
     - key: cache-$CI_COMMIT_REF_SLUG
     - policy: push
@@ -30,7 +32,6 @@ build-job:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  
 
 test-job:
   stage: test
@@ -41,10 +42,11 @@ test-job:
     - key: cache-$CI_COMMIT_REF_SLUG
     - policy: pull
     - paths:
-      - App/app/build/
-      - App/.gradle/
+      - App/app/build
+      - App/.gradle
   script:
     - echo "Running gradle test"
+    - ls -a
     - cd App
     - ./gradlew test
     - ls -a
@@ -64,9 +66,10 @@ apk-release:
     key: cache-$CI_COMMIT_REF_SLUG
     policy: pull
     paths:
-      - App/apk/
+      - App/apk
   script:
     - echo "Pushing latest APK"
+    - ls -a
     - cd App
     - ls -a
     - |
@@ -75,5 +78,3 @@ apk-release:
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file apk/metadata.json "${PACKAGE_REGISTRY_URL}/apk-metadata-${PACKAGE_VERSION}"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
-
