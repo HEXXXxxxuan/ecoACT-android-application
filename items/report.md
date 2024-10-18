@@ -464,8 +464,8 @@ Feature Cateory: User Interactivity <br>
 ### Surprise Feature
 
 *Instructions:*
-- If implemented, explain how your solution addresses the task (any detail requirements will be released with the surprise feature specifications).
-- State that "Surprise feature is not implemented" otherwise.
+- In the previous layout design [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/cd1dc8bb273f4cf903a6e802262c7c785ec3099a), we did not give credit to `OpenWeatherMap` for using their data in our app. For ethical considerations, we decided to update the layout and include a reference to `OpenWeatherMap` in our recent [commit](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/e86e25fb574c593d4dbb6143c112683f936f5c3f)
+- In the previous code design [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/7a69ac685e38f9b99e04c33d556d6592255f4a26), we are using several `ExecutorService` instances, in `SuburbLiveActivity` and `SplashActivity`, We felt that this design would not be efficient or scalable in the long term. Therefore, we created the[ExecutorServiceSingleton](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java) class to make sure that only one `ExecutorService` instance is used across the app, optimizing resource management and preventing the creation of multiple thread pools, [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/a14c0cd1478043e6c66ee060237e0c80655a2f19).
 
 <br> <hr>
 
@@ -526,11 +526,8 @@ Feature Cateory: User Interactivity <br>
 *Here is an example:*
 
 1. *Bug 1:*
-    - *A space bar (' ') in the sign in email will crash the application.*
-    - ...
-
-2. *Bug 2:*
-3. ...
+    - persistent bug that show up only in real APK, however the error is not shown in android emulator, [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/items/media/_examples/462563872_554352077247235_7338037996929308810_n.png)
+    - After running the debug using the Android setup, we found that `firebaseAuth` was returning a `null` user's email. We didn't realize this earlier due to differences in how the cache is stored between the emulator and the real device. We modified the code in the login activity class, and the bug was resolved.
 
 <br> <hr>
 
