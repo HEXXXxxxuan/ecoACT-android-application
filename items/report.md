@@ -129,6 +129,8 @@ The key area(s) of responsibilities for each member
    - [merge request review](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/15)
    - Checking for bugs on real android device
 
+***
+
 **u7327620, Ryan Foote** I have contributed 20%:
 - **Code Contribution in the final App**
    - [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) methods
