@@ -154,8 +154,6 @@ The key area(s) of responsibilities for each member
 
 ## Application Description
 
-*[What is your application, what does it do? Include photos or diagrams if necessary]*
-
 Our app is called "EcoACT", which aims to provide users with real-time air quality information for communities in the Canberra area. This app allows users to view the air quality index (AQI) of different areas on a map, so as to understand the current air conditions in the environment and make better life decisions.
 
 The main features of the app include the following:
@@ -191,13 +189,11 @@ The "EcoACT" app empowers Canberra residents to stay informed about the air qual
 
 ### Problem Statement
 
-*[Problem statement that defines the purpose of your App]*
 Air pollution is a growing concern for urban residents, especially for people with sensitive respiratory systems, such as the elderly and those with diseases such as asthma. Changes in air quality have a direct impact on the health of these people, and meteorological conditions, vehicle exhaust emissions, construction, etc. can affect the fluctuation of air quality.
 
 However, many people lack sufficient understanding of the changes in the air quality of the environment they live in, especially in special circumstances such as fire season and sandstorms, when air quality can change dramatically. At this time, users need to understand the air conditions around them in order to decide whether they should engage in outdoor activities or take necessary precautions.
 
 Therefore, the goal of the EcoACT application is to provide users with accurate and real-time air quality information, allowing them to make informed decisions in their lives and better protect the health of themselves and their families. This is especially important for commuters, runners, the elderly and parents of children.
-
 
 ### Application Use Cases and/or Examples
 
@@ -206,47 +202,19 @@ Mr. Zhang is a running enthusiast. He likes to exercise along the running route 
 
 1. Mr. Zhang noticed that the sky was a little gloomy in the morning
 2. So he opened the "EcoACT" app to check the air quality index in his Bruce area. He found that the air quality index (AQI) showed moderate pollution, which means that the concentration of particulate matter in the air is high and not very friendly to sensitive people.
-
 3. In order to confirm the specific situation, Mr. Zhang searched for the surrounding air quality in the app and checked the historical data of the past few days. He found that the air quality has declined in recent days due to construction of nearby roads.
-
 4. Mr. Zhang decided not to run along the outdoor running route today, but chose to go to the gym to complete the day's exercise on the treadmill.
-
 5. Mr. Zhang also collected Bruce and several running places he often goes to, so that he can check the air quality conditions in these areas at any time, so as to make the best running plan in the next few days.
-
-*List all the use cases in text descriptions or create use case diagrams. Please refer to https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/ for use case diagram.*
-
-<hr> 
 
 ### Application UML
 
-![UML diagram](media/_examples/UML.png) <br>
-
-
-<hr>
+![UML diagram](media/_examples/UML.png) 
 
 ## Code Design and Decisions
 
-This is an important section of your report and should include all technical decisions made. Well-written justifications will increase your marks for both the report as well as for the relevant parts (e.g., data structure). This includes, for example,
-
-- Details about the parser (describe the formal grammar and language used)
-
-- Decisions made (e.g., explain why you chose one or another data structure, why you used a specific data model, etc.)
-
--  ⁠Details about the design patterns used (where in the code, justification of the choice, etc) concise, crucial reasons of your design.
-
-*Please give clear and concise descriptions for each subsections of this part. It would be better to list all the concrete items for each subsection and give no more than 5
-
-
-
-<hr>
-
 ### Data Structures
 
-*[What data structures did your team utilise? Where and why?]*
-
 Here is a partial (short) example for the subsection `Data Structures`:*
-
-*I used the following data structures in my project:*
 
 1. *ArrayList*
    * *Objective**: Used for storing and managing a list of suburb details and historical air quality records dynamically as new data is fetched and displayed in the UI.
@@ -271,6 +239,7 @@ Here is a partial (short) example for the subsection `Data Structures`:*
       * *O(1) average time complexity for both insertions and lookups, which is critical for checking the existence of records efficiently before writing to the CSV.*
       * *Prevents the need for additional loops or checks to ensure that duplicate suburb records are not written.*
       * *Helps maintain the integrity of the dataset by ensuring that only new, unique records are appended to the file, reducing redundant data.*
+
 4. *AVL Tree*
    * *Objective: Used for storing suburb data in a balanced manner to ensure efficient lookups, insertions, and deletions.*
    * *Code Locations: Defined in [`AVLTree`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tree/AVLTree.java#L11); processed using `insert()`, `delete()`, and `search()` methods.*
@@ -278,10 +247,8 @@ Here is a partial (short) example for the subsection `Data Structures`:*
       * *It is more efficient than a standard binary search tree, with O(log n) time complexity for all operations.*
       * *We need to maintain balanced performance as the dataset grows to avoid worst-case O(n) time complexity.*
       * *AVL Tree ensures consistent performance for large datasets, which is crucial as the number of suburbs increases.*
-<hr>
 
 ### Design Patterns
-*[What design patterns did your team utilise? Where and why?]*
 
 1. **DAO (Data Access Object) Pattern**
    * **Objective**: Used to abstract and encapsulate access to air quality data from APIs or files, separating data access logic from business logic. 
@@ -306,12 +273,9 @@ Here is a partial (short) example for the subsection `Data Structures`:*
       * *It enables flexibility in choosing or adding new location-based calculation methods without modifying existing code.*
       * *Adheres to the open-closed principle, allowing new strategies to be added without altering the core logic.*
       * *It decouples the algorithm from the context where it's used, improving code maintainability and making it easier to switch or extend strategies.*
-<hr>
-
-### Parser
 
 ### <u>Grammar(s)</u>
-*[How do you design the grammar? What are the advantages of your designs?]*
+
 Our grammar is designed to parse various types of data input related to air quality and suburb information, ensuring flexibility and adaptability for different formats such as JSON and CSV. By allowing key components like &lt;Location&gt;, &lt;Date&gt;, and &lt;Time&gt; to be interchangeable, the grammar design provides robustness to handle diverse data orders.
 
 Advantages:
@@ -346,20 +310,15 @@ Production Rules:
 
 ### <u>Tokenizers and Parsers</u>
 
-*[Where do you use tokenisers and parsers? How are they built? What are the advantages of the designs?]*
-
 The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the class  SuburbHistoricalActivity in [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) lines 192-230.
 They are built by taking inspiration from Lab 06, and three classes are used, including  Parser ([Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)).
 Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as &lt;Location&gt;, &lt;Date&gt;, &lt;Time&gt;, making the input easier to process.
 Parsers: The Parser class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser uses predefined grammar rules to validate and organize the tokens into meaningful structures.
 
 Advantages of the Designs:
-
-Modularity: The separation between tokenizing and parsing tasks makes the system modular, simplifying maintenance and allowing for easy updates.
-
-Adaptability: By using a flexible, the system can handle different input sequences and formats, improving the user experience when working with varied data sources.
-
-Efficiency: Breaking data into tokens before parsing reduces complexity, leading to more efficient data handling. This design ensures that each step of data processing is straightforward and optimized.
+   - Modularity: The separation between tokenizing and parsing tasks makes the system modular, simplifying maintenance and allowing for easy updates.
+   - Adaptability: By using a flexible, the system can handle different input sequences and formats, improving the user experience when working with varied data sources.
+   - Efficiency: Breaking data into tokens before parsing reduces complexity, leading to more efficient data handling. This design ensures that each step of data processing is straightforward and optimized.
 
 ## Implemented Features
 ### Basic Features
@@ -370,7 +329,7 @@ Username: comp6442@anu.edu.au Password: comp6442
    * **Description of feature**: This feature provides users with a secure way to log into the app using their email and password. Firebase Authentication is used to verify the credentials. Once successfully logged in, the user is redirected to the app's main functionality. Error messages are displayed in case of invalid credentials or network issues. Two predefined accounts (`comp2100@anu.edu.au` and `comp6442@anu.edu.au`) are provided for the markers to access the app. <br>
    * **Description of your implementation**: The login functionality is implemented in `FirebaseLoginActivity`. In the `onCreate` method, we retrieve the authorisation instance associated with the project(`mAuth = FirebaseAuth.getInstance()`), and checks for a cached user, before finally showing the result via a toast message. If no cached user exists, the layout instantiates and provides a form. The login form includes two `EditText` fields: `lg_username` for the email input and `lg_password` for the password, defined in the XML layout file [`activity_firebase_login_ui.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml). The `signIn()` method validates the input fields and uses Firebase's `signInWithEmailAndPassword` method to authenticate the user. If the login is successful, the resultant user data returns via an `Intent`. If the login fails, a failure message is displayed using a `Toast` (`addOnFailureListener`) to inform the user. This ensures a smooth and user-friendly login experience, including proper error handling and input validation. <br>
 
-2. [DataFiles]. The app must use a data set (which you may create) where each entry represents a meaningful piece of information relevant to the app. The data set must be represented and stored in a structured format as taught in the course. It must contain at least 2,500 valid instances. (easy)in your report.
+2. [DataFiles]. The app must use a data set (which you may create) where each entry represents a meaningful piece of information relevant to the app. The data set must be represented and stored in a structured format as taught in the course. It must contain at least 2,500 valid instances. (easy)
    * Code to the Data File [`canberra_suburbs.json`](tFpOJ4pms32UhUzrfL4XFSK6), [`canberra_suburbs_coordinates.json`](SANICmkjDFxw6rcZdjZE65ur).
    * Link to the Firebase repo: https://console.firebase.google.com/u/2/project/go4gp-s2/overview
 
@@ -387,22 +346,28 @@ Username: comp6442@anu.edu.au Password: comp6442
   * **Code**: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java), methods `onCreate`, `refreshData`, and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java), method `fetchData` <br>
    * **Description of feature**: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. The data streams feed air quality data into the app, ensuring that users always have up-to-date information without manual refreshes. <br>
    * **Description of your implementation**: The data stream functionality is implemented using `DataFetcher.java` to retrieve air quality data at regular intervals. The `SuburbLiveActivity` class periodically updates the displayed data by calling `refreshData`, which triggers the data fetch. A `SwipeRefreshLayout` in [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml) enables users to manually refresh the data stream, simulating real-time updates. The app also utilizes timers or handlers to automatically trigger the `fetchData` method in the background, ensuring that data is refreshed regularly during the user's session. This ensures a smooth, real-time experience for users interacting with air quality data across different suburbs. <br>
+
 5. [Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
 * **Code**: [`Tokenizer.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java), methods `tokenizeInput`, [`Parser.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java), methods `parseQuery`, and [`SearchRecord.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SearchRecord.java) <br>
+
 * **Description of feature**: This feature allows users to search for suburb-specific air quality information based on their input, which adheres to a pre-defined grammar. This ensures that users can easily access relevant air quality data by entering queries that match the expected input format. <br>
+
 * **Description of your implementation**: The search functionality is implemented using `Tokenizer.java` to break down the user's input into individual tokens. These tokens are then processed by `Parser.java`, which interprets the query according to a predefined grammar for suburbs and air quality terms. The `SearchRecord.java` stores the user’s search details, including the suburb name and timestamp. The results are displayed in the user interface using a `RecyclerView`, allowing users to browse relevant air quality data for different suburbs in a dynamic and interactive way. <br>
+
 6. [UIUX] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
  * **Code**: XML layouts like [`activity_main.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_main.xml), [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml), [`activity_profile.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml), [`card_layout.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/card_layout.xml) <br>
+
 * **Description of feature**: The application maintains a consistent design language, including colors, fonts, and UI styles throughout all activities and screens. It also handles orientation changes gracefully, ensuring that the layout adapts to both portrait and landscape modes without disrupting the user experience. <br>
+
 * **Description of your implementation**: The UI is implemented using `ConstraintLayout` and `LinearLayout` for flexibility and responsive design. Consistent colors, fonts, and styles are applied across XML layouts, with elements like `RecyclerView`, `CardView`, and `SwipeRefreshLayout` providing a uniform user interface. The app handles orientation changes through flexible layouts defined in XML files such as [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml) and [`suburb_historical.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml). Colors are defined in `colors.xml` to maintain consistency across all screens, and UI elements like `Spinner` and `EditText` adjust appropriately to different screen sizes and orientations, providing a seamless user experience.
    <br>
+
 7. [UIFeedback] The UI must provide clear and informative feedback for user actions, including error messages to guide users effectively. (easy)
  * **Code**: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java), [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java), methods `onDataLoadFailure`, `onDataLoadSuccess` <br>
+
 * **Description of feature**: The app provides clear and informative feedback to users during data loading and error states. Progress indicators and error messages help users understand the current state of the app and what actions they can take if something goes wrong. <br>
+
 * **Description of your implementation**: The app uses a `ProgressBar` within [`layout_refresh_footer.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/layout_refresh_footer.xml) to visually indicate loading progress. In the `SuburbLiveActivity`, `SwipeRefreshLayout` provides feedback during manual data refreshes, offering users visual cues that the content is being updated. When data loading is successful, `onDataLoadSuccess` handles the updates, removing the progress bar and refreshing the UI. If data loading fails, `onDataLoadFailure` is triggered, displaying a `Toast` message to inform users of the error. This ensures users are aware of the issue and can take appropriate actions, such as retrying the data load or checking their network connection. Additionally, error messages are concise and clear, guiding users through troubleshooting steps to ensure a smooth experience.
-   <br>
-
-
 
 ### Custom Features
 Feature Category: Search <br>
@@ -412,20 +377,21 @@ Feature Category: Search <br>
 * Description of your implementation: The proximity-based ranking is implemented by first calculating the distance between the user's current GPS coordinates (latitude and longitude) and each suburb's coordinates, stored in a `HashMap<String, double[]>`. This calculation is done using the Haversine formula, which provides an accurate measure of the great-circle distance between two points on the Earth's surface. The`NearestSuburbStrategy.java` class manages this distance calculation within the `getNearestSuburb` method, iterating through each suburb to determine the shortest distance from the user.<br>
 Once the distances are calculated, the search results are ranked based on proximity. The`LoadMoreSearchResultAdapter.java` class is responsible for binding this sorted list of suburbs to the `RecyclerView`. In the `onBindViewHolder` method, the suburb data—including the name, distance, and coordinates—is dynamically displayed. The UI layout [`adapter_search_result_recyclerview`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/adapter_search_result_recyclerview.xml) ensures that the ranked suburbs are shown in ascending order of distance, making it easy for the user to see which suburbs are closest.<br>
 Additionally, the app is designed to provide real-time updates as the user moves or interacts with the app. The `SuburbLiveActivity.java` class triggers data fetching and re-ranking of the search results as the user's location changes. This ensures that the displayed results always reflect the user’s current location and proximity to various suburbs. The data is continually updated in the `RecyclerView`, maintaining a smooth and interactive experience for the user. <br>
-     <br>
 
 Feature Category: Data <br>
 2. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    *  Code:[`GPSService.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java), and [`MainActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java).
 
-* Description of feature: The app tracks the user's real-time location using GPS to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location in the background, the app ensures that the displayed data is always relevant to the user's current surroundings. <br>
+* Description of feature: The app tracks the user's real-time location using GPS and Wifi via FusedLocationClient to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location when bound, the app ensures that the displayed data is always relevant to the user's current surroundings. <br>
 
 * Description of your implementation:  
-  The GPS tracking feature connects to Android's location services via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
+  The GPS tracking feature connects to the plays services location FusedLocation api via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. There is a single api method `getRecentLocation()` exposed for communication with the service which is available when the service is bound to an activity. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
+
 3. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
+
 4. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
    ***Code:** [`SuburbJsonUtils.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java), method `parseSuburbsFromJson`, and [`environment_monitoring_data.csv`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/assets/environment_monitoring_data.csv), parsed in `CsvParser.java` <br>
 
@@ -433,6 +399,7 @@ Feature Category: Data <br>
 
 * Description of your implementation:
   The app reads local data in two formats: JSON and CSV. JSON data is handled by `SuburbJsonUtils.java`, where the `parseSuburbsFromJson()` method reads suburb names and coordinates stored in a `HashMap<String, double[]>`, supporting location-based features like distance calculations. The app also processes CSV data from `environment_monitoring_data.csv`, with `CsvParser.java` using the `parseCsvData()` method to extract air quality index (AQI) values for real-time environmental updates. By integrating JSON for geographic data and CSV for dynamic data, the app provides accurate, location-based information.<br>
+  
 5. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
    * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
    * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-231): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-231
@@ -470,8 +437,6 @@ Feature Cateory: User Interactivity <br>
 *Instructions:*
 - If implemented, explain how your solution addresses the task (any detail requirements will be released with the surprise feature specifications).
 - State that "Surprise feature is not implemented" otherwise.
-
-<br> <hr>
 
 
 ## Testing Summary
