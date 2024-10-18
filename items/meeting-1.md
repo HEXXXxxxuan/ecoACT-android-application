@@ -1,4 +1,4 @@
-# [Team Name]
+# [Team 4 EcoACT]
 This following is a very simple team meeting template. You should expand it based on the scope and nature of your discussion.
 
 ## Team Meeting [1] - Week [7] - [20-09] (start-end time)
