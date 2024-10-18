@@ -76,6 +76,7 @@ The key area(s) of responsibilities for each member
     - Design the logo and color/style used in app
     - Design the Figma with Chan
     - Design/modify/create the layout in each XML to make the app have a consistent layout style(color/button/cardview etc.)
+    - Performance enhanced and bug fixed in UI Layout related, for example in - [ExecutorServiceSingleton](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java)
 
   - **Others**:
     - Create the UML
@@ -209,6 +210,7 @@ Mr. Zhang is a running enthusiast. He likes to exercise along the running route 
 ### Application UML
 
 ![UML diagram](media/_examples/UML.png) 
+** This image is in .png format, please click on and zoom in to see the details, use Visual Paradigm to generate **
 
 ## Code Design and Decisions
 
