@@ -10,7 +10,6 @@ variables:
 build-job:
   stage: build
   image: cimg/android:2024.09.1
-  when: manual
   tags:
     - comp2100
   script:
