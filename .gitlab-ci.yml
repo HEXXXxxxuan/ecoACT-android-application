@@ -26,9 +26,9 @@ build-job:
     - key: cache-$CI_COMMIT_REF_SLUG
     - policy: push
     - paths:
-      - App/app/build/
-      - App/.gradle/
-      - App/apk/
+      - App/app/build
+      - App/.gradle
+      - App/apk
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
