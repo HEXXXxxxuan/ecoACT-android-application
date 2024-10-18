@@ -61,6 +61,7 @@ The key area(s) of responsibilities for each member
     - Constructed [1/4 Meeting Minutes](meeting-4.md)
     - [Meeting notes](meeting-3-document.jpg)
 
+***
 
 **u7635535, Zechuan Liu** I have 20% contribution, as follows:
 - **Code Contribution in the final App**
@@ -73,7 +74,7 @@ The key area(s) of responsibilities for each member
     - Search: Designed how to meet the requirements for designate. 
     - First version login: Designed the login page without firebase.
 
-    ***
+***
 
 **u8006862, Hexuan Wang** I have contributed 20%:
    - **Code Contribution in the final App**
