@@ -501,48 +501,20 @@ The Dogs™ have selected the MIT license for the project as (despite being a ve
 -**Types of Tests and Descriptions**:
   - Basic Unit Test: Validates arithmetic functionality, primarily used to verify the setup of the testing framework.
 
-
-
-<br> <hr>
-
-
-
 ## Summary of Known Errors and Bugs
 
-*[Where are the known errors and bugs? What consequences might they lead to?]*
-*List all the known errors and bugs here. If we find bugs/errors that your team does not know of, it shows that your testing is not thorough.*
-
-*Here is an example:*
-
-1. *Bug 1:*
-    - *A space bar (' ') in the sign in email will crash the application.*
-    - ...
-
-2. *Bug 2:*
-3. ...
-
-<br> <hr>
-
+1. *Permissions Denial*
+   - When a user denies most permissions, the app can simply re-request until the permissions are granted. There is a specific issue with the background location permission where we can't request it multiple times. Presently, if the user denies the "Access at all times" option for location, the app will continually chew up resources trying to request the permission until it crasheds.
+   - The simple fix is: settings > apps > Application > permissions > location > allow access all the time
 
 ## Team Management
-
 ### Meeting Minutes
-* Link to the minutes of your meetings like above. There must be at least 4 team meetings.
-  (each committed within 2 days after the meeting)
-* Your meetings should also have a reasonable date spanning across Week 6 to 11.*
-
-
 - [Team Meeting 1](meeting-1.md)
 - [Team Meeting 2](meeting-2.md)
 - [Team Meeting 3](meeting-3.md)
 - [Team Meeting 4](meeting-4.md)
 
-
-<hr>
-
 ### Conflict Resolution Protocol
-*[Write a well defined protocol your team can use to handle conflicts. That is, if your group has problems, what is the procedure for reaching consensus or solving a problem?
-(If you choose to make this an external document, link to it here)]*
 
 *If your group has issues, how will your group reach consensus or solve the problem?*
 
@@ -577,5 +549,3 @@ Our team is committed to open communication, collaboration, and mutual support. 
    - **Risk Assessment**: At the start of the project, we’ll identify potential risks (like illness or technical problems) and create contingency plans for each.
    - **Task Backups**: Every critical task will have a backup person familiar with it, so the work can continue if the main person is unavailable.
    - **Regular Check-ins**: We’ll have weekly meetings to review our progress and spot any potential issues early. This will help us take action before they become bigger problems.
-
-
