@@ -1,4 +1,4 @@
-# [Team Name]
+# [Team 4 EcoACT]
 
 
 ## Team Meeting [2] - Week [8] - [27-09] (start-end time)
