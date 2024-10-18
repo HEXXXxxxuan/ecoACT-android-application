@@ -753,5 +753,3 @@ Our team is committed to open communication, collaboration, and mutual support. 
    - Acquiring air quality data from [OpenWeaterMap](https://openweathermap.org/api/air-pollution)
    - [merge request review](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/15)
    - Checking for bugs on real android device
-
-***
