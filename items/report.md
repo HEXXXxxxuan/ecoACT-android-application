@@ -24,33 +24,43 @@
 ## Team Members and Roles
 The key area(s) of responsibilities for each member
 
-| UID   |  Name  |                                                    Role |
-|:------|:------:|--------------------------------------------------------:|
-| [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Integrations] |
-| [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
-| [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search, Profile Page] |
+| UID   |  Name  |                                                       Role |
+|:------|:------:|-----------------------------------------------------------:|
+| [u7327620] | [Ryan Foote] |                       [Firebase, Login, GPS, Integrations] |
+| [u7902000] | [Gea Linggar Galih]|    [AirQualityApi, Data Storage, Data Structures, Backend] |
+| [u8003980] | [Cheng Leong Chan] |                   [UI design, Search, Profile Page, Video] |
 | [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo, UML] |
-| [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
+| [u7635535] | [Zechuan Liu] |                  [Overall Functionality, Search Designate] |
 
 
 ## Summary of Individual Contributions
 
 **u8003980, Chan Cheng Leong** I have 20% contribution, as follows:
 - **Code Contribution in the final App**
-    - Feature Change Profile Picture in Profile Page - class ProfileActivity: [profileActivity.java](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
-    - Feature Display Pinned Suburbs in Profile Page – class SuburbCardViewAdapter: [SuburbCardViewAdapter.java](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
-    class SuburbCard: [SuburbCard.java](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java)
-    - Feature Parse Search Bar input in Historical Data Page – method parseSearchBarInput(): [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java),
-    class Parser: [Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java),
-    class Tokenizer: [Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
-    class Token: [Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)
-    - UI Profile Page - [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml)
-    - UI Pinned Suburb Card - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
+    - Feature Change Profile Picture in Profile Page
+      - [ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) class
+    - Feature Display Pinned Suburb Cards in Profile Page 
+      - [ProfileActivity](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java) 
+      - [SuburbCardViewAdapter](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java) class
+      - [SuburbCard](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java) class
+    - Feature Parse Search Bar input in Suburb Historical Data Page:
+      - SuburbHistoricalActivity class [parseSearchBarInput](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L243-282) method, lines of code 243-282
+      - [Parser](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java) class
+      - [Tokenizer](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java) class
+      - [Token](/App/app/src/main/java/com/go4/application/profile/Token.java) class
+      - [SearchRecord](/App/app/src/main/java/com/go4/application/historical/SearchRecord.java) class
+    - Profile Page UI - [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml)
+    - Pinned Suburb Card UI - [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
+    - Bottom Navigation Bar UI - [suburb_live.xml, lines of code 390-449](/App/app/src/main/res/layout/suburb_live.xml#L390-449)
 
 - **Code and App Design**
-    - UI Design: designed UI for Profile Page and Suburb Live Data Page with Figma with Hexuan.
+    - [UI Design](media/_examples/UI_Design.jpg): Used Figma to design UI for Profile Page and Suburb Live Data Page with Hexuan Wang.
 
-***
+- **Others**:
+    - Recorded and Edited [features.mp4](features.mp4)
+    - [1/4 Meeting Minutes](meeting-4.md)
+    - [Meeting notes](meeting-3-document.jpg)
+
 
 **u7635535, Zechuan Liu** I have 20% contribution, as follows:
 - **Code Contribution in the final App**
@@ -63,7 +73,7 @@ The key area(s) of responsibilities for each member
     - Search: Designed how to meet the requirements for designate. 
     - First version login: Designed the login page without firebase.
 
-    ***
+***
 
 **u8006862, Hexuan Wang** I have contributed 20%:
    - **Code Contribution in the final App**
@@ -284,8 +294,13 @@ Error Handling: This design allows the parser to still function even if the inpu
 
 Production Rules:
 
-    <Input> ::= <Location> <Date> <Time> | <Location> <Time> <Date> | <Date> <Location> <Time> | ...
-
+    <Input> ::= <Input> ::= <Location> <Separator>? <Date> <Separator>? <Time>
+          | <Location> <Separator>? <Time> <Separator>? <Date>
+          | <Date> <Separator>? <Location> <Separator>? <Time>
+          | <Date> <Separator>? <Time> <Separator>? <Location>
+          | <Time> <Separator>? <Location> <Separator>? <Date>
+          | <Time> <Separator>? <Date> <Separator>? <Location>
+    
     <Location> ::= “Acton” | “Ainslie” | … | "Yarralumla"
 
     <Date> ::= <Year> <Month> <Day>
@@ -306,12 +321,14 @@ Production Rules:
 
     <Ampm> ::= "am" | "pm"
 
+    <Separator> ::= "," | ";" | "_"
+
 ### <u>Tokenizers and Parsers</u>
 
 *[Where do you use tokenisers and parsers? How are they built? What are the advantages of the designs?]*
 
-The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the class  SuburbHistoricalActivity in [SuburbHistoricalActivity.java](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) lines 192-230.
-They are built by taking inspiration from Lab 06, and three classes are used, including  Parser ([Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)).
+The tokenizers and parsers are used primarily in the Suburb Historical Data Page, in the SuburbHistoricalActivity class method [parseSearchBarInput](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java)), lines of code 243-282.
+Three classes are used, including Parser ([Parser.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java)), Tokenizer ([Tokenizer.java](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java)) and Token ([Token.java](/App/app/src/main/java/com/go4/application/profile/Token.java)).
 Tokenizers: The Tokenizer class uses regular expressions to split the input data into discrete tokens. These tokens are then classified as &lt;Location&gt;, &lt;Date&gt;, &lt;Time&gt;, making the input easier to process.
 Parsers: The Parser class takes these tokens and applies the grammar rules to construct the data model used in the application. The parser uses predefined grammar rules to validate and organize the tokens into meaningful structures.
 
@@ -342,22 +359,33 @@ Username: comp6442@anu.edu.au Password: comp6442
    
 * **Description of feature**: This feature loads air quality data for various suburbs in Canberra and displays it to the user in real-time. The data can be retrieved from local JSON files such as `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`, which store suburb names and their geographical coordinates. The app is designed to retrieve data from these files or Firebase if real-time data is available. The loaded data is presented to users in a well-organized and dynamic format (via `RecyclerView`), which shows the current air quality index (AQI) for each suburb, allowing users to make informed decisions about outdoor activities based on the air quality. <br>
    
-* **Description of your implementation**: 
-      - The data loading functionality is managed by the `DataFetcher.java` class, which retrieves suburb and air quality data from `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`. The data is displayed using `SuburbLiveActivity.java` with a `RecyclerView`, showing suburb names and air quality indices. A progress bar indicates loading status, and real-time data is fetched from Firebase if available. Error handling is in place to display `Toast` messages for any issues during data retrieval. This ensures smooth loading and display of both real-time and historical data. <br>
+* **Description of your implementation**:
+  - The data loading functionality is managed by the `DataFetcher.java` class, which retrieves suburb and air quality data from `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`. The data is displayed using `SuburbLiveActivity.java` with a `RecyclerView`, showing suburb names and air quality indices. A progress bar indicates loading status, and real-time data is fetched from Firebase if available. Error handling is in place to display `Toast` messages for any issues during data retrieval. This ensures smooth loading and display of both real-time and historical data. <br>
 
-4. [[DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
+4. [DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
   * **Code**: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java), methods `onCreate`, `refreshData`, and [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java), method `fetchData` <br>
    * **Description of feature**: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. The data streams feed air quality data into the app, ensuring that users always have up-to-date information without manual refreshes. <br>
    * **Description of your implementation**: The data stream functionality is implemented using `DataFetcher.java` to retrieve air quality data at regular intervals. The `SuburbLiveActivity` class periodically updates the displayed data by calling `refreshData`, which triggers the data fetch. A `SwipeRefreshLayout` in [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml) enables users to manually refresh the data stream, simulating real-time updates. The app also utilizes timers or handlers to automatically trigger the `fetchData` method in the background, ensuring that data is refreshed regularly during the user's session. This ensures a smooth, real-time experience for users interacting with air quality data across different suburbs. <br>
+
 5. [Search] The app must allow users to search for information. Based on the user's input, adhering to pre-defined grammar(s), a query processor must interpret the input and retrieve relevant information matching the user's query. The implementation of this functionality should align with the app’s theme. The application must incorporate a tokenizer and parser utilizing a formal grammar created specifically for this purpose. (medium)
-* **Code**: [`Tokenizer.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java), methods `tokenizeInput`, [`Parser.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java), methods `parseQuery`, and [`SearchRecord.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/historical/SearchRecord.java) <br>
-* **Description of feature**: This feature allows users to search for suburb-specific air quality information based on their input, which adheres to a pre-defined grammar. This ensures that users can easily access relevant air quality data by entering queries that match the expected input format. <br>
-* **Description of your implementation**: The search functionality is implemented using `Tokenizer.java` to break down the user's input into individual tokens. These tokens are then processed by `Parser.java`, which interprets the query according to a predefined grammar for suburbs and air quality terms. The `SearchRecord.java` stores the user’s search details, including the suburb name and timestamp. The results are displayed in the user interface using a `RecyclerView`, allowing users to browse relevant air quality data for different suburbs in a dynamic and interactive way. <br>
-6. [UIUX] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
+* **Code**: SuburbHistoricalActivity class [`parseSearchBarInput`](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L243-282) method, lines of code 243-282,
+            [`Tokenizer.java`](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Tokenizer.java),
+            [`Parser.java`](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Parser.java), 
+            [`Token.java`](/App/app/src/main/java/com/go4/utils/tokenizer_parser/Token.java),
+            and [`SearchRecord.java`](/App/app/src/main/java/com/go4/application/historical/SearchRecord.java) <br>
+* **Description of feature**: This feature allows users to search for suburb-specific air quality information based on their input, which follows to a pre-defined grammar. This ensures that users can easily access relevant air quality data by entering queries that match the expected input format. <br>
+* **Description of your implementation**: The `SuburbHistoricalActivity` class has a method `parseSearchBarInput`, and it is invoked when the user's input in the search bar has changed.
+    When called, a new `Tokenizer` and `Parser` is initialized, and the method `parseInput` of the `Parser` class is called, parsing the input.
+    The parsed details, including the suburb name, date and time, are stored in the `SearchRecord` class.
+    These details are displayed on screen in the suburb, date and time selectors, so the user can clearly see if their input is interpreted correctly.
+    When the user clicks the search button, the parsed details are used to search for the air quality information.
+
+6. [UXUI] The app must maintain a consistent design language throughout, including colors, fonts, and UI element styles, to provide a cohesive user experience. The app must also handle orientation changes (portrait to landscape and vice versa) gracefully, ensuring that the layout adjusts appropriately. (easy)
  * **Code**: XML layouts like [`activity_main.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_main.xml), [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml), [`activity_profile.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml), [`card_layout.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/card_layout.xml) <br>
 * **Description of feature**: The application maintains a consistent design language, including colors, fonts, and UI styles throughout all activities and screens. It also handles orientation changes gracefully, ensuring that the layout adapts to both portrait and landscape modes without disrupting the user experience. <br>
 * **Description of your implementation**: The UI is implemented using `ConstraintLayout` and `LinearLayout` for flexibility and responsive design. Consistent colors, fonts, and styles are applied across XML layouts, with elements like `RecyclerView`, `CardView`, and `SwipeRefreshLayout` providing a uniform user interface. The app handles orientation changes through flexible layouts defined in XML files such as [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml) and [`suburb_historical.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml). Colors are defined in `colors.xml` to maintain consistency across all screens, and UI elements like `Spinner` and `EditText` adjust appropriately to different screen sizes and orientations, providing a seamless user experience.
    <br>
+
 7. [UIFeedback] The UI must provide clear and informative feedback for user actions, including error messages to guide users effectively. (easy)
  * **Code**: [`SuburbLiveActivity`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java), [`DataFetcher`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/DataFetcher.java), methods `onDataLoadFailure`, `onDataLoadSuccess` <br>
 * **Description of feature**: The app provides clear and informative feedback to users during data loading and error states. Progress indicators and error messages help users understand the current state of the app and what actions they can take if something goes wrong. <br>
@@ -368,12 +396,7 @@ Username: comp6442@anu.edu.au Password: comp6442
 
 ### Custom Features
 Feature Category: Search <br>
-1. [Search-Filter]. The app must provide functionality to sort and filter a list of items returned from searches using appropriate UI components. (easy)
-   * Code: [Class X, methods Z, Y](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
-   * Description of your implementation: ... <br>
-     <br>
-
-2. [Search-Designate]. The app must rank search results based on the status of the users. For example, a user may have multiple roles within the app, which should result in different ranked lists of results. (medium)
+1. [Search-Designate]. The app must rank search results based on the status of the users. For example, a user may have multiple roles within the app, which should result in different ranked lists of results. (medium)
 * Code: [`NearestSuburbStrategy.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java), method `getNearestSuburb` and [`LoadMoreSearchResultAdapter.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/java/com/go4/application/live_data/adapter), method `onBindViewHolder` <br>
 * Description of feature: The app ranks search results by calculating the distance between the user's current location and various suburbs, displaying the nearest suburbs first. This ensures that users receive more relevant information based on their physical proximity to the suburbs. <br>
 * Description of your implementation: The proximity-based ranking is implemented by first calculating the distance between the user's current GPS coordinates (latitude and longitude) and each suburb's coordinates, stored in a `HashMap<String, double[]>`. This calculation is done using the Haversine formula, which provides an accurate measure of the great-circle distance between two points on the Earth's surface. The`NearestSuburbStrategy.java` class manages this distance calculation within the `getNearestSuburb` method, iterating through each suburb to determine the shortest distance from the user.<br>
@@ -382,14 +405,14 @@ Additionally, the app is designed to provide real-time updates as the user moves
      <br>
 
 Feature Category: Data <br>
-3. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
+2. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    *  Code:[`GPSService.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java), and [`MainActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java).
 
 * Description of feature: The app tracks the user's real-time location using GPS to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location in the background, the app ensures that the displayed data is always relevant to the user's current surroundings. <br>
 
 * Description of your implementation:  
   The GPS tracking feature connects to Android's location services via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
-4. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
+3. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
    * Description of your implementation: ... <br>
@@ -400,37 +423,31 @@ Feature Category: Data <br>
 
 * Description of your implementation:
   The app reads local data in two formats: JSON and CSV. JSON data is handled by `SuburbJsonUtils.java`, where the `parseSuburbsFromJson()` method reads suburb names and coordinates stored in a `HashMap<String, double[]>`, supporting location-based features like distance calculations. The app also processes CSV data from `environment_monitoring_data.csv`, with `CsvParser.java` using the `parseCsvData()` method to extract air quality index (AQI) values for real-time environmental updates. By integrating JSON for geographic data and CSV for dynamic data, the app provides accurate, location-based information.<br>
-6. [Data-Profile] The app must include a Profile Page for users (or any relevant entity within your app’s theme) that displays a media file, such as an image, animation (e.g., GIF), or video. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) and [activity_profile.xml](/App/app/src/main/res/layout/activity_login.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L162-231): methods editableProfilePicture, getFilePath, readProfilePicture, writeProfilePicture, lines of code: 162-231
-   * Description of your implementation: Our app contains a profile page, which is shown when the user successfully logs in our app. 
-     The Profile Page displays user email, a profile picture that can be changed by clicking and selecting a picture from your phone. 
-     The profile page is stored in internal storage, and read whenever the activity is created. A default profile picture is shown if the user has not uploaded a profile picture. 
-     The page also contains a LOGOUT button.
 
 Feature Category: UI Design and Testing <br>
-7. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
+4. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
    * Code: [Class X, entire file](https://gitlab.cecs.anu.edu.au/comp2100/group-project/ga-23s2/-/blob/main/items/media/_examples/Dummy.java#L22-43) and Class Y, ...
    * [Class B](../src/path/to/class/file.java#L30-85): methods A, B, C, lines of code: 30 to 85
 
 Feature Cateory: User Interactivity <br>
-8. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
-   * Code: [Class ProfileActivity, entire file](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java), 
+5. [Interact-Micro] The app must provide the ability to micro-interact with items or users (e.g., like, block, connect to another user) with interactions stored in-memory. (easy)
+   * Code: [Class ProfileActivity, lines of code 243-462](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L243-462), 
    [Class SuburbCardViewAdapter, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCardViewAdapter.java),
    [Class SuburbCard, entire file](/App/app/src/main/java/com/go4/application/profile/SuburbCard.java),
-   [activity_profile.xml](/App/app/src/main/res/layout/activity_profile.xml) 
-   and [activity_profile_card.xml](/App/app/src/main/res/layout/activity_profile_card.xml)
-   * [Class ProfileActivity](/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L233-413): 
+   [activity_profile.xml, lines of code 101-153](/App/app/src/main/res/layout/activity_profile.xml#L101-153),
+   and [activity_profile_card.xml, entire file](/App/app/src/main/res/layout/activity_profile_card.xml)
+   * [Class ProfileActivity, lines of code 243-462](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L243-462): 
    methods displayPinnedSuburbCards, searchForQualityAndPm10Number, readPinnedSuburbs, writePinnedSuburbs, 
-   updatePinnedSuburbs, addButtonOnClick, addSuburbCard,  lines of code: 233-413
-   * Description of your implementation: The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
-   It also indicates whether the air quality in that suburb is "Good", "Moderate" or "Bad", based on the air quality index. 
-   If it is "Good", the card will have a green background colour, and the image next to the text "Good" is a smiley face.
-   If it is "Moderate", the card will have a yellow background colour, and the image next to the text "Moderate" is a meh face.
-   If it is "Bad", the card will have an orange background colour, and the image next to the text "Bad" is a meh face.
-   Whenever a suburb is added with the ADD button or deleted by swiping right, or when an label is updated, the method writePinnedSuburbs is called to store the details of the pinned suburbs in internal storage, in a file titled "pinned_suburbs.txt".
-   The pinned suburbs are displayed using the class SuburbCardViewAdapter and RecyclerView, and the class SuburbCard is used to store and return the data of each card.
-   The data of the pinned suburbs are updated every 15 minutes using the updatePinnedSuburbs function.
+   updatePinnedSuburbs, addButtonOnClick, addSuburbCard
+   * Description of your implementation: 
+     - The Profile Page displays a list of the user's pinned suburbs as cards, which contains an editable label, the suburb name and the PM10 Number.
+     - It indicates whether the air quality in that suburb is "Good", "Moderate" or "Bad", based on the air quality index. 
+       - If it is "Good", the card will have a green background colour, and the image next to the text "Good" is a smiley face.
+       - If it is "Moderate", the card will have a yellow background colour, and the image next to the text "Moderate" is a meh face.
+       - If it is "Bad", the card will have an orange background colour, and the image next to the text "Bad" is a meh face.
+     - Whenever a suburb card is added with the ADD button or deleted by swiping right, or when an label is updated, the method [writePinnedSuburbs](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L243-279) is called to store the details of the pinned suburbs in internal storage, in a file titled "pinned_suburbs.txt".
+     - The pinned suburbs are displayed using the class SuburbCardViewAdapter and RecyclerView, and the class SuburbCard is used to store and return the data of each card.
+     - The data of the pinned suburbs are updated every 15 minutes using the [updatePinnedSuburbs](/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java#L374-390) method.
 
 ### Surprise Feature
 
@@ -445,8 +462,6 @@ Feature Cateory: User Interactivity <br>
 
 *[What features have you tested? What is your testing coverage?]*
 *Please provide details (see rubrics) including some screenshots of your testing summary, showing the achieved testing coverage. Feel free to provide further details on your tests.*
-
-*Here is an example:*
 
 1.  Tests for **Data Fetching**
 - **Code**: [`DataFetcherTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/androidTest/java/com/go4/application/DataFetcherTest.java)
@@ -483,7 +498,19 @@ Feature Cateory: User Interactivity <br>
 -**Types of Tests and Descriptions**:
   - Basic Unit Test: Validates arithmetic functionality, primarily used to verify the setup of the testing framework.
 
-
+6. Tests for **Tokenizer**
+- **Code**: [`TokenizerTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/TokenizerTest.java)
+- **Number of Test Cases**: 11
+- **Code Coverage**: Test covers all Token Types, including different formats of the same token.
+- **Types of Tests and Descriptions**:
+    - Unit Tests: Ensure the tokenizer correctly identifies and categorizes all token types, including handling different formats and variations of tokens. 
+  
+7. Tests for **Parser**
+- **Code**: [`ParserTest.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/test/java/com/go4/application/ParserTest.java)
+- **Number of Test Cases**: 14
+- **Code Coverage**: Test covers inputs with different orders, inputs with separators and inputs with invalid tokens.
+- **Types of Tests and Descriptions**:
+    - Unit Tests: Validate the parser's ability to process and interpret sequences of tokens, handling various input orders, separators, and invalid tokens.
 
 <br> <hr>
 
