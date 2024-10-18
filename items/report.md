@@ -359,14 +359,14 @@ Username: comp6442@anu.edu.au Password: comp6442
 3. [LoadShowData] The app must load and display data instances from the data set. Data must be retrieved from either a local file (e.g., JSON, XML) or Firebase. (easy)
    * **Code**: [`SuburbLiveActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java) in [these lines](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java#L767-809), [SuburbHistoricalActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java) in [these lines](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java#L320-354), [ProfileActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/profile/ProfileActivity.java)
    
-   * **Description of feature**: This feature loads air quality data for various suburbs in Canberra and displays it to the user in real-time. The data can be retrieved from an AVL tree or possibly from the OpenWeather API if real-time data is available.
+   * **Description of feature**: This feature loads air quality data for various suburbs in Canberra and displays it to the user in real-time. The data can be retrieved from local JSON files such as `canberra_suburbs.json` and `canberra_suburbs_coordinates.json`, which store suburb names and their geographical coordinates. The app is designed to retrieve data from these files or Firebase if real-time data is available. The loaded data is presented to users in a well-organized and dynamic format (via `RecyclerView`), which shows the current air quality index (AQI) for each suburb, allowing users to make informed decisions about outdoor activities based on the air quality.
    
    * **Description of your implementation**: The data loading functionality is managed by the `DataFetcher.java` class, which retrieves suburb and air quality data from `OpenWeaterMap API`. The data is displayed in `SuburbLiveActivity.java`, `SuburbHistoricalActivity`, or `ProfileActivity`, showing suburb names and related air quality metrics. The app provides air quality metrics either in numerical values or represents them as graphical information (see custom feature - Data Graphical).
 
 4. [DataStream] The app must simulate user interactions through data streams. These data streams must be used to feed the app so that when a user is logged in (or enters a specific activity), the data is loaded at regular time intervals and the app is updated automatically.  (medium)
   * **Code**: [SuburbLiveActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SuburbLiveActivity.java) in [showDataAndRefresh()](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java#L396-406) method.
 
-   * **Description of feature**: This feature strems data periodically, allowing the app to update automatically when the user logs in or enters specific activities. The data streams feed air quality data into the app, ensuring that users always have up-to-date information without manual refreshes. 
+   * **Description of feature**: This feature simulates user interactions by loading data streams periodically, allowing the app to update automatically when the user logs in or enters specific activities. The data streams feed air quality data into the app, ensuring that users always have up-to-date information without manual refreshes.
 
    * **Description of your implementation**: The `SuburbLiveActivity` class periodically updates the displayed data by calling `refreshData`, which triggers the data fetch. A `SwipeRefreshLayout` in [`suburb_live.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml) enables users to manually refresh the data stream, simulating real-time updates. The app also utilizes timers or handlers with default interval of two minutes to automatically trigger the `fetchData` method in the background. However, because the data interval from the OpenWeather API is 1 hour, to demonstrate the app's ability to stream data, we created a [MockJSONResponse](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/MockDataStream/MockJSONResponse.java). This class mimics the API response with similar JSON structures and generates 30 mock responses that are used in a cyclic manner.
 
@@ -392,26 +392,32 @@ Username: comp6442@anu.edu.au Password: comp6442
    * **Description of your implementation**: The app uses a `ProgressBar` within [`layout_refresh_footer.xml`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/layout_refresh_footer.xml) to visually indicate loading progress. In the `SuburbLiveActivity`, `SwipeRefreshLayout` provides feedback during manual data refreshes, offering users visual cues that the content is being updated. When data loading is successful, `onDataLoadSuccess` handles the updates, removing the progress bar and refreshing the UI. If data loading fails, `onDataLoadFailure` is triggered, displaying a `Toast` message to inform users of the error. This ensures users are aware of the issue and can take appropriate actions, such as retrying the data load or checking their network connection. Additionally, error messages are concise and clear, guiding users through troubleshooting steps to ensure a smooth experience.
 
 ### Custom Features
-Feature Category: Search <br>
+***
+Feature Category: Search
 1. [Search-Designate]. The app must rank search results based on the status of the users. For example, a user may have multiple roles within the app, which should result in different ranked lists of results. (medium)
-* Code: [`NearestSuburbStrategy.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java), method `getNearestSuburb` and [`LoadMoreSearchResultAdapter.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/java/com/go4/application/live_data/adapter), method `onBindViewHolder` <br>
-* Description of feature: The app ranks search results by calculating the distance between the user's current location and various suburbs, displaying the nearest suburbs first. This ensures that users receive more relevant information based on their physical proximity to the suburbs. <br>
-* Description of your implementation: The proximity-based ranking is implemented by first calculating the distance between the user's current GPS coordinates (latitude and longitude) and each suburb's coordinates, stored in a `HashMap<String, double[]>`. This calculation is done using the Haversine formula, which provides an accurate measure of the great-circle distance between two points on the Earth's surface. The`NearestSuburbStrategy.java` class manages this distance calculation within the `getNearestSuburb` method, iterating through each suburb to determine the shortest distance from the user.<br>
-Once the distances are calculated, the search results are ranked based on proximity. The`LoadMoreSearchResultAdapter.java` class is responsible for binding this sorted list of suburbs to the `RecyclerView`. In the `onBindViewHolder` method, the suburb data—including the name, distance, and coordinates—is dynamically displayed. The UI layout [`adapter_search_result_recyclerview`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/adapter_search_result_recyclerview.xml) ensures that the ranked suburbs are shown in ascending order of distance, making it easy for the user to see which suburbs are closest.<br>
-Additionally, the app is designed to provide real-time updates as the user moves or interacts with the app. The `SuburbLiveActivity.java` class triggers data fetching and re-ranking of the search results as the user's location changes. This ensures that the displayed results always reflect the user’s current location and proximity to various suburbs. The data is continually updated in the `RecyclerView`, maintaining a smooth and interactive experience for the user. <br>
-     <br>
+   * Code: [`NearestSuburbStrategy.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/live_data/NearestSuburbStrategy.java), method `getNearestSuburb` and [`LoadMoreSearchResultAdapter.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/java/com/go4/application/live_data/adapter), method `onBindViewHolder`
 
-Feature Category: Data <br>
+   * Description of feature: The app ranks search results by calculating the distance between the user's current location and various suburbs, displaying the nearest suburbs first. This ensures that users receive more relevant information based on their physical proximity to the suburbs.
+
+   * Description of your implementation: The proximity-based ranking is implemented by first calculating the distance between the user's current GPS coordinates (latitude and longitude) and each suburb's coordinates, stored in a `HashMap<String, double[]>`. This calculation is done using the Haversine formula, which provides an accurate measure of the great-circle distance between two points on the Earth's surface. The`NearestSuburbStrategy.java` class manages this distance calculation within the `getNearestSuburb` method, iterating through each suburb to determine the shortest distance from the user.
+
+   Once the distances are calculated, the search results are ranked based on proximity. The`LoadMoreSearchResultAdapter.java` class is responsible for binding this sorted list of suburbs to the `RecyclerView`. In the `onBindViewHolder` method, the suburb data—including the name, distance, and coordinates—is dynamically displayed. The UI layout [`adapter_search_result_recyclerview`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/adapter_search_result_recyclerview.xml) ensures that the ranked suburbs are shown in ascending order of distance, making it easy for the user to see which suburbs are closest.
+
+   Additionally, the app is designed to provide real-time updates as the user moves or interacts with the app. The `SuburbLiveActivity.java` class triggers data fetching and re-ranking of the search results as the user's location changes. This ensures that the displayed results always reflect the user’s current location and proximity to various suburbs. The data is continually updated in the `RecyclerView`, maintaining a smooth and interactive experience for the user.
+***
+Feature Category: Data 
 2. [Data-GPS] The app must utilize GPS information based on location data. Hint: see the demo presented by our tutors on ECHO360. (easy)
    *  Code:[`GPSService.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java), and [`MainActivity.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java).
 
-* Description of feature: The app tracks the user's real-time location using GPS to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location in the background, the app ensures that the displayed data is always relevant to the user's current surroundings. <br>
+   * Description of feature: The app tracks the user's real-time location using GPS and Wifi via FusedLocationClient to deliver location-specific content, such as air quality information for the nearest suburb. By continuously updating the user's location when bound, the app ensures that the displayed data is always relevant to the user's current surroundings.
 
-* Description of your implementation:  
-  The GPS tracking feature connects to Android's location services via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
+   * Description of your implementation: The GPS tracking feature connects to the plays services location FusedLocation api via `GPSService.java`, where the `startLocationUpdates()` method requests location updates using `FusedLocationProviderClient` to acquire GPS coordinates. Once permissions are granted, `GPSService.java` processes the updates, accessible by components like `MainActivity.java`. There is a single api method `getRecentLocation()` exposed for communication with the service which is available when the service is bound to an activity. Instead of handling `onLocationChanged()` in `MainActivity.java`, proximity-based updates occur in `GPSService.java`, which provides updated location data for displaying suburb-specific information, such as air quality. Distance calculations between the user’s location and suburbs are managed using suburb coordinates stored in a `HashMap<String, double[]>`. `SuburbLiveActivity.java` reloads data based on GPS updates, and `RecyclerView` in `SuburbCardViewAdapter.java` updates the UI to reflect the nearest suburbs and their air quality data, ensuring a smooth, real-time experience.
+
 3. [Data-Graphical] The app must include a graphical report viewer that displays a report with useful data from the app. No marks will be awarded if the report is not graphical. (hard)
    * Code: [SuburbHistoricalActivity] in [plotPrimaryData() and plotComparisonData()](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java#L823-921)
-   * Description of your implementation: The `SuburbHistoricalActivity` class includes a graphical report viewer that visualizes air   quality data for various suburbs over a selected time period. The `plotPrimaryData()` method plots the primary suburb’s air quality metrics using a line chart. Users can view trends for specific air quality components such as AQI, CO, NO2, PM2.5, PM10, O3, and SO2. The data points are plotted with corresponding time labels on the X-axis, which are dynamically generated based on the retrieved records. The `plotComparisonData()` method provides an additional feature that allows users to compare air quality trends between two suburbs. The method plots a second set of data on the same line chart, using different colors to visually differentiate between the primary and comparison suburb data. The implementation is integrated with the [`MPAndroidChart`](https://github.com/PhilJay/MPAndroidChart) library<br>
+
+   * Description of your implementation: The `SuburbHistoricalActivity` class includes a graphical report viewer that visualizes air   quality data for various suburbs over a selected time period. The `plotPrimaryData()` method plots the primary suburb’s air quality metrics using a line chart. Users can view trends for specific air quality components such as AQI, CO, NO2, PM2.5, PM10, O3, and SO2. The data points are plotted with corresponding time labels on the X-axis, which are dynamically generated based on the retrieved records. The `plotComparisonData()` method provides an additional feature that allows users to compare air quality trends between two suburbs. The method plots a second set of data on the same line chart, using different colors to visually differentiate between the primary and comparison suburb data. The implementation is integrated with the [`MPAndroidChart`](https://github.com/PhilJay/MPAndroidChart) library
+   
 4. [Data-Formats] The app must read data from local files in at least two different formats, such as JSON, XML, etc. (easy)
    ***Code:** [`SuburbJsonUtils.java`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java), method `parseSuburbsFromJson`, and [`environment_monitoring_data.csv`](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/assets/environment_monitoring_data.csv), parsed in `CsvParser.java` <br>
 
@@ -430,7 +436,7 @@ Feature Category: Data <br>
 Feature Category: UI Design and Testing <br>
 6. [UI-Layout]  The app must incorporate appropriate layout adjustments for UI components to support both portrait and landscape orientations, as well as various screen sizes. This requirement is in addition to the [UXUI] basic feature and necessitates the implementation of new layouts for each orientation and screen size. (easy)
    * Code: [layout-land, entire folder](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land?ref_type=heads) 
-   * [activity_firebase_login_ui.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml?ref_type=heads) and [activity_profile.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads) and [suburb_historical.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml?ref_type=heads) and [suburb_live.xml] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads)
+   * [activity_firebase_login_ui.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_firebase_login_ui.xml?ref_type=heads) and [activity_profile.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/activity_profile.xml?ref_type=heads) and [suburb_historical.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_historical.xml?ref_type=heads) and [suburb_live.xml](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/res/layout/suburb_live.xml?ref_type=heads)
 
    * Description of your implementation: Our app utilized CardView for a unified visual style, along with flexible layout managers, enhances both the aesthetic appeal and performance of the app. The modular layout structure further facilitates easy maintenance and scalability, allowing the app to adapt seamlessly to future requirements.
    * The use of match_parent and wrap_content in combination with ConstraintLayout and GridLayout allows UI components to automatically adjust their size and position based on the device's screen size and resolution. For instance, in SuburbHistoricalActivity, ConstraintLayout and GridLayout are employed to dynamically adapt to different screen arrangements seamlessly.
@@ -458,13 +464,38 @@ Feature Cateory: User Interactivity <br>
    The pinned suburbs are displayed using the class SuburbCardViewAdapter and RecyclerView, and the class SuburbCard is used to store and return the data of each card.
    The data of the pinned suburbs are updated every 15 minutes using the updatePinnedSuburbs function.
 
-### Surprise Feature
+## Surprise Feature
 
-*Instructions:*
+#### *TLDR:*
 - In the previous layout design [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/cd1dc8bb273f4cf903a6e802262c7c785ec3099a), we did not give credit to `OpenWeatherMap` for using their data in our app. For ethical considerations, we decided to update the layout and include a reference to `OpenWeatherMap` in our recent [commit](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/e86e25fb574c593d4dbb6143c112683f936f5c3f)
 - In the previous code design [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/7a69ac685e38f9b99e04c33d556d6592255f4a26), we are using several `ExecutorService` instances, in `SuburbLiveActivity` and `SplashActivity`, We felt that this design would not be efficient or scalable in the long term. Therefore, we created the[ExecutorServiceSingleton](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java) class to make sure that only one `ExecutorService` instance is used across the app, optimizing resource management and preventing the creation of multiple thread pools, [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/a14c0cd1478043e6c66ee060237e0c80655a2f19).
 
-<br> <hr>
+#### *In full*
+
+*"Your design choices have resulted in an app that, while it may be functional, is not fully modular, reusable, scalable or readable. We are also concerned that you haven’t carefully thought through possible perceived or actual ethical violations, as is standard in industry. And you never consulted us on the software license!"*
+
+Hello customer,
+
+We here at Dogs incorporated wish to extend our sincerest apologies for the mismanagement of your product. We aim to hold ourselves to the highest standards and accept no less than perfection when shipping our customers final products. I'm deeply upset to hear that the team have let you down. To show you that we're adamant on our claims, we've taken your advice to heart and implemented the following changes to the project.
+
+([Issue/merge documentation stem](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4))
+
+1. 
+- To ensure scalability and reusability, we've identified multiple usages of the ExecutorService class. This causes multiple instances of the class that consume system resources without optimal usage. To rectify the mistake, we've implemented a Singleton design pattern and migrated our Activity classes to the new version. This means that the code can be re-used elsewhere under different executor handling conditions and the code within the project will optimally use the system resources assigned to it.
+   - [Associated Issue](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/5)
+   - [Merge Request 1](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/48) creates the singleton rendition of the class.
+      - [Relevant file](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/7b172896d7d871f479bc3ba7de8d2ac85abc0d09/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java)
+   - [Merge Request 2](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/59) updates activity usages of the ExecutorService class to our new singleton version.
+These upgrades to the system rectifies the improper system resource management and aligns with our project vision for reusability through robust design patterns.
+
+2. 
+The Dogs™ are vehemently apologetic to the lack care taken to avoid ethical violations, and as such, violating the industry standards. We've conducted an explosive internal review spearheaded by our scrum masters to identify decadent developers and conducted ethical training modules where needed. The Dogs™ have identified that the usage of the OpenWeather Api has gone without accreditation within the project. Since the availability of data is the foundation to the project, we've rectified the mistake and added accreditation into the app to maintain amicable business agreements with the company.
+   - [Associated Issue](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4?work_item_iid=6)
+   - [Merge Request Solution](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
+We hope our rapid response exemplifies The Dogs™ strict moral code and adherance to perpetuating positive ethics through our work.
+
+3.
+The Dogs™ have selected the MIT license for the project as (despite being a very real and epic company) we're a group of students who's code is going to be hidden in a sea of student submissions. If a user reviewed our code and wished to use it, I'm sure we would be honoured (if not a little confused). The license protects us against any potential legal issues regarding warranties whilst allowing anyone to utilise and adapt the software to their needs.
 
 
 ## Testing Summary
@@ -509,41 +540,26 @@ Feature Cateory: User Interactivity <br>
 -**Types of Tests and Descriptions**:
   - Basic Unit Test: Validates arithmetic functionality, primarily used to verify the setup of the testing framework.
 
-
-
-<br> <hr>
-
-
+***
 
 ## Summary of Known Errors and Bugs
 
-*[Where are the known errors and bugs? What consequences might they lead to?]*
-*List all the known errors and bugs here. If we find bugs/errors that your team does not know of, it shows that your testing is not thorough.*
+### Active
+1. *Permissions Denial*
+   - When a user denies most permissions, the app can simply re-request until the permissions are granted. There is a specific issue with the background location permission where we can't request it multiple times. Presently, if the user denies the "Access at all times" option for location, the app will continually chew up resources trying to request the permission until it crasheds.
+   - The simple fix is: settings > apps > Application > permissions > location > allow access all the time
 
-*Here is an example:*
-
-1. *Bug 1:*
+### Fixed
+1. *Caching:*
     - persistent bug that show up only in real APK, however the error is not shown in android emulator, [see here](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/items/media/_examples/462563872_554352077247235_7338037996929308810_n.png)
     - After running the debug using the Android setup, we found that `firebaseAuth` was returning a `null` user's email. We didn't realize this earlier due to differences in how the cache is stored between the emulator and the real device. We modified the code in the login activity class, and the bug was resolved.
-
-<br> <hr>
-
-
+***
 ## Team Management
-
 ### Meeting Minutes
-* Link to the minutes of your meetings like above. There must be at least 4 team meetings.
-  (each committed within 2 days after the meeting)
-* Your meetings should also have a reasonable date spanning across Week 6 to 11.*
-
-
 - [Team Meeting 1](meeting-1.md)
 - [Team Meeting 2](meeting-2.md)
 - [Team Meeting 3](meeting-3.md)
 - [Team Meeting 4](meeting-4.md)
-
-
-<hr>
 
 ### Conflict Resolution Protocol
 *[Write a well defined protocol your team can use to handle conflicts. That is, if your group has problems, what is the procedure for reaching consensus or solving a problem?
@@ -582,5 +598,3 @@ Our team is committed to open communication, collaboration, and mutual support. 
    - **Risk Assessment**: At the start of the project, we’ll identify potential risks (like illness or technical problems) and create contingency plans for each.
    - **Task Backups**: Every critical task will have a backup person familiar with it, so the work can continue if the main person is unavailable.
    - **Regular Check-ins**: We’ll have weekly meetings to review our progress and spot any potential issues early. This will help us take action before they become bigger problems.
-
-
