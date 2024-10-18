@@ -27,7 +27,7 @@ The key area(s) of responsibilities for each member
 | UID   |  Name  |                                                    Role |
 |:------|:------:|--------------------------------------------------------:|
 | [u7327620] | [Ryan Foote] | [Firebase, Login, GPS, Integrations] |
-| [u7902000] | [Gea Linggar Galih]| [AirQualityApi, Data Storage, Data Structures, Backend] |
+| [u7902000] | [Gea Linggar Galih]| [Data Fetching and Processing, Backend, Data Graphical, Code Review] |
 | [u8003980] | [Cheng Leong Chan] | [UI design in Figma, Search, Profile Page] |
 | [u8006862] | [Hexuan Wang] | [UI design/layout, UI interface (UI Graphical), Logo, UML] |
 | [u7635535] | [Zechuan Liu] | [Overall Functionality, Search Designate] |
@@ -81,6 +81,50 @@ The key area(s) of responsibilities for each member
     - Create the UML
 
 ***
+
+**u7902000, Gea Linggar Galih** I have contributed 20%:
+- **Code Contribution in the final App**
+   Created classes:
+   - [DataFetcher] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/DataFetcher.java)
+   - [CsvParser] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/CsvParser.java)
+   - [SuburbsJsonUtils] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/SuburbJsonUtils.java)
+   - [AVLTree] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/tree/AVLTree.java)
+   - [DataAccessObject](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/design_pattern/DataAccessObject.java)
+   - [ExecutorServiceSingleton] (https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java)
+   - [LocationStrategy](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/design_pattern/LocationStrategy.java)
+   - [AirQualityRecord](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/model/AirQualityRecord.java)
+   - [MockAirQualityRecord](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/MockDataStream/MockAirQualityRecord.java)
+   - [MockJSONResponse](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/MockDataStream/MockJSONResponse.java)
+   Contributed in classes:
+   - [SplashActivity] class
+   - 
+   - A few refactors; [notably](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/49/diffs#fc57be931eb08ba1143607ff8ef48225b5bb9f6f).
+- [MainActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)
+   - Integrated [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java) and [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+   - ActivityResultLauncher Implementation
+   - Notifications
+- [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java)
+   - [Further Refactors](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/f681406e2257af7d728bd7ad77d11ff672e60c3d)
+   - [Created](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7), [deprecated](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/6c7fd54462bd9ba938401ee06fa81d9f5bd4a80a) sorta [twice](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/8c6e62cd57a300effd4ff8229dc20db1f02fa187), [revived](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/edd9c3b7da70be004390b03db6e9e167d4dad676)
+   - ActivityResult contract allowing safe-usage
+   - Interactions with [firebaseAuth](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7#7bfdaf85de87d0757f3c20334e5b4d93a01f83cf_0_51)
+- [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+   - Implemented as bound service over background service after checkpoint 2 discussions
+   - Requests location updates...
+   - Integrated with notifications in mainActivity
+
+   - **Code and App Design** 
+      - Reviewed *requested* merge requests
+         - [Styling](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
+         - [Style bordering on Critique](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/58)
+         - [Reverting "Midnight Merges"](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/39/diffs)
+      - Location as a bound service
+      - ResultActivityApi usage
+
+- **Others**:
+   - The *working* [CI](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/.gitlab-ci.yml) (see reflection)
+   - The [firebase project](https://console.firebase.google.com/u/2/project/go4gp-s2/overview)
+   - 3/4 Meeting Minutes
 
 **u7327620, Ryan Foote** I have contributed 20%:
 - **Code Contribution in the final App**
