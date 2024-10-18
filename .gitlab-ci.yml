@@ -17,11 +17,11 @@ build-job:
     - cd App
     - mkdir -p apk
     - ./gradlew --build-cache assemble
-    - cp ./app/build/outputs/apk/release/app-release-unsigned.apk ./apk/ourApk.apk
-    - cp ./app/build/outputs/apk/release/output-metadata.json ./apk/metadata.json
+    - cp app/build/outputs/apk/release/app-release-unsigned.apk apk/ourApk.apk
+    - cp app/build/outputs/apk/release/output-metadata.json apk/metadata.json
     - ls -a
   cache:
-    - key: "cache-${CI_COMMIT_SHA}"
+    - key: cache-$CI_COMMIT_REF_SLUG
     - policy: push
     - paths:
       - App/app/build/
@@ -38,7 +38,7 @@ test-job:
   tags:
     - comp2100
   cache:
-    - key: "cache-${CI_COMMIT_SHA}"
+    - key: cache-$CI_COMMIT_REF_SLUG
     - policy: pull
     - paths:
       - App/app/build/
@@ -61,7 +61,7 @@ apk-release:
   tags:
     - comp2100
   cache:
-    key: "cache-${CI_COMMIT_SHA}"
+    key: cache-$CI_COMMIT_REF_SLUG
     policy: pull
     paths:
       - App/apk/
