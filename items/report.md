@@ -1,4 +1,4 @@
-# [G04 - Dogs] Report
+# [G04 - EcoACT] Report
 
 ## Table of Contents
 
@@ -492,7 +492,7 @@ Feature Cateory: User Interactivity <br>
 
 Hello customer,
 
-We here at Dogs incorporated wish to extend our sincerest apologies for the mismanagement of your product. We aim to hold ourselves to the highest standards and accept no less than perfection when shipping our customers final products. I'm deeply upset to hear that the team have let you down. To show you that we're adamant on our claims, we've taken your advice to heart and implemented the following changes to the project.
+We here at EcoACT wish to extend our sincerest apologies for the mismanagement of your product. We aim to hold ourselves to the highest standards and accept no less than perfection when shipping our customers final products. I'm deeply upset to hear that the team have let you down. To show you that we're adamant on our claims, we've taken your advice to heart and implemented the following changes to the project.
 
 ([Issue/merge documentation stem](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4))
 
@@ -503,12 +503,12 @@ To ensure scalability and reusability, we've identified multiple usages of the E
    - [Merge Request 2](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/59) updates activity usages of the ExecutorService class to our new singleton version.
 These upgrades to the system rectifies the improper system resource management and aligns with our project vision for reusability through robust design patterns.
 
-The Dogs™ are vehemently apologetic to the lack care taken to avoid ethical violations, and as such, violating the industry standards. We've conducted an explosive internal review spearheaded by our scrum masters to identify decadent developers and conducted ethical training modules where needed. The Dogs™ have identified that the usage of the OpenWeather Api has gone without accreditation within the project. Since the availability of data is the foundation to the project, we've rectified the mistake and added accreditation into the app to maintain amicable business agreements with the company.
+The Eco Team™ are vehemently apologetic to the lack care taken to avoid ethical violations, and as such, violating the industry standards. We've conducted an explosive internal review spearheaded by our scrum masters to identify decadent developers and conducted ethical training modules where needed. The Dogs™ have identified that the usage of the OpenWeather Api has gone without accreditation within the project. Since the availability of data is the foundation to the project, we've rectified the mistake and added accreditation into the app to maintain amicable business agreements with the company.
    - [Associated Issue](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/issues/4?work_item_iid=6)
    - [Merge Request Solution](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
 We hope our rapid response exemplifies The Dogs™ strict moral code and adherance to perpetuating positive ethics through our work.
 
-The Dogs™ have selected the MIT license for the project as (despite being a very real and epic company) we're a group of students who's code is going to be hidden in a sea of student submissions. If a user reviewed our code and wished to use it, I'm sure we would be honoured (if not a little confused). The license protects us against any potential legal issues regarding warranties whilst allowing anyone to utilise and adapt the software to their needs.
+The Eco Team™ have selected the MIT license for the project as (despite being a very real and epic company) we're a group of students who's code is going to be hidden in a sea of student submissions. If a user reviewed our code and wished to use it, I'm sure we would be honoured (if not a little confused). The license protects us against any potential legal issues regarding warranties whilst allowing anyone to utilise and adapt the software to their needs.
 
 
 ## Testing Summary
