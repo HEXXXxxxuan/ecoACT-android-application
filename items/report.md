@@ -76,6 +76,7 @@ The key area(s) of responsibilities for each member
     - Design the logo and color/style used in app
     - Design the Figma with Chan
     - Design/modify/create the layout in each XML to make the app have a consistent layout style(color/button/cardview etc.)
+    - Performance enhanced and bug fixed in UI Layout related, for example in - [ExecutorServiceSingleton](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/utils/design_pattern/ExecutorServiceSingleton.java)
 
   - **Others**:
     - Create the UML
@@ -98,7 +99,6 @@ The key area(s) of responsibilities for each member
       - [SuburbLiveActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/live_data/SuburbLiveActivity.java)
       - basic class for [SuburbHistoricalActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/84716283214c2a43ec69051045ee5e19963ed8e1/App/app/src/main/java/com/go4/application/historical/SuburbHistoricalActivity.java)
 
-
    - Contributed in classes:
       - [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java)
          - [Add data fetching mechanism](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/f635ede3045ca1a17dc39feeb037187b6ce8e886)
@@ -117,37 +117,42 @@ The key area(s) of responsibilities for each member
    - [merge request review](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/15)
    - Checking for bugs on real android device
 
+***
+
 **u7327620, Ryan Foote** I have contributed 20%:
 - **Code Contribution in the final App**
-   - [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) class
-   - Building on what Gea implemented; [checkPermissions flow](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java#L62)
-   - A few refactors; [notably](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/49/diffs#fc57be931eb08ba1143607ff8ef48225b5bb9f6f).
-- [MainActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)
-   - Integrated [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java) and [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+   - [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) methods
+      - Building on what Gea implemented: [checkPermissions flow](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java#L62).
+      - A few refactors: [notably](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/49/diffs#fc57be931eb08ba1143607ff8ef48225b5bb9f6f).
+   - [MainActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)
+      - Integrated [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java) and [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
    - ActivityResultLauncher Implementation
-   - Notifications
-- [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java)
-   - [Further Refactors](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/f681406e2257af7d728bd7ad77d11ff672e60c3d)
-   - [Created](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7), [deprecated](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/6c7fd54462bd9ba938401ee06fa81d9f5bd4a80a) sorta [twice](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/8c6e62cd57a300effd4ff8229dc20db1f02fa187), [revived](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/edd9c3b7da70be004390b03db6e9e167d4dad676)
-   - ActivityResult contract allowing safe-usage
-   - Interactions with [firebaseAuth](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7#7bfdaf85de87d0757f3c20334e5b4d93a01f83cf_0_51)
-- [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
-   - Implemented as bound service over background service after checkpoint 2 discussions
-   - Requests location updates...
-   - Integrated with notifications in mainActivity
+   - Push notifications
+   - [FirebaseLogin](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/FirebaseLoginActivity.java)
+      - [Further Refactors](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/f681406e2257af7d728bd7ad77d11ff672e60c3d)
+      - [Created](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7), [it became deprecated](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/6c7fd54462bd9ba938401ee06fa81d9f5bd4a80a), then was [revived](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/edd9c3b7da70be004390b03db6e9e167d4dad676)
+      - ActivityResult contract allowing safe-usage
+      - Handled interactions with [firebaseAuth](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/commit/d2d372e6bf16051af5fecc26bd4553db1d4e88d7#7bfdaf85de87d0757f3c20334e5b4d93a01f83cf_0_51)
+      - Set-up Firebase Project
+   - [GPSService](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/utils/GPSService.java)
+      - Adjusted from background service to bound service.
+      - Requested locations through [Play Services FusedLocationClient](https://developer.android.com/develop/sensors-and-location/location/request-updates).
+      - Setup required notification system.
 
    - **Code and App Design** 
       - Reviewed *requested* merge requests
          - [Styling](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/56)
          - [Style bordering on Critique](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/58)
-         - [Reverting "Midnight Merges"](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/39/diffs)
-      - Location as a bound service
-      - ResultActivityApi usage
+         - [Reverts](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/merge_requests/39/diffs)
+         - And more...
+      - Design choice to switch LocationService to a bound service instead of a background service.
+      - Implementation of the ResultActivityApi throughout the app.
 
 - **Others**:
-   - The *working* [CI](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/.gitlab-ci.yml) (see reflection)
+   - The *working* [CI](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/.gitlab-ci.yml)
    - The [firebase project](https://console.firebase.google.com/u/2/project/go4gp-s2/overview)
-   - 3/4 Meeting Minutes
+   - Constructed 3/4 Meeting Minutes
+
 
 ## Application Description
 
