@@ -82,6 +82,7 @@ The key area(s) of responsibilities for each member
     - Feature Navigation Bar for the app in [Main Activity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/MainActivity.java)and related XML.
     - Feature created original [SplashActivity](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/blob/main/App/app/src/main/java/com/go4/application/SplashActivity.java) and its UI.
     - Feature [UI Layout in landscape and portrait](https://gitlab.cecs.anu.edu.au/u7327620/gp-24s2/-/tree/main/App/app/src/main/res/layout-land)
+    - Feature testing covers 70% of main functions, associated with Gea
 
 - **Code and App Design**
     - Design the logo and color/style used in app
